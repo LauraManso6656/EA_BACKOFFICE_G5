@@ -7,15 +7,19 @@
       </div>
       
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div *ngIf="errorMsg" class="error-alert">
+          {{ errorMsg }}
+        </div>
+
         <div class="form-group">
-          <label for="username">Nombre de usuario</label>
+          <label for="email">Correo electrónico</label>
           <div class="input-container">
             <input 
-              type="text" 
-              id="username" 
-              formControlName="username"
-              placeholder="Introduce tu usuario"
-              [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+              type="email" 
+              id="email" 
+              formControlName="email"
+              placeholder="Introduce tu correo"
+              [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
             >
           </div>
         </div>

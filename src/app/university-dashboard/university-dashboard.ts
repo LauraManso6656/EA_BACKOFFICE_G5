@@ -82,7 +82,7 @@ export class UniversityDashboard implements OnInit {
   }
 
   get totalUsersAcrossUniversities(): number {
-    return this.universities.reduce((acc, curr) => acc + (curr.usuarios.length || 0), 0);
+    return this.universities.reduce((acc, curr) => acc + (curr.numIntegrantes || 0), 0);
   }
 
   get universitiesVisibles(): Universidad[] {
@@ -101,8 +101,11 @@ export class UniversityDashboard implements OnInit {
   }
 
   getInitials(name: string): string {
-    if (!name) return '??';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    if (!name || typeof name !== 'string') return 'UN';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 0) return 'UN';
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
   }
 
   editarUniversity(university: Universidad): void {
