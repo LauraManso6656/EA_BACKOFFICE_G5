@@ -90,7 +90,8 @@
                     </thead>
                     <tbody class="divide-y divide-outline-variant/20">
                         <tr *ngFor="let user of usuariosVisibles"
-                            class="hover:bg-surface-container/30 transition-colors group">
+                            class="hover:bg-surface-container/30 transition-colors group cursor-pointer"
+                            (click)="editarUsuario(user)">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <div
@@ -111,7 +112,7 @@
                                 {{ universidadLabel(user) }}
                             </td>
                             <td class="px-6 py-4">
-                                <label class="relative inline-flex items-center cursor-pointer">
+                                <label class="relative inline-flex items-center cursor-pointer" (click)="$event.stopPropagation()">
                                     <input type="checkbox" [checked]="user.activo" class="sr-only peer"
                                         (change)="onToggleStatus(user, $event)">
                                     <div
@@ -123,13 +124,8 @@
                                 <div
                                     class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
-                                        class="p-2 text-secondary hover:bg-secondary/10 rounded-lg transition-colors"
-                                        title="Edit User" (click)="editarUsuario(user)">
-                                        <span class="material-symbols-outlined text-xl">edit</span>
-                                    </button>
-                                    <button
                                         class="p-2 text-error-container hover:bg-error/20 rounded-lg transition-colors text-error"
-                                        title="Delete Permanent" (click)="openDeleteModal(user)">
+                                        title="Delete Permanent" (click)="openDeleteModal(user); $event.stopPropagation()">
                                         <span class="material-symbols-outlined text-xl">delete_forever</span>
                                     </button>
                                 </div>
