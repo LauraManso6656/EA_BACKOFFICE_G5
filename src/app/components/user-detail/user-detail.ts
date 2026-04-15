@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { UsuarioService } from '../services/usuario-service';
-import { UniversidadService } from '../services/universidad-service';
-import { Universidad } from '../models/universidad';
-import { Usuario } from '../models/usuario';
+import { UsuarioService } from '../../services/usuario-service';
+import { UniversidadService } from '../../services/universidad-service';
+import { Universidad } from '../../models/universidad';
+import { Usuario } from '../../models/usuario';
 
 @Component({
   selector: 'app-user-detail',

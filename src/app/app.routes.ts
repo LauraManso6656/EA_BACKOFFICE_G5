@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { Login } from './login/login';
-import { UserDashboard } from './user-dashboard/user-dashboard';
-import { UserDetail } from './user-detail/user-detail';
-import { UserCreate } from './user-create/user-create';
-import { UniversityDashboard } from './university-dashboard/university-dashboard';
-import { UniversityCreate } from './university-create/university-create';
-import { UniversityDetail } from './university-detail/university-detail';
+import { Login } from './components/login/login';
+import { UserDashboard } from './components/user-dashboard/user-dashboard';
+import { UserDetail } from './components/user-detail/user-detail';
+import { UserCreate } from './components/user-create/user-create';
+import { UniversityDashboard } from './components/university-dashboard/university-dashboard';
+import { UniversityCreate } from './components/university-create/university-create';
+import { UniversityDetail } from './components/university-detail/university-detail';
 
 export const routes: Routes = [
   { path: 'login', component: Login },

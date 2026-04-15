@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Usuario } from '../models/usuario';
+import { Usuario } from '../../models/usuario';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Universidad } from '../models/universidad';
-import { UsuarioService } from '../services/usuario-service';
-import { UniversidadService } from '../services/universidad-service';
+import { Universidad } from '../../models/universidad';
+import { UsuarioService } from '../../services/usuario-service';
+import { UniversidadService } from '../../services/universidad-service';
 import { Navbar } from '../navbar/navbar';
 
 

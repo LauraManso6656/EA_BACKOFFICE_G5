@@ -2,9 +2,9 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Universidad } from '../models/universidad';
-import { UniversidadService } from '../services/universidad-service';
-import { UsuarioService } from '../services/usuario-service';
+import { Universidad } from '../../models/universidad';
+import { UniversidadService } from '../../services/universidad-service';
+import { UsuarioService } from '../../services/usuario-service';
 import { Navbar } from '../navbar/navbar';
 
 @Component({

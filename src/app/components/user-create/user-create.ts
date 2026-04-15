@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { UsuarioService } from '../services/usuario-service';
-import { UniversidadService } from '../services/universidad-service';
-import { Universidad } from '../models/universidad';
+import { UsuarioService } from '../../services/usuario-service';
+import { UniversidadService } from '../../services/universidad-service';
+import { Universidad } from '../../models/universidad';
 
 @Component({
   selector: 'app-user-create',
