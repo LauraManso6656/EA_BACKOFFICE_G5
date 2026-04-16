@@ -3,11 +3,19 @@
 <div class="flex min-h-screen">
   <main class="flex-1 p-8 overflow-y-auto">
     <!-- Header -->
-    <header class="mb-8">
-      <h1 class="text-2xl font-semibold text-white">General Dashboard</h1>
-      <p class="text-on-surface-variant text-sm mt-1">
-        Overview of platform metrics and recent activity for UNVY Backoffice.
-      </p>
+    <header class="mb-8 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-semibold text-white">General Dashboard</h1>
+        <p class="text-on-surface-variant text-sm mt-1">
+          Overview of platform metrics and recent activity for UNVY Backoffice.
+        </p>
+      </div>
+      <button (click)="loadAllStats()" 
+              class="flex items-center gap-2 px-4 py-2 bg-primary-container hover:bg-surface-container-highest text-white rounded-xl border border-outline-variant/20 transition-all group active:scale-95 shadow-lg">
+        <span class="material-symbols-outlined text-secondary group-active:rotate-180 transition-transform duration-500"
+              [ngClass]="{'animate-spin': apiStatus() === 'checking'}">refresh</span>
+        <span class="text-sm font-bold uppercase tracking-widest">Refresh</span>
+      </button>
     </header>
 
     <!-- Stats Grid (Bento Style) -->
@@ -86,7 +94,7 @@
             <span class="px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-tighter transition-all"
                   [ngClass]="apiStatus() === 'online' ? 'bg-green-400/10 text-green-400 border-green-400/20' : 
                              (apiStatus() === 'offline' ? 'bg-error/10 text-error border-error/20' : 'bg-outline/10 text-outline border-outline/20')">
-              {{ apiStatus() === 'online' ? 'Healthy' : (apiStatus() === 'offline' ? 'Disconnected' : 'Checking...') }}
+              {{ apiStatus() === 'online' ? 'Healthy' : (apiStatus() === 'offline' ? 'Error' : 'Checking...') }}
             </span>
           </div>
           <div class="flex items-center justify-between">
@@ -100,7 +108,7 @@
             <span class="px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-tighter transition-all"
                   [ngClass]="dbStatus() === 'online' ? 'bg-green-400/10 text-green-400 border-green-400/20' : 
                              (dbStatus() === 'offline' ? 'bg-error/10 text-error border-error/20' : 'bg-outline/10 text-outline border-outline/20')">
-              {{ dbStatus() === 'online' ? 'Healthy' : (dbStatus() === 'offline' ? 'Error' : 'Syncing...') }}
+              {{ dbStatus() === 'online' ? 'Healthy' : (dbStatus() === 'offline' ? 'Error' : 'Checking...') }}
             </span>
           </div>
           <div class="flex items-center justify-between opacity-40">
