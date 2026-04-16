@@ -1,0 +1,23 @@
+/* Basic layout and animations following the project style */
+main {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Transitions for interactive elements */
+button {
+  @apply transition-all duration-200;
+}
+
+button:active {
+  @apply scale-95 opacity-80;
+}
+
+/* Specific status indicators if needed beyond utility classes */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

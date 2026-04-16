@@ -27,7 +27,7 @@ export class Login implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/usuarios']);
+      this.router.navigate(['/home']);
     }
   }
 
@@ -40,7 +40,7 @@ export class Login implements OnInit {
         next: (res: any) => {
           if (res.usuario.rol === 'admin') {
             console.log('Login exitoso como Administrador');
-            this.router.navigate(['/usuarios']);
+            this.router.navigate(['/home']);
           } else {
             console.warn('Intento de acceso denegado: no es admin');
             this.authService.logout();

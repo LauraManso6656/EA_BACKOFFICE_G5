@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Universidad } from '../../models/universidad';
 import { UniversidadService } from '../../services/universidad-service';
 import { UsuarioService } from '../../services/usuario-service';
+import { StatsService } from '../../services/stats-service';
 import { Navbar } from '../navbar/navbar';
 
 @Component({
@@ -21,6 +22,7 @@ export class UniversityDashboard implements OnInit {
   loading = false;
   errorMsg = '';
   totalUsersCount = 0;
+  totalUniversitiesCount = 0;
   
   // Pagination
   currentPage = 1;
@@ -33,6 +35,7 @@ export class UniversityDashboard implements OnInit {
   constructor(
     private universidadService: UniversidadService, 
     private usuarioService: UsuarioService,
+    private statsService: StatsService,
     private cdr: ChangeDetectorRef, 
     private router: Router
   ) {}
@@ -70,13 +73,18 @@ export class UniversityDashboard implements OnInit {
       },
     });
 
-    this.usuarioService.getUsuarios().subscribe({
+    // Obtener conteos reales desde el nuevo servicio de estadísticas
+    this.statsService.getUserCount().subscribe({
       next: (res) => {
-        this.totalUsersCount = res.length;
+        this.totalUsersCount = res.count;
         this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error fetching users:', err);
+      }
+    });
+
+    this.statsService.getUniversityCount().subscribe({
+      next: (res) => {
+        this.totalUniversitiesCount = res.count;
+        this.cdr.detectChanges();
       }
     });
   }

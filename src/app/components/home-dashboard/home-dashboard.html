@@ -1,0 +1,154 @@
+<app-navbar></app-navbar>
+
+<div class="flex min-h-screen">
+  <main class="flex-1 p-8 overflow-y-auto">
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-2xl font-semibold text-white">General Dashboard</h1>
+      <p class="text-on-surface-variant text-sm mt-1">
+        Overview of platform metrics and recent activity for UNVY Backoffice.
+      </p>
+    </header>
+
+    <!-- Stats Grid (Bento Style) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      
+      <!-- Users Card -->
+      <div class="bg-primary-container p-6 rounded-2xl border border-outline-variant/20 shadow-lg">
+        <span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest block mb-1">Total Users</span>
+        <div class="flex items-baseline justify-between mb-2">
+          <span class="text-4xl font-bold text-white tracking-tight">{{ userCount() === null ? '...' : userCount() }}</span>
+          <span class="material-symbols-outlined text-secondary/30 text-3xl">group</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm font-bold text-secondary uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">trending_up</span>
+          Active System
+        </div>
+      </div>
+
+      <!-- Universities Card -->
+      <div class="bg-primary-container p-6 rounded-2xl border border-outline-variant/20 shadow-lg">
+        <span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest block mb-1">Universities</span>
+        <div class="flex items-baseline justify-between mb-2">
+          <span class="text-4xl font-bold text-white tracking-tight">{{ universityCount() === null ? '...' : universityCount() }}</span>
+          <span class="material-symbols-outlined text-blue-400/30 text-3xl">account_balance</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm font-bold text-blue-400 uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">location_city</span>
+          Verified Entities
+        </div>
+      </div>
+
+      <!-- Posts Card -->
+      <div class="bg-primary-container p-6 rounded-2xl border border-outline-variant/20 shadow-lg">
+        <span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest block mb-1">Content (Posts)</span>
+        <div class="flex items-baseline justify-between mb-2">
+          <span class="text-4xl font-bold text-white tracking-tight">{{ postCount() === null ? '...' : postCount() }}</span>
+          <span class="material-symbols-outlined text-purple-400/30 text-3xl">article</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm font-bold text-purple-400 uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">chat_bubble</span>
+          Social Activity
+        </div>
+      </div>
+
+      <!-- Reports Card (Focus en Acción) -->
+      <div class="bg-surface-container-highest p-6 rounded-2xl border border-error/20 shadow-lg">
+        <span class="text-sm font-bold text-error uppercase tracking-widest block mb-1 flex items-center gap-1">
+          <span class="material-symbols-outlined text-base">warning</span>
+          Attention Required
+        </span>
+        <div class="flex items-baseline justify-between mb-2">
+          <span class="text-4xl font-bold text-error tracking-tight">{{ reportCount() }}</span>
+          <span class="material-symbols-outlined text-error/30 text-3xl">report</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm font-bold text-error uppercase tracking-widest opacity-70">
+          Pending Moderation
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- System Health -->
+      <div class="bg-primary-container p-8 rounded-2xl border border-outline-variant/20 shadow-lg relative overflow-hidden">
+        <h2 class="text-lg font-semibold text-white mb-6">System Health</h2>
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined" 
+                    [ngClass]="apiStatus() === 'online' ? 'text-green-400' : (apiStatus() === 'offline' ? 'text-error' : 'text-outline')">
+                {{ apiStatus() === 'online' ? 'check_circle' : (apiStatus() === 'offline' ? 'error' : 'sync') }}
+              </span>
+              <span class="text-base text-on-surface-variant font-medium">API Server</span>
+            </div>
+            <span class="px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-tighter transition-all"
+                  [ngClass]="apiStatus() === 'online' ? 'bg-green-400/10 text-green-400 border-green-400/20' : 
+                             (apiStatus() === 'offline' ? 'bg-error/10 text-error border-error/20' : 'bg-outline/10 text-outline border-outline/20')">
+              {{ apiStatus() === 'online' ? 'Healthy' : (apiStatus() === 'offline' ? 'Disconnected' : 'Checking...') }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined"
+                    [ngClass]="dbStatus() === 'online' ? 'text-green-400' : (dbStatus() === 'offline' ? 'text-error' : 'text-outline')">
+                database
+              </span>
+              <span class="text-base text-on-surface-variant font-medium">Database Sync</span>
+            </div>
+            <span class="px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-tighter transition-all"
+                  [ngClass]="dbStatus() === 'online' ? 'bg-green-400/10 text-green-400 border-green-400/20' : 
+                             (dbStatus() === 'offline' ? 'bg-error/10 text-error border-error/20' : 'bg-outline/10 text-outline border-outline/20')">
+              {{ dbStatus() === 'online' ? 'Healthy' : (dbStatus() === 'offline' ? 'Error' : 'Syncing...') }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between opacity-40">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-outline">language</span>
+              <span class="text-base text-on-surface-variant font-medium">Web Client</span>
+            </div>
+            <span class="text-[11px] font-bold text-outline uppercase border border-outline/20 px-2.5 py-1 rounded">Upcoming</span>
+          </div>
+          <div class="flex items-center justify-between opacity-40">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-outline">smartphone</span>
+              <span class="text-base text-on-surface-variant font-medium">Mobile App</span>
+            </div>
+            <span class="text-[11px] font-bold text-outline uppercase border border-outline/20 px-2.5 py-1 rounded">Upcoming</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Resources / Swagger -->
+      <div class="bg-primary-container p-8 rounded-2xl border border-outline-variant/20 shadow-lg flex flex-col justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-2">Developer Resources</h2>
+          <p class="text-sm text-on-surface-variant mb-6">Access technical documentation and API specifications.</p>
+        </div>
+        
+        <a href="http://localhost:1337/api/" target="_blank" 
+           class="flex items-center justify-between p-4 bg-blue-500/10 hover:bg-blue-500/20 rounded-xl transition-all border border-blue-500/20 group">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+              <span class="material-symbols-outlined text-blue-400">api</span>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-white">Swagger UI</p>
+              <p class="text-[10px] text-blue-400/70 uppercase">Interactive Docs</p>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">open_in_new</span>
+        </a>
+
+        <div class="mt-4 pt-4 border-t border-outline-variant/10">
+          <div class="flex items-center justify-between text-sm font-bold text-on-surface-variant uppercase tracking-tighter">
+            <span>Documentation</span>
+            <span class="text-blue-400">Open API 3.0</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
