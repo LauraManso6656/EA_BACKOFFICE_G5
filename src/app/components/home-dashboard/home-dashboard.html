@@ -53,16 +53,16 @@
       </div>
 
       <!-- Reports Card (Focus en Acción) -->
-      <div class="bg-surface-container-highest p-6 rounded-2xl border border-error/20 shadow-lg">
+      <div class="bg-surface-container-highest p-6 rounded-2xl border border-error/20 shadow-lg flex flex-col">
         <span class="text-sm font-bold text-error uppercase tracking-widest block mb-1 flex items-center gap-1">
-          <span class="material-symbols-outlined text-base">warning</span>
           Attention Required
         </span>
         <div class="flex items-baseline justify-between mb-2">
           <span class="text-4xl font-bold text-error tracking-tight">{{ reportCount() }}</span>
           <span class="material-symbols-outlined text-error/30 text-3xl">report</span>
         </div>
-        <div class="flex items-center gap-2 text-sm font-bold text-error uppercase tracking-widest opacity-70">
+        <div class="flex items-center gap-2 text-sm font-bold text-error uppercase tracking-widest opacity-80">
+          <span class="material-symbols-outlined text-base">warning</span>
           Pending Moderation
         </div>
       </div>
@@ -129,13 +129,13 @@
         
         <a href="http://localhost:1337/api/" target="_blank" 
            class="flex items-center justify-between p-4 bg-blue-500/10 hover:bg-blue-500/20 rounded-xl transition-all border border-blue-500/20 group">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-              <span class="material-symbols-outlined text-blue-400">api</span>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center">
+              <span class="material-symbols-outlined text-blue-400 text-3xl">api</span>
             </div>
             <div>
-              <p class="text-sm font-bold text-white">Swagger UI</p>
-              <p class="text-[10px] text-blue-400/70 uppercase">Interactive Docs</p>
+              <p class="text-base font-bold text-white">Swagger UI</p>
+              <p class="text-sm text-blue-400/80 uppercase font-medium">Interactive Docs</p>
             </div>
           </div>
           <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">open_in_new</span>
