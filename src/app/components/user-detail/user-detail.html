@@ -1,12 +1,12 @@
 <!-- TopNavBar -->
 <nav
-    class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-primary-container/40 backdrop-blur-md border-b border-outline-variant/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+    class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-primary-container/40 backdrop-blur-md border-b border-outline-variant/20 shadow-[0_8px_32_0_rgba(0,0,0,0.3)]">
     <div class="flex items-center gap-4">
         <button
             class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-container-highest/50"
             [routerLink]="['/usuarios']">
             <span class="material-symbols-outlined">arrow_back</span>
-            <span class="text-sm font-bold">Volver</span>
+            <span class="text-sm font-bold">Back</span>
         </button>
     </div>
 
@@ -29,15 +29,14 @@
     <div class="w-72 shrink-0 sticky top-24">
         <div
             class="bg-primary-container rounded-3xl p-6 border border-outline-variant/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] flex flex-col gap-3">
-            <h3 class="text-sm font-bold text-secondary uppercase tracking-[0.2em] mb-4 text-center">Gestión de
-                Cuenta</h3>
+            <h3 class="text-sm font-bold text-secondary uppercase tracking-[0.2em] mb-4 text-center">Account Management</h3>
 
             <button (click)="setActiveTab('profile')" [class.bg-secondary]="activeTab === 'profile'"
                 [class.text-primary-container]="activeTab === 'profile'"
                 [class.text-on-surface-variant]="activeTab !== 'profile'"
                 class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
                 <span class="material-symbols-outlined">person</span>
-                Perfil
+                Profile
             </button>
 
             <button (click)="setActiveTab('posts')" [class.bg-secondary]="activeTab === 'posts'"
@@ -53,7 +52,15 @@
                 [class.text-on-surface-variant]="activeTab !== 'comments'"
                 class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
                 <span class="material-symbols-outlined">forum</span>
-                Comentarios
+                Comments
+            </button>
+
+            <button (click)="setActiveTab('reports')" [class.bg-secondary]="activeTab === 'reports'"
+                [class.text-primary-container]="activeTab === 'reports'"
+                [class.text-on-surface-variant]="activeTab !== 'reports'"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
+                <span class="material-symbols-outlined">report</span>
+                Reports
             </button>
 
             <div class="mt-8 pt-6 border-t border-outline-variant/20">
@@ -76,14 +83,14 @@
         <div *ngIf="activeTab === 'profile'"
             class="bg-primary-container rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div class="mb-10">
-                <h2 class="text-2xl font-bold text-white mb-2">Información del Perfil</h2>
-                <p class="text-on-surface-variant text-sm">Gestiona los datos principales y el nivel de acceso.</p>
+                <h2 class="text-2xl font-bold text-white mb-2">Profile Information</h2>
+                <p class="text-on-surface-variant text-sm">Manage main data and access level.</p>
             </div>
 
             <form [formGroup]="userForm" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Nombre</label>
+                        <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Name</label>
                         <input type="text" formControlName="nombre"
                             class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white disabled:opacity-60 disabled:cursor-not-allowed">
                     </div>
@@ -97,20 +104,20 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Rol</label>
+                        <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Role</label>
                         <select formControlName="rol"
                             class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white disabled:opacity-60 disabled:cursor-not-allowed appearance-none">
-                            <option value="user">Usuario</option>
-                            <option value="admin">Administrador</option>
+                            <option value="user">User</option>
+                            <option value="admin">Administrator</option>
                         </select>
                     </div>
 
                     <div class="space-y-2">
                         <label
-                            class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Universidad</label>
+                            class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">University</label>
                         <div class="relative">
                             <input type="text" [formControl]="universidadSearch"
-                                (focus)="showUniversidadesDropdown = true" placeholder="Buscar universidad..."
+                                (focus)="showUniversidadesDropdown = true" placeholder="Search university..."
                                 class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white disabled:opacity-60 disabled:cursor-not-allowed">
 
                             <div *ngIf="showUniversidadesDropdown && filteredUniversidades.length > 0 && isEditing"
@@ -128,9 +135,8 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Nueva
-                        Contraseña</label>
-                    <input type="password" formControlName="password" placeholder="Dejar vacío para mantener la actual"
+                    <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">New Password</label>
+                    <input type="password" formControlName="password" placeholder="Leave empty to keep current"
                         class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white disabled:opacity-60 disabled:cursor-not-allowed">
                 </div>
 
@@ -138,17 +144,17 @@
                     <button *ngIf="!isEditing" type="button" (click)="toggleEdit()"
                         class="px-8 bg-gradient-to-br from-secondary to-primary-container text-on-secondary-fixed py-3.5 rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition-all flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined text-sm font-bold">edit</span>
-                        Habilitar Edición
+                        Enable Editing
                     </button>
 
                     <div *ngIf="isEditing" class="flex gap-4">
                         <button type="button" (click)="cancelEdit()"
                             class="px-8 bg-surface-container-highest text-white py-3.5 rounded-xl text-sm font-bold hover:bg-surface-container transition-colors border border-outline-variant/20">
-                            Cancelar
+                            Cancel
                         </button>
                         <button type="submit" (click)="saveChanges()" [disabled]="userForm.invalid"
                             class="px-8 bg-gradient-to-br from-secondary to-primary-container text-on-secondary-fixed py-3.5 rounded-xl text-sm font-bold shadow-lg">
-                            Guardar Cambios
+                            Save Changes
                         </button>
                     </div>
                 </div>
@@ -160,9 +166,8 @@
             class="bg-primary-container rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div class="mb-10 flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Publicaciones del Usuario</h2>
-                    <p class="text-on-surface-variant text-sm">Contenido compartido por este usuario en la plataforma.
-                    </p>
+                    <h2 class="text-2xl font-bold text-white mb-2">User Posts</h2>
+                    <p class="text-on-surface-variant text-sm">Content shared by this user on the platform.</p>
                 </div>
                 <div class="px-4 py-2 bg-surface-container rounded-2xl border border-secondary/20">
                     <span class="text-xs font-bold text-secondary">{{ userPosts.length }} Posts</span>
@@ -186,9 +191,13 @@
                     <!-- Post Info -->
                     <div class="flex-1 p-6 flex flex-col justify-between">
                         <div>
-                            <p class="text-on-surface text-sm line-clamp-3 mb-4 leading-relaxed italic">
-                                "{{ post.caption || 'Sin descripción' }}"
+                            <p class="text-on-surface text-sm line-clamp-3 mb-2 leading-relaxed italic">
+                                "{{ post.caption || 'No caption' }}"
                             </p>
+                            <div class="mb-4 flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/60">
+                                <span class="bg-surface-container px-2 py-0.5 rounded text-secondary">PUBLISHED</span>
+                                <span>{{ post.createdAt | date:'short' }}</span>
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-between">
@@ -205,7 +214,7 @@
 
                             <button (click)="$event.stopPropagation(); openConfirmModal(post._id, 'post')"
                                 class="p-2 text-error-container hover:bg-error/20 rounded-lg transition-colors"
-                                title="Eliminar Post">
+                                title="Delete Post">
                                 <span class="material-symbols-outlined">delete</span>
                             </button>
                         </div>
@@ -216,8 +225,8 @@
                 <div *ngIf="userPosts.length === 0"
                     class="py-20 text-center bg-surface-container/30 rounded-3xl border-2 border-dashed border-outline-variant/20">
                     <span class="material-symbols-outlined text-6xl text-outline-variant mb-4">post_add</span>
-                    <h3 class="text-lg font-bold text-white uppercase tracking-widest">Sin publicaciones</h3>
-                    <p class="text-on-surface-variant text-sm mt-2">Este usuario aún no ha compartido nada.</p>
+                    <h3 class="text-lg font-bold text-white uppercase tracking-widest">No posts</h3>
+                    <p class="text-on-surface-variant text-sm mt-2">This user hasn't shared anything yet.</p>
                 </div>
             </div>
         </div>
@@ -227,12 +236,11 @@
             class="bg-primary-container rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div class="mb-10 flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Actividad de Comentarios</h2>
-                    <p class="text-on-surface-variant text-sm">Registro de aportaciones en las publicaciones de otros.
-                    </p>
+                    <h2 class="text-2xl font-bold text-white mb-2">Comment Activity</h2>
+                    <p class="text-on-surface-variant text-sm">Record of contributions to other posts.</p>
                 </div>
                 <div class="px-4 py-2 bg-surface-container rounded-2xl border border-secondary/20">
-                    <span class="text-xs font-bold text-secondary">{{ userComments.length }} Mensajes</span>
+                    <span class="text-xs font-bold text-secondary">{{ userComments.length }} Messages</span>
                 </div>
             </div>
 
@@ -263,9 +271,59 @@
                 <div *ngIf="userComments.length === 0"
                     class="py-20 text-center bg-surface-container/30 rounded-3xl border-2 border-dashed border-outline-variant/20">
                     <span class="material-symbols-outlined text-6xl text-outline-variant mb-4">chat</span>
-                    <h3 class="text-lg font-bold text-white uppercase tracking-widest">Sin comentarios</h3>
-                    <p class="text-on-surface-variant text-sm mt-2">Este usuario no ha comentado en ninguna publicación.
-                    </p>
+                    <h3 class="text-lg font-bold text-white uppercase tracking-widest">No comments</h3>
+                    <p class="text-on-surface-variant text-sm mt-2">This user hasn't commented on any posts yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div *ngIf="activeTab === 'reports'"
+            class="bg-primary-container rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div class="mb-10 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-2">Report History</h2>
+                    <p class="text-on-surface-variant text-sm">Record of complaints received by this user.</p>
+                </div>
+                <div class="px-4 py-2 bg-error/10 rounded-2xl border border-error/20">
+                    <span class="text-xs font-bold text-error">{{ userReports.length }} Incidents</span>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <a *ngFor="let report of userReports" 
+                     [routerLink]="['/report', report._id]" target="_blank"
+                     class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 hover:border-secondary transition-all group flex items-center justify-between cursor-pointer no-underline">
+                    <div class="flex items-center gap-5">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center transition-colors"
+                             [ngClass]="{
+                               'bg-blue-500/10 text-blue-400': report.tipo === 'post',
+                               'bg-purple-500/10 text-purple-400': report.tipo === 'comment',
+                               'bg-error/10 text-error': report.tipo === 'user'
+                             }">
+                            <span class="material-symbols-outlined">{{ report.tipo === 'user' ? 'person' : (report.tipo === 'post' ? 'article' : 'forum') }}</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-white font-bold text-base">{{ report.tipo | uppercase }} Reported</span>
+                                <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border"
+                                      [ngClass]="report.estado === 'resuelto' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-error/10 text-error border-error/20'">
+                                    {{ report.estado }}
+                                </span>
+                            </div>
+                            <p class="text-on-surface-variant text-xs mt-1 line-clamp-1 italic">"{{ report.descripcion }}"</p>
+                            <p class="text-[9px] text-on-surface-variant/40 mt-2 font-bold uppercase tracking-widest">{{ report.createdAt | date:'medium' }}</p>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-outline-variant group-hover:text-secondary group-hover:translate-x-1 transition-all">chevron_right</span>
+                </a>
+
+                <!-- Empty State -->
+                <div *ngIf="userReports.length === 0"
+                    class="py-20 text-center bg-surface-container/30 rounded-3xl border-2 border-dashed border-outline-variant/20">
+                    <span class="material-symbols-outlined text-6xl text-green-400/30 mb-4">check_circle</span>
+                    <h3 class="text-lg font-bold text-white uppercase tracking-widest">No reports</h3>
+                    <p class="text-on-surface-variant text-sm mt-2">This user has a clean record.</p>
                 </div>
             </div>
         </div>
@@ -289,13 +347,13 @@
             <div class="flex w-full gap-4">
                 <button (click)="closeConfirmModal()"
                     class="flex-1 px-6 py-3 rounded-xl bg-surface-container-highest text-white text-sm font-bold hover:bg-surface-container transition-colors">
-                    Cancelar
+                    Cancel
                 </button>
                 <button (click)="confirmAction()"
                     [disabled]="isDeleting"
                     class="flex-1 px-6 py-3 rounded-xl bg-error text-white text-sm font-bold hover:bg-error/90 transition-colors shadow-lg shadow-error/20 flex items-center justify-center gap-2">
                     <span *ngIf="isDeleting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                    {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+                    {{ isDeleting ? 'Deleting...' : 'Delete' }}
                 </button>
             </div>
         </div>
@@ -314,7 +372,7 @@
             <img *ngIf="selectedPost?.imageUrl" [src]="selectedPost?.imageUrl" class="max-w-full max-h-full object-contain">
             <div *ngIf="!selectedPost?.imageUrl" class="flex flex-col items-center text-outline-variant">
                 <span class="material-symbols-outlined text-6xl">image_not_supported</span>
-                <p class="text-xs mt-4 uppercase tracking-[0.2em] font-bold">Sin imagen</p>
+                <p class="text-xs mt-4 uppercase tracking-[0.2em] font-bold">No Image</p>
             </div>
             
             <button (click)="closePostDetailModal()" class="absolute top-4 left-4 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all hover:scale-110">
@@ -333,12 +391,12 @@
                     </div>
                     <div>
                         <p class="text-white font-bold text-sm leading-none">{{ usuario?.nombre }}</p>
-                        <p class="text-on-surface-variant text-[10px] mt-1 uppercase tracking-widest">Publicación activa</p>
+                        <p class="text-on-surface-variant text-[10px] mt-1 uppercase tracking-widest">Active Post</p>
                     </div>
                 </div>
                 <button (click)="openConfirmModal(selectedPost!._id, 'post'); closePostDetailModal()" 
                         class="text-error-container hover:text-error transition-all hover:scale-110 p-2"
-                        title="Eliminar este post">
+                        title="Delete this post">
                     <span class="material-symbols-outlined text-xl">delete_sweep</span>
                 </button>
             </div>
@@ -347,12 +405,13 @@
             <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
                 <!-- Caption original como primer comentario -->
                 <div class="mb-8 p-4 bg-surface-container/50 rounded-2xl border border-outline-variant/10 italic text-on-surface text-sm leading-relaxed relative">
-                    <span class="absolute -top-2.5 left-4 px-2 bg-surface-container-lowest text-[9px] font-bold text-secondary uppercase tracking-widest border border-outline-variant/10 rounded">Pie de foto</span>
-                    "{{ selectedPost?.caption || 'Sin descripción' }}"
+                    <span class="absolute -top-2.5 left-4 px-2 bg-surface-container-lowest text-[9px] font-bold text-secondary uppercase tracking-widest border border-outline-variant/10 rounded">Caption</span>
+                    "{{ selectedPost?.caption || 'No description' }}"
+                    <p class="text-[8px] text-on-surface-variant/50 mt-2 font-bold uppercase tracking-tighter not-italic">{{ selectedPost?.createdAt | date:'short' }}</p>
                 </div>
 
                 <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-[10px] font-bold text-secondary uppercase tracking-[0.2em]">Comentarios</h4>
+                    <h4 class="text-[10px] font-bold text-secondary uppercase tracking-[0.2em]">Comments</h4>
                     <span class="text-[10px] font-bold text-on-surface-variant/40">{{ selectedPostComments.length }} TOTAL</span>
                 </div>
 
@@ -380,7 +439,7 @@
                     <!-- Si no hay comentarios -->
                     <div *ngIf="selectedPostComments.length === 0" class="py-12 text-center opacity-30 select-none">
                         <span class="material-symbols-outlined text-4xl mb-2">forum</span>
-                        <p class="text-[10px] font-bold uppercase tracking-widest">Sin comentarios aún</p>
+                        <p class="text-[10px] font-bold uppercase tracking-widest">No comments yet</p>
                     </div>
                 </div>
             </div>

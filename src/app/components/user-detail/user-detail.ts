@@ -8,9 +8,10 @@ import { Universidad } from '../../models/universidad';
 import { Usuario } from '../../models/usuario';
 import { Post } from '../../models/post';
 import { PostService } from '../../services/post-service';
-
-import { Comment } from '../../models/comment';
+import { Comment as AppComment } from '../../models/comment';
 import { CommentService } from '../../services/comment-service';
+import { ReportService } from '../../services/report-service';
+import { Report } from '../../models/report';
 
 @Component({
   selector: 'app-user-detail',
@@ -30,9 +31,10 @@ export class UserDetail implements OnInit {
   showUniversidadesDropdown = false;
 
   // Nueva lógica de pestañas, posts y comentarios
-  activeTab: 'profile' | 'posts' | 'comments' = 'profile';
+  activeTab: 'profile' | 'posts' | 'comments' | 'reports' = 'profile';
   userPosts: Post[] = [];
-  userComments: Comment[] = [];
+  userComments: AppComment[] = [];
+  userReports: Report[] = [];
 
   // --- MODAL DE ALERTAS GENÉRICO ---
   showConfirmModal = false;
@@ -47,7 +49,7 @@ export class UserDetail implements OnInit {
   // Estado para el modal de detalles de post (Estilo Instagram)
   showPostDetailModal = false;
   selectedPost: Post | null = null;
-  selectedPostComments: Comment[] = [];
+  selectedPostComments: AppComment[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -55,6 +57,7 @@ export class UserDetail implements OnInit {
     private universidadService: UniversidadService,
     private postService: PostService,
     private commentService: CommentService,
+    private reportService: ReportService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -75,6 +78,7 @@ export class UserDetail implements OnInit {
       this.loadUser();
       this.loadUserPosts();
       this.loadUserComments();
+      this.loadUserReports();
     }
 
     this.universidadSearch.valueChanges.subscribe(value => {
@@ -82,14 +86,37 @@ export class UserDetail implements OnInit {
     });
   }
 
-  setActiveTab(tab: 'profile' | 'posts' | 'comments'): void {
+  setActiveTab(tab: 'profile' | 'posts' | 'comments' | 'reports'): void {
     this.activeTab = tab;
+  }
+
+  loadUserReports(): void {
+    if (!this.userId) return;
+    this.reportService.getReports().subscribe({
+      next: (allReports: Report[]) => {
+        // Filtramos reportes donde el objetivo sea el usuario, o uno de sus posts, o sus comentarios
+        this.userReports = allReports.filter(r => {
+            if (r.tipo === 'user' && r.objetivoId === this.userId) return true;
+            
+            const isTargetPost = r.tipo === 'post' && this.userPosts.some(p => p._id === r.objetivoId);
+            if (isTargetPost) return true;
+
+            const isTargetComment = r.tipo === 'comment' && this.userComments.some(c => c._id === r.objetivoId);
+            if (isTargetComment) return true;
+
+            return false;
+        });
+        // Ordenar por fecha descendente
+        this.userReports.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+      },
+      error: (err) => console.error('Error loading user reports:', err)
+    });
   }
 
   loadUserComments(): void {
     if (!this.userId) return;
     this.commentService.getComments().subscribe({
-      next: (allComments: Comment[]) => {
+      next: (allComments: AppComment[]) => {
         this.userComments = allComments.filter(c => {
           const authorId = typeof c.usuario === 'string' ? c.usuario : c.usuario._id;
           return authorId === this.userId;
@@ -114,10 +141,10 @@ export class UserDetail implements OnInit {
     this.confirmModalConfig = {
       type,
       idToDelete: id,
-      title: type === 'post' ? '¿Eliminar publicación?' : '¿Eliminar comentario?',
+      title: type === 'post' ? 'Delete Post?' : 'Delete Comment?',
       message: type === 'post' 
-        ? 'Estás a punto de borrar este contenido permanentemente. Esta acción no se puede deshacer.' 
-        : 'El comentario será eliminado de forma permanente. Esta acción no se puede deshacer.'
+        ? 'You are about to permanently delete this content. This action cannot be undone.' 
+        : 'The comment will be permanently removed. This action cannot be undone.'
     };
     this.showConfirmModal = true;
   }
@@ -177,7 +204,7 @@ export class UserDetail implements OnInit {
 
   loadCommentsForPost(postId: string): void {
     this.commentService.getCommentsFromPost(postId).subscribe({
-      next: (comments: Comment[]) => {
+      next: (comments: AppComment[]) => {
         this.selectedPostComments = comments;
         this.cdr.detectChanges();
       },
@@ -185,7 +212,7 @@ export class UserDetail implements OnInit {
     });
   }
 
-  openPostFromComment(comment: Comment): void {
+  openPostFromComment(comment: AppComment): void {
     const postId = typeof comment.post === 'string' ? comment.post : comment.post._id;
     if (!postId) return;
 

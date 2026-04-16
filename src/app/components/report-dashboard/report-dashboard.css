@@ -1,0 +1,51 @@
+:host {
+    display: block;
+    background-color: var(--mat-sys-surface-container-lowest);
+    color: var(--mat-sys-on-surface);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(var(--mat-sys-secondary-rgb), 0.1);
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--mat-sys-secondary-rgb), 0.2);
+}
+
+/* Animaciones suaves para las filas */
+tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto focus en el input de búsqueda */
+input:focus {
+    box-shadow: 0 0 0 4px rgba(var(--mat-sys-secondary-rgb), 0.1);
+}
+
+/* Estilo para los badges de tipo */
+span.uppercase {
+    letter-spacing: 0.1em;
+}
+
+/* Animación pulse personalizada para reportes críticos */
+.animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}

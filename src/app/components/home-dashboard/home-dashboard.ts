@@ -17,7 +17,7 @@ export class HomeDashboard implements OnInit {
   universityCount = signal<number | null>(null);
   postCount = signal<number | null>(null);
   commentCount = signal<number | null>(null);
-  reportCount = signal<number>(5);
+  reportCount = signal<number | null>(null);
   
   apiStatus = signal<'online' | 'offline' | 'checking'>('checking');
   dbStatus = signal<'online' | 'offline' | 'checking'>('checking');
@@ -41,6 +41,7 @@ export class HomeDashboard implements OnInit {
         this.universityCount.set(data.universities);
         this.postCount.set(data.posts);
         this.commentCount.set(data.comments);
+        this.reportCount.set(data.reports);
         
         // El servidor ha contestado, así que el API Server está online
         this.apiStatus.set('online');

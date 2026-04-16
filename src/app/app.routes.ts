@@ -7,6 +7,8 @@ import { UniversityDashboard } from './components/university-dashboard/universit
 import { UniversityCreate } from './components/university-create/university-create';
 import { UniversityDetail } from './components/university-detail/university-detail';
 import { HomeDashboard } from './components/home-dashboard/home-dashboard';
+import { ReportDashboard } from './components/report-dashboard/report-dashboard';
+import { ReportDetail } from './components/report-detail/report-detail';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -18,6 +20,8 @@ export const routes: Routes = [
   { path: 'universidades', component: UniversityDashboard, canActivate: [authGuard] },
   { path: 'universidades/crear', component: UniversityCreate, canActivate: [authGuard] },
   { path: 'universidad/:id', component: UniversityDetail, canActivate: [authGuard] },
+  { path: 'reports', component: ReportDashboard, canActivate: [authGuard] },
+  { path: 'report/:id', component: ReportDetail, canActivate: [authGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];

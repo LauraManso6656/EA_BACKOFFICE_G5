@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject, PLATFORM_ID } from '@angular/core';
 import { Usuario } from '../../models/usuario';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Universidad } from '../../models/universidad';
@@ -33,6 +33,7 @@ export class UserDashboard implements OnInit {
   // Modal state
   showDeleteModal = false;
   userToDelete: Usuario | null = null;
+  private platformId = inject(PLATFORM_ID);
 
   constructor(
     private api: UsuarioService,
@@ -43,18 +44,20 @@ export class UserDashboard implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.load();
+    if (isPlatformBrowser(this.platformId)) {
+      this.load();
 
-    this.searchControl.valueChanges.subscribe(value => {
-      const term = value?.toLowerCase() ?? '';
-      this.usuariosFiltrados = this.usuarios.filter(usuario =>
-        usuario.nombre.toLowerCase().includes(term) ||
-        usuario.email.toLowerCase().includes(term) ||
-        usuario.rol.toLowerCase().includes(term) ||
-        this.universidadLabel(usuario).toLowerCase().includes(term)
-      );
-      this.currentPage = 1; // Reset to first page on search
-    });
+      this.searchControl.valueChanges.subscribe(value => {
+        const term = value?.toLowerCase() ?? '';
+        this.usuariosFiltrados = this.usuarios.filter(usuario =>
+          usuario.nombre.toLowerCase().includes(term) ||
+          usuario.email.toLowerCase().includes(term) ||
+          usuario.rol.toLowerCase().includes(term) ||
+          this.universidadLabel(usuario).toLowerCase().includes(term)
+        );
+        this.currentPage = 1; // Reset to first page on search
+      });
+    }
   }
 
   load(): void {

@@ -7,7 +7,15 @@ export interface GlobalStats {
   universities: number;
   posts: number;
   comments: number;
+  reports: number;
   dbStatus?: 'online' | 'offline';
+}
+
+export interface ReportStats {
+  total: number;
+  user: number;
+  post: number;
+  comment: number;
 }
 
 @Injectable({
@@ -36,5 +44,9 @@ export class StatsService {
 
   getCommentCount(): Observable<{ count: number }> {
     return this.http.get<{ count: number }>(`${this.apiUrl}/comments`);
+  }
+
+  getReportStats(): Observable<ReportStats> {
+    return this.http.get<ReportStats>(`${this.apiUrl}/reports`);
   }
 }
