@@ -38,9 +38,9 @@ export class UserCreate implements OnInit {
   }
 
   loadUniversidades(): void {
-    this.universidadService.getUniversidades().subscribe({
-      next: (data) => {
-        this.universidades = data;
+    this.universidadService.getUniversidades(1, 1000).subscribe({
+      next: (res: any) => {
+        this.universidades = res.docs || [];
       },
       error: (err) => console.error('Error loading universities:', err)
     });

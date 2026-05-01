@@ -66,9 +66,10 @@ export class ReportDashboard implements OnInit {
   }
 
   loadReports(): void {
-    this.reportService.getReports().subscribe({
-      next: (data) => {
-        this.reports = data;
+    this.reportService.getReports(this.currentPage, this.pageSize).subscribe({
+      next: (res) => {
+        this.reports = res.docs;
+        this.totalPages = res.totalPages;
         this.filterReports();
       },
       error: (err) => console.error('Error loading reports:', err)
@@ -110,8 +111,6 @@ export class ReportDashboard implements OnInit {
       return matchSearch && matchTipo && matchActive && matchDate;
     });
 
-    this.totalPages = Math.ceil(this.filteredReports.length / this.pageSize);
-    this.currentPage = 1;
     this.updateVisibleReports();
   }
 
@@ -121,15 +120,14 @@ export class ReportDashboard implements OnInit {
   }
 
   updateVisibleReports(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.visibleReports = this.filteredReports.slice(start, end);
+    // For backend pagination, visibleReports is directly the filtered elements of the current page.
+    this.visibleReports = this.filteredReports;
   }
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
-      this.updateVisibleReports();
+      this.loadReports();
     }
   }
 

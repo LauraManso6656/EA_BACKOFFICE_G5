@@ -29,6 +29,7 @@ export class UserDashboard implements OnInit {
   // Pagination
   currentPage = 1;
   pageSize = 5;
+  backendTotalPages = 1;
 
   // Modal state
   showDeleteModal = false;
@@ -48,14 +49,8 @@ export class UserDashboard implements OnInit {
       this.load();
 
       this.searchControl.valueChanges.subscribe(value => {
-        const term = value?.toLowerCase() ?? '';
-        this.usuariosFiltrados = this.usuarios.filter(usuario =>
-          usuario.nombre.toLowerCase().includes(term) ||
-          usuario.email.toLowerCase().includes(term) ||
-          usuario.rol.toLowerCase().includes(term) ||
-          this.universidadLabel(usuario).toLowerCase().includes(term)
-        );
-        this.currentPage = 1; // Reset to first page on search
+        this.currentPage = 1;
+        this.load();
       });
     }
   }
@@ -65,10 +60,12 @@ export class UserDashboard implements OnInit {
     this.errorMsg = '';
     this.cdr.detectChanges();
 
-    this.api.getUsuarios().subscribe({
+    const searchTerm = this.searchControl.value ?? '';
+
+    this.api.getUsuarios(this.currentPage, this.pageSize, searchTerm).subscribe({
       next: (res) => {
-        this.usuarios = res;
-        this.usuariosFiltrados = [...this.usuarios];
+        this.usuariosFiltrados = res.docs;
+        this.backendTotalPages = res.totalPages;
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -97,17 +94,17 @@ export class UserDashboard implements OnInit {
   }
 
   get usuariosVisibles(): Usuario[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.usuariosFiltrados.slice(start, start + this.pageSize);
+    return this.usuariosFiltrados;
   }
 
   get totalPages(): number {
-    return Math.ceil(this.usuariosFiltrados.length / this.pageSize);
+    return this.backendTotalPages;
   }
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.load();
     }
   }
 

@@ -92,10 +92,11 @@ export class UserDetail implements OnInit {
 
   loadUserReports(): void {
     if (!this.userId) return;
-    this.reportService.getReports().subscribe({
-      next: (allReports: Report[]) => {
+    this.reportService.getReports(1, 1000).subscribe({
+      next: (res: any) => {
+        const allReports: Report[] = res.docs || [];
         // Filtramos reportes donde el objetivo sea el usuario, o uno de sus posts, o sus comentarios
-        this.userReports = allReports.filter(r => {
+        this.userReports = allReports.filter((r: Report) => {
             if (r.tipo === 'user' && r.objetivoId === this.userId) return true;
             
             const isTargetPost = r.tipo === 'post' && this.userPosts.some(p => p._id === r.objetivoId);
@@ -115,9 +116,10 @@ export class UserDetail implements OnInit {
 
   loadUserComments(): void {
     if (!this.userId) return;
-    this.commentService.getComments().subscribe({
-      next: (allComments: AppComment[]) => {
-        this.userComments = allComments.filter(c => {
+    this.commentService.getComments(1, 1000).subscribe({
+      next: (res: any) => {
+        const allComments: AppComment[] = res.docs || [];
+        this.userComments = allComments.filter((c: AppComment) => {
           const authorId = typeof c.usuario === 'string' ? c.usuario : c.usuario._id;
           return authorId === this.userId;
         });
@@ -254,8 +256,9 @@ export class UserDetail implements OnInit {
   }
 
   loadUniversidades(): void {
-    this.universidadService.getUniversidades().subscribe({
-      next: (data: Universidad[]) => {
+    this.universidadService.getUniversidades(1, 1000).subscribe({
+      next: (res: any) => {
+        const data: Universidad[] = res.docs || [];
         this.universidades = data;
         this.filteredUniversidades = data;
       },

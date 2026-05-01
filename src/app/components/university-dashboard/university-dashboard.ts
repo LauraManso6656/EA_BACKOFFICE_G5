@@ -27,6 +27,7 @@ export class UniversityDashboard implements OnInit {
   // Pagination
   currentPage = 1;
   pageSize = 5;
+  backendTotalPages = 1;
 
   // Modal state
   showDeleteModal = false;
@@ -46,12 +47,8 @@ export class UniversityDashboard implements OnInit {
       this.load();
       
       this.searchControl.valueChanges.subscribe(value => {
-        const term = value?.toLowerCase() ?? '';
-        this.universitiesFiltradas = this.universities.filter(university =>
-          university.nombre.toLowerCase().includes(term) ||
-          university.ubicacion.toLowerCase().includes(term)
-        );
         this.currentPage = 1; // Reset to first page on search
+        this.load();
       });
     }
   }
@@ -61,10 +58,16 @@ export class UniversityDashboard implements OnInit {
     this.errorMsg = '';
     this.cdr.detectChanges();
 
-    this.universidadService.getUniversidades().subscribe({
+    this.universidadService.getUniversidades(this.currentPage, this.pageSize).subscribe({
       next: (res) => {
-        this.universities = res;
-        this.universitiesFiltradas = [...this.universities];
+        // filter locally on the current page docs since the backend might not have search yet
+        const term = this.searchControl.value?.toLowerCase() ?? '';
+        this.universities = res.docs;
+        this.universitiesFiltradas = this.universities.filter(university =>
+          university.nombre.toLowerCase().includes(term) ||
+          university.ubicacion.toLowerCase().includes(term)
+        );
+        this.backendTotalPages = res.totalPages;
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -97,17 +100,17 @@ export class UniversityDashboard implements OnInit {
   }
 
   get universitiesVisibles(): Universidad[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.universitiesFiltradas.slice(start, start + this.pageSize);
+    return this.universitiesFiltradas;
   }
 
   get totalPages(): number {
-    return Math.ceil(this.universitiesFiltradas.length / this.pageSize);
+    return this.backendTotalPages;
   }
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.load();
     }
   }
 

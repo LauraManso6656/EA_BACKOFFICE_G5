@@ -11,8 +11,8 @@ export class ReportService {
 
   constructor(private http: HttpClient) {}
 
-  getReports(): Observable<Report[]> {
-    return this.http.get<Report[]>(this.apiUrl);
+  getReports(page: number = 1, limit: number = 5): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}?page=${page}&limit=${limit}`);
   }
 
   getReport(id: string): Observable<Report> {

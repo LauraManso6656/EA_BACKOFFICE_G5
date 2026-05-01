@@ -13,8 +13,12 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
-  getUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(this.apiUrl);
+  getUsuarios(page: number = 1, limit: number = 5, search: string = ''): Observable<any> {
+    let url = `${this.apiUrl}?page=${page}&limit=${limit}`;
+    if (search) {
+      url += `&search=${encodeURIComponent(search)}`;
+    }
+    return this.http.get<any>(url);
   }
 
   getUsuario(id: string): Observable<Usuario> {

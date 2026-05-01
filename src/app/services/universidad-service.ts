@@ -13,8 +13,8 @@ export class UniversidadService {
 
   constructor(private http: HttpClient) { }
 
-  getUniversidades(): Observable<Universidad[]> {
-    return this.http.get<Universidad[]>(this.apiUrl);
+  getUniversidades(page: number = 1, limit: number = 5): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}?page=${page}&limit=${limit}`);
   }
 
   getUniversidad(id: string): Observable<Universidad> {
