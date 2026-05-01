@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, inject, PLATFORM_ID } from '@angu
 import { Usuario } from '../../models/usuario';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Router, RouterModule } from '@angular/router';
 import { Universidad } from '../../models/universidad';
 import { UsuarioService } from '../../services/usuario-service';
@@ -48,7 +49,10 @@ export class UserDashboard implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.load();
 
-      this.searchControl.valueChanges.subscribe(value => {
+      this.searchControl.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      ).subscribe(value => {
         this.currentPage = 1;
         this.load();
       });

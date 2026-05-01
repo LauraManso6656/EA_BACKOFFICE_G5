@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, inject, PLATFORM_ID } from '@angu
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReportService } from '../../services/report-service';
 import { StatsService, ReportStats } from '../../services/stats-service';
 import { Report } from '../../models/report';
@@ -31,6 +32,7 @@ export class ReportDashboard implements OnInit {
   currentPage = 1;
   pageSize = 10;
   totalPages = 1;
+  totalDocs = 0;
 
   // Filters
   searchControl = new FormControl('');
@@ -59,7 +61,10 @@ export class ReportDashboard implements OnInit {
       this.loadReports();
       this.loadStats();
       
-      this.searchControl.valueChanges.subscribe(() => this.filterReports());
+      this.searchControl.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      ).subscribe(() => this.filterReports());
       this.startDateControl.valueChanges.subscribe(() => this.filterReports());
       this.endDateControl.valueChanges.subscribe(() => this.filterReports());
     }
@@ -82,9 +87,14 @@ export class ReportDashboard implements OnInit {
       next: (res) => {
         this.reports = res.docs;
         this.totalPages = res.totalPages;
+        this.totalDocs = res.totalDocs || 0;
         this.visibleReports = this.reports;
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error loading reports:', err)
+      error: (err) => {
+        console.error('Error loading reports:', err);
+        this.cdr.detectChanges();
+      }
     });
   }
 

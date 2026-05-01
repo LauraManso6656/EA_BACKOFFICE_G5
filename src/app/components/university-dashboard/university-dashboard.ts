@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Router, RouterModule } from '@angular/router';
 import { Universidad } from '../../models/universidad';
 import { UniversidadService } from '../../services/universidad-service';
@@ -46,7 +47,10 @@ export class UniversityDashboard implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.load();
       
-      this.searchControl.valueChanges.subscribe(value => {
+      this.searchControl.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      ).subscribe(value => {
         this.currentPage = 1; // Reset to first page on search
         this.load();
       });
@@ -58,15 +62,11 @@ export class UniversityDashboard implements OnInit {
     this.errorMsg = '';
     this.cdr.detectChanges();
 
-    this.universidadService.getUniversidades(this.currentPage, this.pageSize).subscribe({
+    const searchTerm = this.searchControl.value ?? '';
+    this.universidadService.getUniversidades(this.currentPage, this.pageSize, searchTerm).subscribe({
       next: (res) => {
-        // filter locally on the current page docs since the backend might not have search yet
-        const term = this.searchControl.value?.toLowerCase() ?? '';
         this.universities = res.docs;
-        this.universitiesFiltradas = this.universities.filter(university =>
-          university.nombre.toLowerCase().includes(term) ||
-          university.ubicacion.toLowerCase().includes(term)
-        );
+        this.universitiesFiltradas = this.universities;
         this.backendTotalPages = res.totalPages;
         this.loading = false;
         this.cdr.detectChanges();
