@@ -11,7 +11,7 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
-  getPosts(page: number = 1, limit: number = 5): Observable<any> {
+  getPosts(page: number = 1, limit: number = 10): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}?page=${page}&limit=${limit}`);
   }
 

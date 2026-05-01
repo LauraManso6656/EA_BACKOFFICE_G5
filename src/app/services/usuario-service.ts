@@ -13,7 +13,7 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
-  getUsuarios(page: number = 1, limit: number = 5, search: string = ''): Observable<any> {
+  getUsuarios(page: number = 1, limit: number = 10, search: string = ''): Observable<any> {
     let url = `${this.apiUrl}?page=${page}&limit=${limit}`;
     if (search) {
       url += `&search=${encodeURIComponent(search)}`;

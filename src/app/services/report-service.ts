@@ -11,8 +11,23 @@ export class ReportService {
 
   constructor(private http: HttpClient) {}
 
-  getReports(page: number = 1, limit: number = 5): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}?page=${page}&limit=${limit}`);
+  getReports(
+    page: number = 1, 
+    limit: number = 10,
+    search: string = '',
+    tipo: string = 'all',
+    activeOnly: boolean = false,
+    startDate: string = '',
+    endDate: string = ''
+  ): Observable<any> {
+    let url = `${this.apiUrl}?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (tipo !== 'all') url += `&tipo=${tipo}`;
+    if (activeOnly) url += `&activeOnly=true`;
+    if (startDate) url += `&startDate=${startDate}`;
+    if (endDate) url += `&endDate=${endDate}`;
+    
+    return this.http.get<any>(url);
   }
 
   getReport(id: string): Observable<Report> {

@@ -66,11 +66,23 @@ export class ReportDashboard implements OnInit {
   }
 
   loadReports(): void {
-    this.reportService.getReports(this.currentPage, this.pageSize).subscribe({
+    const search = this.searchControl.value ?? '';
+    const startDate = this.startDateControl.value ?? '';
+    const endDate = this.endDateControl.value ?? '';
+
+    this.reportService.getReports(
+      this.currentPage, 
+      this.pageSize,
+      search,
+      this.tipoFilter,
+      this.showOnlyActive,
+      startDate,
+      endDate
+    ).subscribe({
       next: (res) => {
         this.reports = res.docs;
         this.totalPages = res.totalPages;
-        this.filterReports();
+        this.visibleReports = this.reports;
       },
       error: (err) => console.error('Error loading reports:', err)
     });
@@ -87,31 +99,8 @@ export class ReportDashboard implements OnInit {
   }
 
   filterReports(): void {
-    const term = this.searchControl.value?.toLowerCase() || '';
-    const startDate = this.startDateControl.value ? new Date(this.startDateControl.value) : null;
-    const endDate = this.endDateControl.value ? new Date(this.endDateControl.value) : null;
-    
-    // Set endDate to direct end of day to include that day
-    if (endDate) endDate.setHours(23, 59, 59, 999);
-
-    this.filteredReports = this.reports.filter(r => {
-      const matchSearch = r.descripcion.toLowerCase().includes(term) || 
-                          r.objetivoId.toLowerCase().includes(term);
-      const matchTipo = this.tipoFilter === 'all' || r.tipo === this.tipoFilter;
-      const matchActive = !this.showOnlyActive || r.estado !== 'resuelto';
-      
-      // Date Filter
-      let matchDate = true;
-      if (r.createdAt) {
-          const reportDate = new Date(r.createdAt);
-          if (startDate && reportDate < startDate) matchDate = false;
-          if (endDate && reportDate > endDate) matchDate = false;
-      }
-      
-      return matchSearch && matchTipo && matchActive && matchDate;
-    });
-
-    this.updateVisibleReports();
+    this.currentPage = 1;
+    this.loadReports();
   }
 
   toggleActiveFilter(): void {
@@ -120,8 +109,7 @@ export class ReportDashboard implements OnInit {
   }
 
   updateVisibleReports(): void {
-    // For backend pagination, visibleReports is directly the filtered elements of the current page.
-    this.visibleReports = this.filteredReports;
+    this.visibleReports = this.reports;
   }
 
   goToPage(page: number): void {
