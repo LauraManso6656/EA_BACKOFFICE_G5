@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Post } from '../../models/post';
 import { PostModalService } from '../../services/post-modal-service';
@@ -20,6 +21,7 @@ export class PostDetailModal implements OnInit {
   private postService = inject(PostService);
   private confirmService = inject(ConfirmService);
   private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
 
   selectedPost: Post | null = null;
   selectedPostComments: AppComment[] = [];
@@ -27,10 +29,22 @@ export class PostDetailModal implements OnInit {
 
   ngOnInit(): void {
     this.postModalService.post$.subscribe((post: Post | null) => {
-      this.selectedPost = post;
       if (post) {
-        this.loadCommentsForPost(post._id);
+        // Recargamos el post completo del servidor para asegurar que los likes vienen poblados
+        this.postService.getPost(post._id).subscribe({
+          next: (fullPost) => {
+            this.selectedPost = fullPost;
+            this.loadCommentsForPost(post._id);
+            this.cdr.detectChanges();
+          },
+          error: (err) => {
+            console.error('Error reloading post details:', err);
+            this.selectedPost = post; // Fallback al post original
+            this.loadCommentsForPost(post._id);
+          }
+        });
       } else {
+        this.selectedPost = null;
         this.selectedPostComments = [];
       }
       this.cdr.detectChanges();
@@ -118,7 +132,34 @@ export class PostDetailModal implements OnInit {
 
   getLikers(): any[] {
     if (!this.selectedPost?.likes) return [];
-    // Ensure we only return objects (populated users)
-    return this.selectedPost.likes.filter(l => typeof l !== 'string');
+    
+    return this.selectedPost.likes.map(l => {
+      if (typeof l === 'string') {
+        return { _id: l, nombre: 'User ' + l.substring(0, 4) };
+      }
+      return l;
+    });
+  }
+
+  openUserDetail(userId: string): void {
+    if (!userId) return;
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/usuario', userId])
+    );
+    window.open(url, '_blank');
+  }
+
+  getAuthorId(): string {
+    if (!this.selectedPost?.usuario) return '';
+    return typeof this.selectedPost.usuario === 'string' 
+      ? this.selectedPost.usuario 
+      : this.selectedPost.usuario._id;
+  }
+
+  getCommentAuthorId(comment: AppComment): string {
+    if (!comment.usuario) return '';
+    return typeof comment.usuario === 'string' 
+      ? comment.usuario 
+      : comment.usuario._id;
   }
 }
