@@ -129,61 +129,46 @@
                 </div>
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-surface-container-highest/40">
-                            <th
-                                class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">
-                                Nombre</th>
-                            <th
-                                class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">
-                                Email</th>
-                            <th
-                                class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">
-                                Rol</th>
-                            <th
-                                class="px-6 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest text-right">
-                                Desvincular</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-outline-variant/20">
-                        <tr *ngFor="let user of filteredUsers" class="hover:bg-surface-container/30 transition-colors">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-secondary/20 text-secondary flex items-center justify-center font-bold text-[10px]">
-                                        {{ getInitials(user.nombre) }}
-                                    </div>
-                                    <span class="font-semibold text-white text-sm">{{ user.nombre }}</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-xs text-on-surface-variant">{{ user.email }}</td>
-                            <td class="px-6 py-4">
-                                <span
-                                    class="px-2 py-0.5 rounded text-[10px] font-bold border border-outline-variant/30 text-secondary-container bg-secondary-container/5 uppercase">
-                                    {{ user.rol }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <button
-                                    class="p-2 text-error-container hover:bg-error/20 rounded-lg transition-colors text-error"
-                                    title="Desvincular Usuario" (click)="openUnlinkModal(user)">
-                                    <span class="material-symbols-outlined text-xl">delete_forever</span>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr *ngIf="filteredUsers.length === 0">
-                            <td colspan="4" class="px-6 py-12 text-center text-on-surface-variant italic text-sm">
-                                <div class="flex flex-col items-center gap-2 opacity-60">
-                                    <span class="material-symbols-outlined text-4xl">search_off</span>
-                                    {{ searchTerm ? 'No se encontraron usuarios que coincidan con la búsqueda.' : 'No
-                                    hay usuarios vinculados a esta universidad todavía.' }}
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="p-6">
+                <div class="flex flex-col gap-3">
+                    <a *ngFor="let user of filteredUsers" 
+                       [routerLink]="['/usuario', user._id]" target="_blank"
+                       class="bg-surface-container-lowest/30 rounded-2xl p-4 border border-outline-variant/10 hover:border-secondary transition-all group flex items-center justify-between no-underline">
+                        
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-bold text-sm shadow-inner border border-secondary/20">
+                                {{ getInitials(user.nombre) }}
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-bold text-white text-base group-hover:text-secondary transition-colors">{{ user.nombre }}</span>
+                                <span class="text-xs text-on-surface-variant font-medium">{{ user.email }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-6">
+                            <span class="px-3 py-1 rounded-lg text-[10px] font-black border border-outline-variant/30 text-secondary bg-secondary/5 uppercase tracking-[0.2em]">
+                                {{ user.rol }}
+                            </span>
+                            
+                            <button (click)="$event.preventDefault(); $event.stopPropagation(); openUnlinkModal(user)"
+                                class="p-2.5 text-error/60 hover:bg-error/20 rounded-xl transition-all hover:text-error group-hover:scale-110"
+                                title="Desvincular Usuario">
+                                <span class="material-symbols-outlined text-xl">delete_forever</span>
+                            </button>
+                        </div>
+                    </a>
+
+                    <!-- Empty State -->
+                    <div *ngIf="filteredUsers.length === 0" 
+                         class="py-16 text-center bg-surface-container/20 rounded-3xl border-2 border-dashed border-outline-variant/10">
+                        <div class="flex flex-col items-center gap-3 opacity-40">
+                            <span class="material-symbols-outlined text-5xl">search_off</span>
+                            <p class="text-sm font-bold uppercase tracking-widest">
+                                {{ searchTerm ? 'No users matching search' : 'No users linked to this university' }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -85,7 +85,8 @@
                     </thead>
                     <tbody class="divide-y divide-outline-variant/20">
                         <tr *ngFor="let university of universitiesVisibles"
-                            class="hover:bg-surface-container/30 transition-colors group">
+                            (click)="editarUniversity(university)"
+                            class="hover:bg-surface-container/30 transition-colors group cursor-pointer">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <div
@@ -106,13 +107,8 @@
                                 <div
                                     class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
-                                        class="p-2 text-secondary hover:bg-secondary/10 rounded-lg transition-colors"
-                                        title="Edit University" (click)="editarUniversity(university)">
-                                        <span class="material-symbols-outlined text-xl">edit</span>
-                                    </button>
-                                    <button
                                         class="p-2 text-error-container hover:bg-error/20 rounded-lg transition-colors text-error"
-                                        title="Delete Permanent" (click)="openDeleteModal(university)">
+                                        title="Delete Permanent" (click)="$event.stopPropagation(); openDeleteModal(university)">
                                         <span class="material-symbols-outlined text-xl">delete_forever</span>
                                     </button>
                                 </div>
