@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -12,6 +12,8 @@ import { Comment as AppComment } from '../../models/comment';
 import { CommentService } from '../../services/comment-service';
 import { ReportService } from '../../services/report-service';
 import { Report } from '../../models/report';
+import { ConfirmService } from '../../services/confirm-service';
+import { PostModalService } from '../../services/post-modal-service';
 
 @Component({
   selector: 'app-user-detail',
@@ -49,19 +51,10 @@ export class UserDetail implements OnInit {
   pageSize = 5; // Smaller page size for detail view tabs
 
   // --- MODAL DE ALERTAS GENÉRICO ---
-  showConfirmModal = false;
-  confirmModalConfig = {
-    title: '',
-    message: '',
-    type: 'post' as 'post' | 'comment',
-    idToDelete: ''
-  };
-  isDeleting = false;
+  private confirmService = inject(ConfirmService);
+  private postModalService = inject(PostModalService);
 
-  // Estado para el modal de detalles de post (Estilo Instagram)
-  showPostDetailModal = false;
-  selectedPost: Post | null = null;
-  selectedPostComments: AppComment[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -72,7 +65,8 @@ export class UserDetail implements OnInit {
     private reportService: ReportService,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private confirmServiceInject: ConfirmService // inject() is used above but let's be consistent if needed. Actually inject is fine.
   ) {
     this.userForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -164,78 +158,38 @@ export class UserDetail implements OnInit {
 
   // --- Lógica Unificada de Modals ---
   openConfirmModal(id: string, type: 'post' | 'comment'): void {
-    this.confirmModalConfig = {
-      type,
-      idToDelete: id,
+    this.confirmService.ask({
       title: type === 'post' ? 'Delete Post?' : 'Delete Comment?',
       message: type === 'post' 
         ? 'You are about to permanently delete this content. This action cannot be undone.' 
-        : 'The comment will be permanently removed. This action cannot be undone.'
-    };
-    this.showConfirmModal = true;
-  }
-
-  closeConfirmModal(): void {
-    this.showConfirmModal = false;
-    this.isDeleting = false;
-  }
-
-  confirmAction(): void {
-    const { type, idToDelete } = this.confirmModalConfig;
-    if (!idToDelete) return;
-
-    this.isDeleting = true;
-    if (type === 'post') {
-      this.postService.deletePost(idToDelete).subscribe({
-        next: () => {
-          this.userPosts = this.userPosts.filter(p => p._id !== idToDelete);
-          this.closeConfirmModal();
-          this.cdr.detectChanges();
-        },
-        error: (err: any) => {
-          console.error('Error deleting post:', err);
-          this.closeConfirmModal();
+        : 'The comment will be permanently removed. This action cannot be undone.',
+      type: type,
+      confirmText: 'Delete',
+      onConfirm: () => {
+        if (type === 'post') {
+          this.postService.deletePost(id).subscribe({
+            next: () => {
+              this.userPosts = this.userPosts.filter((p: Post) => p._id !== id);
+              this.cdr.detectChanges();
+            },
+            error: (err: any) => console.error('Error deleting post:', err)
+          });
+        } else {
+          this.commentService.deleteComment(id).subscribe({
+            next: () => {
+              this.userComments = this.userComments.filter((c: AppComment) => c._id !== id);
+              this.cdr.detectChanges();
+            },
+            error: (err: any) => console.error('Error deleting comment:', err)
+          });
         }
-      });
-    } else {
-      this.commentService.deleteComment(idToDelete).subscribe({
-        next: () => {
-          if (this.selectedPostComments) {
-            this.selectedPostComments = this.selectedPostComments.filter(c => c._id !== idToDelete);
-          }
-          this.userComments = this.userComments.filter(c => c._id !== idToDelete);
-          this.closeConfirmModal();
-          this.cdr.detectChanges();
-        },
-        error: (err: any) => {
-          console.error('Error deleting comment:', err);
-          this.closeConfirmModal();
-        }
-      });
-    }
+      }
+    });
   }
 
   // --- MODAL DETALLE POST ---
   openPostDetailModal(post: Post): void {
-    this.selectedPost = post;
-    this.showPostDetailModal = true;
-    this.loadCommentsForPost(post._id);
-  }
-
-  closePostDetailModal(): void {
-    this.showPostDetailModal = false;
-    this.selectedPost = null;
-    this.selectedPostComments = [];
-  }
-
-  loadCommentsForPost(postId: string): void {
-    this.commentService.getCommentsFromPost(postId).subscribe({
-      next: (comments: AppComment[]) => {
-        this.selectedPostComments = comments;
-        this.cdr.detectChanges();
-      },
-      error: (err: any) => console.error('Error loading post comments:', err)
-    });
+    this.postModalService.open(post);
   }
 
   openPostFromComment(comment: AppComment): void {

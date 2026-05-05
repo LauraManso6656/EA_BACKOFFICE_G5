@@ -11,8 +11,10 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
-  getPosts(page: number = 1, limit: number = 10): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}?page=${page}&limit=${limit}`);
+  getPosts(page: number = 1, limit: number = 10, search: string = ''): Observable<any> {
+    let url = `${this.apiUrl}?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    return this.http.get<any>(url);
   }
 
   getPost(id: string): Observable<Post> {

@@ -7,6 +7,7 @@ import { ReportService } from '../../services/report-service';
 import { StatsService, ReportStats } from '../../services/stats-service';
 import { Report } from '../../models/report';
 import { Navbar } from '../navbar/navbar';
+import { ConfirmService } from '../../services/confirm-service';
 
 @Component({
   selector: 'app-report-dashboard',
@@ -39,16 +40,11 @@ export class ReportDashboard implements OnInit {
   startDateControl = new FormControl('');
   endDateControl = new FormControl('');
   tipoFilter: 'all' | 'user' | 'post' | 'comment' = 'all';
-
-  // Modals
-  showDeleteModal = false;
-  reportToDelete: Report | null = null;
+  showOnlyActive = true;
   isUpdating = false;
 
-  // Toggles
-  showOnlyActive = true; 
-
   private platformId = inject(PLATFORM_ID);
+  private confirmService = inject(ConfirmService);
 
   constructor(
     private reportService: ReportService,
@@ -159,26 +155,21 @@ export class ReportDashboard implements OnInit {
   }
 
   openDeleteModal(report: Report): void {
-    this.reportToDelete = report;
-    this.showDeleteModal = true;
-  }
-
-  closeDeleteModal(): void {
-    this.showDeleteModal = false;
-    this.reportToDelete = null;
-  }
-
-  confirmDelete(): void {
-    if (!this.reportToDelete) return;
-
-    this.reportService.deleteReport(this.reportToDelete._id).subscribe({
-      next: () => {
-        this.reports = this.reports.filter(r => r._id !== this.reportToDelete?._id);
-        this.filterReports();
-        this.loadStats();
-        this.closeDeleteModal();
-      },
-      error: (err) => console.error('Error deleting report:', err)
+    this.confirmService.ask({
+      title: 'Delete Report?',
+      message: `Are you sure you want to delete this report? This action is permanent.`,
+      type: 'danger',
+      confirmText: 'Delete',
+      onConfirm: () => {
+        this.reportService.deleteReport(report._id).subscribe({
+          next: () => {
+            this.reports = this.reports.filter(r => r._id !== report._id);
+            this.filterReports();
+            this.loadStats();
+          },
+          error: (err) => console.error('Error deleting report:', err)
+        });
+      }
     });
   }
 

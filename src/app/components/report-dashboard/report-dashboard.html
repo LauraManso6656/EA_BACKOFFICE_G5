@@ -204,29 +204,3 @@
         </div>
     </main>
 </div>
-
-<!-- Custom Delete Modal -->
-<div *ngIf="showDeleteModal" (click)="closeDeleteModal()"
-    class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-    <div (click)="$event.stopPropagation()" class="bg-primary-container w-full max-w-md rounded-2xl p-8 border border-outline-variant/30 shadow-2xl">
-        <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center mb-6">
-                <span class="material-symbols-outlined text-error text-3xl">delete</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">Delete report record?</h3>
-            <p class="text-on-surface-variant text-sm mb-8">
-                You are about to delete only the report record, not the reported content. This action is final.
-            </p>
-            <div class="flex w-full gap-4">
-                <button (click)="closeDeleteModal()"
-                    class="flex-1 px-6 py-3 rounded-xl bg-surface-container-highest text-white text-sm font-bold hover:bg-surface-container transition-colors">
-                    Cancel
-                </button>
-                <button (click)="confirmDelete()"
-                    class="flex-1 px-6 py-3 rounded-xl bg-error text-white text-sm font-bold hover:bg-error/90 transition-colors shadow-lg shadow-error/20">
-                    Delete
-                </button>
-            </div>
-        </div>
-    </div>
-</div>

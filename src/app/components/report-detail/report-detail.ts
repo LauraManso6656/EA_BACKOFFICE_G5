@@ -11,6 +11,8 @@ import { Navbar } from '../navbar/navbar';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { ConfirmService } from '../../services/confirm-service';
+import { PostModalService } from '../../services/post-modal-service';
 
 @Component({
   selector: 'app-report-detail',
@@ -37,19 +39,9 @@ export class ReportDetail implements OnInit {
   // Stats para la sidebar
   targetStats = signal<{ label: string, value: any }[]>([]);
 
-  // Estado para el modal de detalles de post (Estilo Instagram)
-  showPostDetailModal = signal(false);
-  selectedPost = signal<Post | null>(null);
-  selectedPostComments = signal<AppComment[]>([]);
-
   // --- MODAL DE ALERTAS GENÉRICO ---
-  showConfirmModal = false;
-  confirmModalConfig = {
-    title: '',
-    message: '',
-    type: 'post' as 'post' | 'comment',
-    idToDelete: ''
-  };
+  private confirmService = inject(ConfirmService);
+  private postModalService = inject(PostModalService);
 
   private router = inject(Router);
 
@@ -143,12 +135,18 @@ export class ReportDetail implements OnInit {
     const current = this.report();
     if (!current) return;
 
-    if (confirm('Are you sure you want to delete this report record?')) {
-      this.reportService.deleteReport(current._id).subscribe({
-        next: () => this.router.navigate(['/reports']),
-        error: (err) => console.error('Error deleting report:', err)
-      });
-    }
+    this.confirmService.ask({
+      title: 'Delete Report?',
+      message: 'Are you sure you want to delete this report record? This action is permanent.',
+      type: 'danger',
+      confirmText: 'Delete',
+      onConfirm: () => {
+        this.reportService.deleteReport(current._id).subscribe({
+          next: () => this.router.navigate(['/reports']),
+          error: (err) => console.error('Error deleting report:', err)
+        });
+      }
+    });
   }
 
   getAuthorName(): string {
@@ -160,56 +158,34 @@ export class ReportDetail implements OnInit {
 
   // --- Lógica Unificada de Modals ---
   openConfirmModal(id: string, type: 'post' | 'comment'): void {
-    this.confirmModalConfig = {
-      type,
-      idToDelete: id,
-      title: type === 'post' ? '¿Eliminar publicación?' : '¿Eliminar comentario?',
+    this.confirmService.ask({
+      title: type === 'post' ? 'Delete Post?' : 'Delete Comment?',
       message: type === 'post' 
-        ? 'Estás a punto de borrar este contenido permanentemente. Esta acción no se puede deshacer.' 
-        : 'El comentario será eliminado de forma permanente. Esta acción no se puede deshacer.'
-    };
-    this.showConfirmModal = true;
-  }
-
-  closeConfirmModal(): void {
-    this.showConfirmModal = false;
-    this.isDeleting = false;
-  }
-
-  confirmAction(): void {
-    const { type, idToDelete } = this.confirmModalConfig;
-    if (!idToDelete) return;
-
-    this.isDeleting = true;
-    if (type === 'post') {
-      this.postService.deletePost(idToDelete).subscribe({
-        next: () => {
-          this.closeConfirmModal();
-          this.closePostDetailModal();
-          this.loadReport(this.report()?._id || '');
-        },
-        error: (err: any) => {
-          console.error('Error deleting post:', err);
-          this.closeConfirmModal();
+        ? 'You are about to delete this content permanently. This action cannot be undone.' 
+        : 'The comment will be removed permanently. This action cannot be undone.',
+      type: type,
+      confirmText: 'Delete',
+      onConfirm: () => {
+        if (type === 'post') {
+          this.postService.deletePost(id).subscribe({
+            next: () => {
+              this.loadReport(this.report()?._id || '');
+            },
+            error: (err: any) => console.error('Error deleting post:', err)
+          });
+        } else {
+          this.commentService.deleteComment(id).subscribe({
+            next: () => {
+              if (id === this.report()?.objetivoId) {
+                this.loadReport(this.report()?._id || '');
+              }
+              this.cdr.detectChanges();
+            },
+            error: (err: any) => console.error('Error deleting comment:', err)
+          });
         }
-      });
-    } else {
-      this.commentService.deleteComment(idToDelete).subscribe({
-        next: () => {
-          this.selectedPostComments.update(comments => comments.filter(c => c._id !== idToDelete));
-          this.closeConfirmModal();
-          // Si el comentario borrado es el objetivo principal del reporte, recargamos
-          if (idToDelete === this.report()?.objetivoId) {
-            this.loadReport(this.report()?._id || '');
-          }
-          this.cdr.detectChanges();
-        },
-        error: (err: any) => {
-          console.error('Error deleting comment:', err);
-          this.closeConfirmModal();
-        }
-      });
-    }
+      }
+    });
   }
 
   getInitials(name: string): string {
@@ -219,25 +195,7 @@ export class ReportDetail implements OnInit {
 
   // --- MODAL DETALLE POST ---
   openPostDetailModal(post: Post): void {
-    this.selectedPost.set(post);
-    this.showPostDetailModal.set(true);
-    this.loadCommentsForPost(post._id);
-  }
-
-  closePostDetailModal(): void {
-    this.showPostDetailModal.set(false);
-    this.selectedPost.set(null);
-    this.selectedPostComments.set([]);
-  }
-
-  loadCommentsForPost(postId: string): void {
-    this.commentService.getCommentsFromPost(postId).subscribe({
-      next: (comments: AppComment[]) => {
-        this.selectedPostComments.set(comments);
-        this.cdr.detectChanges();
-      },
-      error: (err: any) => console.error('Error loading post comments:', err)
-    });
+    this.postModalService.open(post);
   }
 
   openPostFromComment(): void {
@@ -262,19 +220,5 @@ export class ReportDetail implements OnInit {
   getAuthorInitial(comment: any): string {
     const name = this.getCommentAuthorName(comment);
     return name.substring(0, 1).toUpperCase();
-  }
-
-  getPostAuthorName(): string {
-    const post = this.selectedPost();
-    if (!post?.usuario) return 'Publicación';
-    if (typeof post.usuario === 'string') return 'Publicación';
-    return post.usuario.nombre || 'Publicación';
-  }
-
-  getPostAuthorId(): string {
-    const post = this.selectedPost();
-    if (!post?.usuario) return '';
-    if (typeof post.usuario === 'string') return post.usuario;
-    return post.usuario._id || '';
   }
 }

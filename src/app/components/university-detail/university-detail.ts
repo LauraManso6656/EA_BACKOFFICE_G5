@@ -6,6 +6,8 @@ import { UniversidadService } from '../../services/universidad-service';
 import { UsuarioService } from '../../services/usuario-service';
 import { Universidad } from '../../models/universidad';
 import { Usuario } from '../../models/usuario';
+import { inject } from '@angular/core';
+import { ConfirmService } from '../../services/confirm-service';
 
 @Component({
   selector: 'app-university-detail',
@@ -24,8 +26,7 @@ export class UniversityDetail implements OnInit {
   universityUsers: Usuario[] = [];
   filteredUsers: Usuario[] = [];
   searchTerm: string = '';
-  showUnlinkModal = false;
-  userToUnlink: Usuario | null = null;
+  private confirmService = inject(ConfirmService);
 
   constructor(
     private fb: FormBuilder,
@@ -124,27 +125,18 @@ export class UniversityDetail implements OnInit {
   }
 
   openUnlinkModal(user: Usuario): void {
-    this.userToUnlink = user;
-    this.showUnlinkModal = true;
-  }
-
-  closeUnlinkModal(): void {
-    this.showUnlinkModal = false;
-    this.userToUnlink = null;
-  }
-
-  confirmUnlink(): void {
-    if (!this.userToUnlink) return;
-
-    // Solo enviamos el campo universidad como null para desvincular
-    const dataToUpdate = { universidad: null };
-    
-    this.usuarioService.updateUsuario(this.userToUnlink._id, dataToUpdate as any).subscribe({
-      next: () => {
-        this.loadUniversity();
-        this.closeUnlinkModal();
-      },
-      error: (err: any) => console.error('Error unlinking user:', err)
+    this.confirmService.ask({
+      title: 'Unlink User?',
+      message: `Are you sure you want to unlink "${user.nombre}" from this university?`,
+      type: 'warning',
+      confirmText: 'Unlink',
+      onConfirm: () => {
+        const dataToUpdate = { universidad: null };
+        this.usuarioService.updateUsuario(user._id, dataToUpdate as any).subscribe({
+          next: () => this.loadUniversity(),
+          error: (err: any) => console.error('Error unlinking user:', err)
+        });
+      }
     });
   }
 }

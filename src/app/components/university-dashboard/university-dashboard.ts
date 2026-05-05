@@ -8,6 +8,7 @@ import { UniversidadService } from '../../services/universidad-service';
 import { UsuarioService } from '../../services/usuario-service';
 import { StatsService } from '../../services/stats-service';
 import { Navbar } from '../navbar/navbar';
+import { ConfirmService } from '../../services/confirm-service';
 
 @Component({
   selector: 'app-university-dashboard',
@@ -30,9 +31,6 @@ export class UniversityDashboard implements OnInit {
   pageSize = 10;
   backendTotalPages = 1;
 
-  // Modal state
-  showDeleteModal = false;
-  universityToDelete: Universidad | null = null;
   private platformId = inject(PLATFORM_ID);
 
   constructor(
@@ -40,7 +38,8 @@ export class UniversityDashboard implements OnInit {
     private usuarioService: UsuarioService,
     private statsService: StatsService,
     private cdr: ChangeDetectorRef, 
-    private router: Router
+    private router: Router,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit(): void {
@@ -128,27 +127,17 @@ export class UniversityDashboard implements OnInit {
 
   // --- DELETE LOGIC ---
   openDeleteModal(university: Universidad): void {
-    this.universityToDelete = university;
-    this.showDeleteModal = true;
-  }
-
-  closeDeleteModal(): void {
-    this.showDeleteModal = false;
-    this.universityToDelete = null;
-  }
-
-  confirmDelete(): void {
-    if (this.universityToDelete) {
-      this.universidadService.deleteUniversidad(this.universityToDelete._id).subscribe({
-        next: () => {
-          this.load();
-          this.closeDeleteModal();
-        },
-        error: (err) => {
-          console.error('Error deleting university:', err);
-          this.closeDeleteModal();
-        }
-      });
-    }
+    this.confirmService.ask({
+      title: 'Delete University?',
+      message: `You are about to permanently delete the university "${university.nombre}". This action cannot be undone.`,
+      type: 'danger',
+      confirmText: 'Delete',
+      onConfirm: () => {
+        this.universidadService.deleteUniversidad(university._id).subscribe({
+          next: () => this.load(),
+          error: (err) => console.error('Error deleting university:', err)
+        });
+      }
+    });
   }
 }

@@ -173,30 +173,3 @@
         </div>
     </div>
 </div>
-
-<!-- Custom Unlink Modal -->
-<div *ngIf="showUnlinkModal"
-    class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-    <div class="bg-primary-container w-full max-w-md rounded-2xl p-8 border border-outline-variant/30 shadow-2xl">
-        <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center mb-6">
-                <span class="material-symbols-outlined text-error text-3xl">warning</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">¿Desvincular usuario?</h3>
-            <p class="text-on-surface-variant text-sm mb-8">
-                Estás a punto de desvincular a <span class="text-white font-bold">{{ userToUnlink?.nombre }}</span>
-                de esta universidad.
-            </p>
-            <div class="flex w-full gap-4">
-                <button (click)="closeUnlinkModal()"
-                    class="flex-1 px-6 py-3 rounded-xl bg-surface-container-highest text-white text-sm font-bold hover:bg-surface-container transition-colors">
-                    Cancelar
-                </button>
-                <button (click)="confirmUnlink()"
-                    class="flex-1 px-6 py-3 rounded-xl bg-error text-white text-sm font-bold hover:bg-error/90 transition-colors shadow-lg shadow-error/20">
-                    Desvincular
-                </button>
-            </div>
-        </div>
-    </div>
-</div>

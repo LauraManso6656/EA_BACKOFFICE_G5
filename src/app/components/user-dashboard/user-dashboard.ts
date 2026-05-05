@@ -9,6 +9,7 @@ import { UsuarioService } from '../../services/usuario-service';
 import { UniversidadService } from '../../services/universidad-service';
 import { StatsService } from '../../services/stats-service';
 import { Navbar } from '../navbar/navbar';
+import { ConfirmService } from '../../services/confirm-service';
 
 
 @Component({
@@ -32,10 +33,8 @@ export class UserDashboard implements OnInit {
   pageSize = 10;
   backendTotalPages = 1;
 
-  // Modal state
-  showDeleteModal = false;
-  userToDelete: Usuario | null = null;
   private platformId = inject(PLATFORM_ID);
+  private confirmService = inject(ConfirmService);
 
   constructor(
     private api: UsuarioService,
@@ -131,28 +130,18 @@ export class UserDashboard implements OnInit {
 
   // --- DELETE LOGIC ---
   openDeleteModal(usuario: Usuario): void {
-    this.userToDelete = usuario;
-    this.showDeleteModal = true;
-  }
-
-  closeDeleteModal(): void {
-    this.showDeleteModal = false;
-    this.userToDelete = null;
-  }
-
-  confirmDelete(): void {
-    if (this.userToDelete) {
-      this.api.hardDeleteUsuario(this.userToDelete._id).subscribe({
-        next: () => {
-          this.load();
-          this.closeDeleteModal();
-        },
-        error: (err) => {
-          console.error('Error deleting user:', err);
-          this.closeDeleteModal();
-        }
-      });
-    }
+    this.confirmService.ask({
+      title: 'Delete User?',
+      message: `You are about to permanently delete the user "${usuario.nombre}". This action cannot be undone and will remove all their data.`,
+      type: 'danger',
+      confirmText: 'Delete',
+      onConfirm: () => {
+        this.api.hardDeleteUsuario(usuario._id).subscribe({
+          next: () => this.load(),
+          error: (err) => console.error('Error deleting user:', err)
+        });
+      }
+    });
   }
 
   // --- TOGGLE STATUS LOGIC ---
