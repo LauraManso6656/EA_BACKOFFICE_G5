@@ -170,7 +170,7 @@
                     <p class="text-on-surface-variant text-sm">Content shared by this user on the platform.</p>
                 </div>
                 <div class="px-4 py-2 bg-surface-container rounded-2xl border border-secondary/20">
-                    <span class="text-xs font-bold text-secondary">{{ userPosts.length }} Posts</span>
+                    <span class="text-xs font-bold text-secondary">{{ postsTotalDocs }} Total Posts</span>
                 </div>
             </div>
 
@@ -228,6 +228,21 @@
                     <h3 class="text-lg font-bold text-white uppercase tracking-widest">No posts</h3>
                     <p class="text-on-surface-variant text-sm mt-2">This user hasn't shared anything yet.</p>
                 </div>
+
+                <!-- Pagination -->
+                <div *ngIf="postsTotalPages > 1" class="pt-6 flex justify-center gap-4">
+                    <button (click)="changePostsPage(postsPage - 1)" [disabled]="postsPage === 1"
+                        class="p-2 rounded-xl bg-surface-container border border-outline-variant/30 text-white disabled:opacity-30 hover:bg-secondary/20 transition-all">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <div class="flex items-center px-4 bg-surface-container rounded-xl border border-outline-variant/30">
+                        <span class="text-xs font-bold text-white">Page {{ postsPage }} of {{ postsTotalPages }}</span>
+                    </div>
+                    <button (click)="changePostsPage(postsPage + 1)" [disabled]="postsPage === postsTotalPages"
+                        class="p-2 rounded-xl bg-surface-container border border-outline-variant/30 text-white disabled:opacity-30 hover:bg-secondary/20 transition-all">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -240,7 +255,7 @@
                     <p class="text-on-surface-variant text-sm">Record of contributions to other posts.</p>
                 </div>
                 <div class="px-4 py-2 bg-surface-container rounded-2xl border border-secondary/20">
-                    <span class="text-xs font-bold text-secondary">{{ userComments.length }} Messages</span>
+                    <span class="text-xs font-bold text-secondary">{{ commentsTotalDocs }} Total Comments</span>
                 </div>
             </div>
 
@@ -274,6 +289,21 @@
                     <h3 class="text-lg font-bold text-white uppercase tracking-widest">No comments</h3>
                     <p class="text-on-surface-variant text-sm mt-2">This user hasn't commented on any posts yet.</p>
                 </div>
+
+                <!-- Pagination -->
+                <div *ngIf="commentsTotalPages > 1" class="pt-6 flex justify-center gap-4">
+                    <button (click)="changeCommentsPage(commentsPage - 1)" [disabled]="commentsPage === 1"
+                        class="p-2 rounded-xl bg-surface-container border border-outline-variant/30 text-white disabled:opacity-30 hover:bg-secondary/20 transition-all">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <div class="flex items-center px-4 bg-surface-container rounded-xl border border-outline-variant/30">
+                        <span class="text-xs font-bold text-white">Page {{ commentsPage }} of {{ commentsTotalPages }}</span>
+                    </div>
+                    <button (click)="changeCommentsPage(commentsPage + 1)" [disabled]="commentsPage === commentsTotalPages"
+                        class="p-2 rounded-xl bg-surface-container border border-outline-variant/30 text-white disabled:opacity-30 hover:bg-secondary/20 transition-all">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -286,7 +316,7 @@
                     <p class="text-on-surface-variant text-sm">Record of complaints received by this user.</p>
                 </div>
                 <div class="px-4 py-2 bg-error/10 rounded-2xl border border-error/20">
-                    <span class="text-xs font-bold text-error">{{ userReports.length }} Incidents</span>
+                    <span class="text-xs font-bold text-error">{{ reportsTotalDocs }} Total Reports</span>
                 </div>
             </div>
 
@@ -324,6 +354,21 @@
                     <span class="material-symbols-outlined text-6xl text-green-400/30 mb-4">check_circle</span>
                     <h3 class="text-lg font-bold text-white uppercase tracking-widest">No reports</h3>
                     <p class="text-on-surface-variant text-sm mt-2">This user has a clean record.</p>
+                </div>
+
+                <!-- Pagination -->
+                <div *ngIf="reportsTotalPages > 1" class="pt-6 flex justify-center gap-4">
+                    <button (click)="changeReportsPage(reportsPage - 1)" [disabled]="reportsPage === 1"
+                        class="p-2 rounded-xl bg-surface-container border border-outline-variant/30 text-white disabled:opacity-30 hover:bg-secondary/20 transition-all">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <div class="flex items-center px-4 bg-surface-container rounded-xl border border-outline-variant/30">
+                        <span class="text-xs font-bold text-white">Page {{ reportsPage }} of {{ reportsTotalPages }}</span>
+                    </div>
+                    <button (click)="changeReportsPage(reportsPage + 1)" [disabled]="reportsPage === reportsTotalPages"
+                        class="p-2 rounded-xl bg-surface-container border border-outline-variant/30 text-white disabled:opacity-30 hover:bg-secondary/20 transition-all">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
                 </div>
             </div>
         </div>

@@ -36,6 +36,18 @@ export class UserDetail implements OnInit {
   userComments: AppComment[] = [];
   userReports: Report[] = [];
 
+  // Pagination for tabs
+  postsPage = 1;
+  postsTotalPages = 1;
+  postsTotalDocs = 0;
+  commentsPage = 1;
+  commentsTotalPages = 1;
+  commentsTotalDocs = 0;
+  reportsPage = 1;
+  reportsTotalPages = 1;
+  reportsTotalDocs = 0;
+  pageSize = 5; // Smaller page size for detail view tabs
+
   // --- MODAL DE ALERTAS GENÉRICO ---
   showConfirmModal = false;
   confirmModalConfig = {
@@ -92,23 +104,12 @@ export class UserDetail implements OnInit {
 
   loadUserReports(): void {
     if (!this.userId) return;
-    this.reportService.getReports(1, 1000).subscribe({
+    this.reportService.getReportsForUser(this.userId, this.reportsPage, this.pageSize).subscribe({
       next: (res: any) => {
-        const allReports: Report[] = res.docs || [];
-        // Filtramos reportes donde el objetivo sea el usuario, o uno de sus posts, o sus comentarios
-        this.userReports = allReports.filter((r: Report) => {
-            if (r.tipo === 'user' && r.objetivoId === this.userId) return true;
-            
-            const isTargetPost = r.tipo === 'post' && this.userPosts.some(p => p._id === r.objetivoId);
-            if (isTargetPost) return true;
-
-            const isTargetComment = r.tipo === 'comment' && this.userComments.some(c => c._id === r.objetivoId);
-            if (isTargetComment) return true;
-
-            return false;
-        });
-        // Ordenar por fecha descendente
-        this.userReports.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+        this.userReports = res.docs || [];
+        this.reportsTotalPages = res.totalPages || 1;
+        this.reportsTotalDocs = res.totalDocs || 0;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error loading user reports:', err)
     });
@@ -116,13 +117,12 @@ export class UserDetail implements OnInit {
 
   loadUserComments(): void {
     if (!this.userId) return;
-    this.commentService.getComments(1, 1000).subscribe({
+    this.commentService.getCommentsFromUser(this.userId, this.commentsPage, this.pageSize).subscribe({
       next: (res: any) => {
-        const allComments: AppComment[] = res.docs || [];
-        this.userComments = allComments.filter((c: AppComment) => {
-          const authorId = typeof c.usuario === 'string' ? c.usuario : c.usuario._id;
-          return authorId === this.userId;
-        });
+        this.userComments = res.docs || [];
+        this.commentsTotalPages = res.totalPages || 1;
+        this.commentsTotalDocs = res.totalDocs || 0;
+        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error loading user comments:', err)
     });
@@ -130,12 +130,36 @@ export class UserDetail implements OnInit {
 
   loadUserPosts(): void {
     if (!this.userId) return;
-    this.postService.getPostsFromUser(this.userId).subscribe({
-      next: (posts: Post[]) => {
-        this.userPosts = posts;
+    this.postService.getPostsFromUser(this.userId, this.postsPage, this.pageSize).subscribe({
+      next: (res: any) => {
+        this.userPosts = res.docs || [];
+        this.postsTotalPages = res.totalPages || 1;
+        this.postsTotalDocs = res.totalDocs || 0;
+        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error loading user posts:', err)
     });
+  }
+
+  changePostsPage(page: number): void {
+    if (page >= 1 && page <= this.postsTotalPages) {
+      this.postsPage = page;
+      this.loadUserPosts();
+    }
+  }
+
+  changeCommentsPage(page: number): void {
+    if (page >= 1 && page <= this.commentsTotalPages) {
+      this.commentsPage = page;
+      this.loadUserComments();
+    }
+  }
+
+  changeReportsPage(page: number): void {
+    if (page >= 1 && page <= this.reportsTotalPages) {
+      this.reportsPage = page;
+      this.loadUserReports();
+    }
   }
 
   // --- Lógica Unificada de Modals ---

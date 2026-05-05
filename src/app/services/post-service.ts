@@ -19,8 +19,8 @@ export class PostService {
     return this.http.get<Post>(`${this.apiUrl}/${id}`);
   }
 
-  getPostsFromUser(userId: string): Observable<Post[]> {
-    return this.http.get<Post[]>(`${this.apiUrl}/user/${userId}`);
+  getPostsFromUser(userId: string, page: number = 1, limit: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user/${userId}?page=${page}&limit=${limit}`);
   }
 
   createPost(post: Partial<Post>): Observable<Post> {

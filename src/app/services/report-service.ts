@@ -30,6 +30,10 @@ export class ReportService {
     return this.http.get<any>(url);
   }
 
+  getReportsForUser(userId: string, page: number = 1, limit: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user/${userId}?page=${page}&limit=${limit}`);
+  }
+
   getReport(id: string): Observable<Report> {
     return this.http.get<Report>(`${this.apiUrl}/${id}`);
   }
