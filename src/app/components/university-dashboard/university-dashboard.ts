@@ -78,7 +78,6 @@ export class UniversityDashboard implements OnInit {
       },
     });
 
-    // Obtener conteos reales desde el nuevo servicio de estadísticas
     this.statsService.getUserCount().subscribe({
       next: (res) => {
         this.totalUsersCount = res.count;
