@@ -10,11 +10,23 @@
                 <p class="text-on-surface-variant text-sm mt-1">Manage platform access and permissions for all
                     registered users.</p>
             </div>
-            <button [routerLink]="['/usuarios/crear']"
-                class="bg-gradient-to-br from-secondary to-primary-container text-on-secondary-fixed px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition-all flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm font-bold">add</span>
-                Create New User
-            </button>
+            <div class="flex items-center gap-3">
+                <button (click)="load()"
+                    class="flex items-center gap-2 px-4 py-2.5 bg-primary-container hover:bg-surface-container-highest text-white rounded-xl border border-outline-variant/20 transition-all group active:scale-95 shadow-lg">
+                    <span class="material-symbols-outlined text-secondary group-active:rotate-180 transition-transform duration-500"
+                        [ngClass]="{'animate-spin': loading}">refresh</span>
+                    <span class="text-sm font-bold uppercase tracking-widest">Refresh</span>
+                </button>
+                
+                <!-- Divider -->
+                <div class="w-px h-8 bg-outline-variant/30 ms-1 me-1"></div>
+
+                <button [routerLink]="['/usuarios/crear']"
+                    class="bg-gradient-to-br from-secondary to-primary-container text-on-secondary-fixed px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm font-bold">add</span>
+                    Create New User
+                </button>
+            </div>
         </header>
 
         <!-- Search and Filter Bar -->

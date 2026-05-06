@@ -5,6 +5,7 @@ import { authInterceptor } from './interceptors/auth.interceptor';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideClientHydration(withEventReplay()),
+    provideAnimations(),
   ],
 };

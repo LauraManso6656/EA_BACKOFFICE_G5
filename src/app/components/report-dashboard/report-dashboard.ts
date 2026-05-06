@@ -42,6 +42,7 @@ export class ReportDashboard implements OnInit {
   tipoFilter: 'all' | 'user' | 'post' | 'comment' = 'all';
   showOnlyActive = true;
   isUpdating = false;
+  loading = false;
 
   private platformId = inject(PLATFORM_ID);
   private confirmService = inject(ConfirmService);
@@ -54,8 +55,7 @@ export class ReportDashboard implements OnInit {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.loadReports();
-      this.loadStats();
+      this.load();
       
       this.searchControl.valueChanges.pipe(
         debounceTime(300),
@@ -66,7 +66,13 @@ export class ReportDashboard implements OnInit {
     }
   }
 
+  load(): void {
+    this.loadReports();
+    this.loadStats();
+  }
+
   loadReports(): void {
+    this.loading = true;
     const search = this.searchControl.value ?? '';
     const startDate = this.startDateControl.value ?? '';
     const endDate = this.endDateControl.value ?? '';
@@ -85,10 +91,12 @@ export class ReportDashboard implements OnInit {
         this.totalPages = res.totalPages;
         this.totalDocs = res.totalDocs || 0;
         this.visibleReports = this.reports;
+        this.loading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading reports:', err);
+        this.loading = false;
         this.cdr.detectChanges();
       }
     });

@@ -9,29 +9,40 @@
                 <h1 class="text-2xl font-semibold text-white">Content Moderation</h1>
                 <p class="text-on-surface-variant text-sm mt-1">Review and manage reports from platform users.</p>
             </div>
-            <div class="flex gap-2">
+            <div class="flex items-center gap-3">
+                <button (click)="load()"
+                    class="flex items-center gap-2 px-4 py-2.5 bg-primary-container hover:bg-surface-container-highest text-white rounded-xl border border-outline-variant/20 transition-all group active:scale-95 shadow-lg">
+                    <span class="material-symbols-outlined text-secondary group-active:rotate-180 transition-transform duration-500"
+                        [ngClass]="{'animate-spin': loading}">refresh</span>
+                    <span class="text-sm font-bold uppercase tracking-widest">Refresh</span>
+                </button>
+                
+                <!-- Divider -->
+                <div class="w-px h-8 bg-outline-variant/30 ms-1 me-1"></div>
+
+                <div class="flex gap-2">
                 <button (click)="setTipoFilter('all')" 
                         [class.bg-secondary]="tipoFilter === 'all'"
                         [class.text-primary-container]="tipoFilter === 'all'"
-                        class="px-4 py-2 rounded-xl text-xs font-bold transition-all border border-outline-variant/20 hover:bg-surface-container">ALL</button>
+                        class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all border border-outline-variant/20 hover:bg-surface-container">ALL</button>
                 <button (click)="setTipoFilter('user')" 
                         [class.bg-secondary]="tipoFilter === 'user'"
                         [class.text-primary-container]="tipoFilter === 'user'"
-                        class="px-4 py-2 rounded-xl text-xs font-bold transition-all border border-outline-variant/20 hover:bg-surface-container">USERS</button>
+                        class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all border border-outline-variant/20 hover:bg-surface-container">USERS</button>
                 <button (click)="setTipoFilter('post')" 
                         [class.bg-secondary]="tipoFilter === 'post'"
                         [class.text-primary-container]="tipoFilter === 'post'"
-                        class="px-4 py-2 rounded-xl text-xs font-bold transition-all border border-outline-variant/20 hover:bg-surface-container">POSTS</button>
+                        class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all border border-outline-variant/20 hover:bg-surface-container">POSTS</button>
                 <button (click)="setTipoFilter('comment')" 
                         [class.bg-secondary]="tipoFilter === 'comment'"
                         [class.text-primary-container]="tipoFilter === 'comment'"
-                        class="px-4 py-2 rounded-xl text-xs font-bold transition-all border border-outline-variant/20 hover:bg-surface-container">COMMENTS</button>
+                        class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all border border-outline-variant/20 hover:bg-surface-container">COMMENTS</button>
                 
                 <!-- Divider -->
                 <div class="w-px h-8 bg-outline-variant/30 ms-2 me-2"></div>
 
                 <!-- Toggle Switch -->
-                <div class="flex items-center gap-3 bg-surface-container-highest/40 px-4 py-2 rounded-xl border border-outline-variant/10">
+                <div class="flex items-center gap-3 bg-surface-container-highest/40 px-4 py-2.5 rounded-xl border border-outline-variant/10">
                     <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Active Only</span>
                     <button (click)="toggleActiveFilter()" 
                             class="relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none"
@@ -39,6 +50,7 @@
                         <span class="inline-block h-3 w-3 transform rounded-full bg-white transition-transform"
                               [ngClass]="showOnlyActive ? 'translate-x-6' : 'translate-x-1'"></span>
                     </button>
+                </div>
                 </div>
             </div>
         </header>

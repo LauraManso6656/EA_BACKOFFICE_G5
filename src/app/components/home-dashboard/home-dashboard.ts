@@ -18,16 +18,18 @@ export class HomeDashboard implements OnInit {
   postCount = signal<number | null>(null);
   commentCount = signal<number | null>(null);
   reportCount = signal<number | null>(null);
-  
+
   apiStatus = signal<'online' | 'offline' | 'checking'>('checking');
   dbStatus = signal<'online' | 'offline' | 'checking'>('checking');
-  
+  webClientStatus = signal<'online' | 'offline' | 'checking'>('checking');
+
   private platformId = inject(PLATFORM_ID);
   private statsService = inject(StatsService);
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.loadAllStats();
+      this.checkWebClientStatus();
     }
   }
 
@@ -42,7 +44,7 @@ export class HomeDashboard implements OnInit {
         this.postCount.set(data.posts);
         this.commentCount.set(data.comments);
         this.reportCount.set(data.reports);
-        
+
         // El servidor ha contestado, así que el API Server está online
         this.apiStatus.set('online');
         // El servidor nos dice explícitamente el estado de la DB
@@ -54,5 +56,16 @@ export class HomeDashboard implements OnInit {
         this.dbStatus.set('offline');  // Si el servidor no contesta, asumimos DB offline también
       }
     });
+
+    this.checkWebClientStatus();
+  }
+
+  checkWebClientStatus(): void {
+    this.webClientStatus.set('checking');
+    // Intentamos cargar el index de la web cliente (ajusta la URL según necesites)
+    // Usamos mode: 'no-cors' para evitar problemas de CORS en un ping básico
+    fetch('https://www.google.com/', { mode: 'no-cors' })
+      .then(() => this.webClientStatus.set('online'))
+      .catch(() => this.webClientStatus.set('offline'));
   }
 }

@@ -115,12 +115,19 @@
               {{ dbStatus() === 'online' ? 'Healthy' : (dbStatus() === 'offline' ? 'Error' : 'Checking...') }}
             </span>
           </div>
-          <div class="flex items-center justify-between opacity-40">
+          <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-outline">language</span>
+              <span class="material-symbols-outlined"
+                    [ngClass]="webClientStatus() === 'online' ? 'text-green-400' : (webClientStatus() === 'offline' ? 'text-error' : 'text-outline')">
+                language
+              </span>
               <span class="text-base text-on-surface-variant font-medium">Web Client</span>
             </div>
-            <span class="text-[11px] font-bold text-outline uppercase border border-outline/20 px-2.5 py-1 rounded">Upcoming</span>
+            <span class="px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-tighter transition-all"
+                  [ngClass]="webClientStatus() === 'online' ? 'bg-green-400/10 text-green-400 border-green-400/20' : 
+                             (webClientStatus() === 'offline' ? 'bg-error/10 text-error border-error/20' : 'bg-outline/10 text-outline border-outline/20')">
+              {{ webClientStatus() === 'online' ? 'Healthy' : (webClientStatus() === 'offline' ? 'Error' : 'Checking...') }}
+            </span>
           </div>
           <div class="flex items-center justify-between opacity-40">
             <div class="flex items-center gap-3">
