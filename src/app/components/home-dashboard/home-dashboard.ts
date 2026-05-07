@@ -22,6 +22,7 @@ export class HomeDashboard implements OnInit {
   apiStatus = signal<'online' | 'offline' | 'checking'>('checking');
   dbStatus = signal<'online' | 'offline' | 'checking'>('checking');
   webClientStatus = signal<'online' | 'offline' | 'checking'>('checking');
+  webClientUrl = 'https://www.ea5.upc.edu/';
 
   private platformId = inject(PLATFORM_ID);
   private statsService = inject(StatsService);
@@ -64,7 +65,7 @@ export class HomeDashboard implements OnInit {
     this.webClientStatus.set('checking');
     // Intentamos cargar el index de la web cliente (ajusta la URL según necesites)
     // Usamos mode: 'no-cors' para evitar problemas de CORS en un ping básico
-    fetch('https://www.google.com/', { mode: 'no-cors' })
+    fetch(this.webClientUrl, { mode: 'no-cors' })
       .then(() => this.webClientStatus.set('online'))
       .catch(() => this.webClientStatus.set('offline'));
   }

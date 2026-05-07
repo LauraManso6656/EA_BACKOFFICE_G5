@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, inject, PLATFORM_ID } from '@angu
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { ReportService } from '../../services/report-service';
 import { StatsService, ReportStats } from '../../services/stats-service';
 import { Report } from '../../models/report';
@@ -169,14 +169,13 @@ export class ReportDashboard implements OnInit {
       type: 'danger',
       confirmText: 'Delete',
       onConfirm: () => {
-        this.reportService.deleteReport(report._id).subscribe({
-          next: () => {
+        return this.reportService.deleteReport(report._id).pipe(
+          tap(() => {
             this.reports = this.reports.filter(r => r._id !== report._id);
             this.filterReports();
             this.loadStats();
-          },
-          error: (err) => console.error('Error deleting report:', err)
-        });
+          })
+        );
       }
     });
   }

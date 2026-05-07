@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { tap } from 'rxjs';
 import { Post } from '../../models/post';
 import { PostModalService } from '../../services/post-modal-service';
 import { CommentService } from '../../services/comment-service';
@@ -80,14 +81,9 @@ export class PostDetailModal implements OnInit {
       type: 'post',
       confirmText: 'Delete',
       onConfirm: () => {
-        this.postService.deletePost(this.selectedPost!._id).subscribe({
-          next: () => {
-            this.close();
-            // We might need a way to notify the caller to refresh the list
-            // For now, most callers refresh on their own or we could use a global refresh event
-          },
-          error: (err: any) => console.error('Error deleting post:', err)
-        });
+        return this.postService.deletePost(this.selectedPost!._id).pipe(
+          tap(() => this.close())
+        );
       }
     });
   }
@@ -99,13 +95,12 @@ export class PostDetailModal implements OnInit {
       type: 'comment',
       confirmText: 'Delete',
       onConfirm: () => {
-        this.commentService.deleteComment(commentId).subscribe({
-          next: () => {
+        return this.commentService.deleteComment(commentId).pipe(
+          tap(() => {
             this.selectedPostComments = this.selectedPostComments.filter(c => c._id !== commentId);
             this.cdr.detectChanges();
-          },
-          error: (err: any) => console.error('Error deleting comment:', err)
-        });
+          })
+        );
       }
     });
   }

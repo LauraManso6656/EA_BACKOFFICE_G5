@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 export interface ConfirmOptions {
   title: string;
@@ -7,7 +7,7 @@ export interface ConfirmOptions {
   confirmText?: string;
   cancelText?: string;
   type?: 'danger' | 'warning' | 'info' | 'post' | 'comment';
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<any> | Observable<any>;
 }
 
 @Injectable({

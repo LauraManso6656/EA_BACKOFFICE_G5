@@ -121,7 +121,11 @@
                     [ngClass]="webClientStatus() === 'online' ? 'text-green-400' : (webClientStatus() === 'offline' ? 'text-error' : 'text-outline')">
                 language
               </span>
-              <span class="text-base text-on-surface-variant font-medium">Web Client</span>
+              <a [href]="webClientUrl" target="_blank" 
+                 class="flex items-center gap-1 text-base text-on-surface-variant font-medium hover:text-secondary hover:underline transition-all group">
+                Web Client
+                <span class="material-symbols-outlined text-[14px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">open_in_new</span>
+              </a>
             </div>
             <span class="px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-tighter transition-all"
                   [ngClass]="webClientStatus() === 'online' ? 'bg-green-400/10 text-green-400 border-green-400/20' : 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfirmService, ConfirmOptions } from '../../services/confirm-service';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'app-confirm-modal',
@@ -23,17 +24,33 @@ export class ConfirmModal implements OnInit {
   }
 
   cancel(): void {
+    if (this.isProcessing) return;
     this.confirmService.close();
   }
 
   confirm(): void {
-    if (this.options?.onConfirm) {
-      this.isProcessing = true;
-      this.options.onConfirm();
+    if (!this.options?.onConfirm || this.isProcessing) return;
+
+    this.isProcessing = true;
+    const result = this.options.onConfirm();
+
+    if (result instanceof Promise) {
+      result
+        .then(() => this.confirmService.close())
+        .catch(() => {
+          this.isProcessing = false;
+        });
+    } else if (isObservable(result)) {
+      result.subscribe({
+        next: () => this.confirmService.close(),
+        error: () => {
+          this.isProcessing = false;
+        },
+        complete: () => this.confirmService.close()
+      });
+    } else {
+      this.confirmService.close();
     }
-    // We don't close immediately if it's processing, but the services usually handle the close
-    // For now, let's keep it simple as the previous modals did.
-    // Actually, the previous modal had a "Deleting..." state.
   }
 
   getIcon(): string {
