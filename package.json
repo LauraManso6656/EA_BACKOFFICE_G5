@@ -22,6 +22,7 @@
     "@angular/platform-server": "^21.2.12",
     "@angular/router": "^21.2.12",
     "@angular/ssr": "^21.2.10",
+    "chalk": "^4.1.2",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

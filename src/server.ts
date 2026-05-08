@@ -6,6 +6,7 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import Logging from './library/Logging';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -56,7 +57,7 @@ if (isMainModule(import.meta.url) || process.env['pm_id']) {
       throw error;
     }
 
-    console.log(`Node Express server listening on http://localhost:${port}`);
+    Logging.info(`Node Express server listening on http://localhost:${port}`);
   });
 }
 

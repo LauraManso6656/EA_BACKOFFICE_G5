@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth-service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import Logging from '../../../library/Logging';
 
 @Component({
   selector: 'app-login',
@@ -39,16 +40,16 @@ export class Login implements OnInit {
       this.authService.login(email, password).subscribe({
         next: (res: any) => {
           if (res.usuario.rol === 'admin') {
-            console.log('Login exitoso como Administrador');
+            Logging.info('Login exitoso como Administrador');
             this.router.navigate(['/home']);
           } else {
-            console.warn('Intento de acceso denegado: no es admin');
+            Logging.warning('Intento de acceso denegado: no es admin');
             this.authService.logout();
             this.errorMsg = 'Acceso denegado: Se requieren permisos de administrador.';
           }
         },
         error: (err: any) => {
-          console.error('Error en login:', err);
+          Logging.error(`Error en login: ${err}`);
           this.errorMsg = 'Credenciales incorrectas o error en el servidor.';
         }
       });
