@@ -40,6 +40,7 @@ export class ReportDashboard implements OnInit {
   startDateControl = new FormControl('');
   endDateControl = new FormControl('');
   tipoFilter: 'all' | 'user' | 'post' | 'comment' = 'all';
+  estadoFilter: 'all' | 'pendiente' | 'revisado' | 'resuelto' = 'all';
   showOnlyActive = true;
   isUpdating = false;
   loading = false;
@@ -84,7 +85,8 @@ export class ReportDashboard implements OnInit {
       this.tipoFilter,
       this.showOnlyActive,
       startDate,
-      endDate
+      endDate,
+      this.estadoFilter
     ).subscribe({
       next: (res) => {
         this.reports = res.docs;
@@ -119,6 +121,17 @@ export class ReportDashboard implements OnInit {
 
   toggleActiveFilter(): void {
     this.showOnlyActive = !this.showOnlyActive;
+    if (this.showOnlyActive && this.estadoFilter === 'resuelto') {
+      this.estadoFilter = 'all'; // Reset status if active only is turned on and we were viewing resolved
+    }
+    this.filterReports();
+  }
+
+  setEstadoFilter(estado: 'all' | 'pendiente' | 'revisado' | 'resuelto'): void {
+    this.estadoFilter = estado;
+    if (estado === 'resuelto') {
+      this.showOnlyActive = false; // Turn off active only if they explicitly want to see resolved
+    }
     this.filterReports();
   }
 

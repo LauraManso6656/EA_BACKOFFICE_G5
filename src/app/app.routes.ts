@@ -10,6 +10,8 @@ import { HomeDashboard } from './components/home-dashboard/home-dashboard';
 import { ReportDashboard } from './components/report-dashboard/report-dashboard';
 import { ReportDetail } from './components/report-detail/report-detail';
 import { PostDashboard } from './components/post-dashboard/post-dashboard';
+import { BugDashboard } from './components/bug-dashboard/bug-dashboard';
+import { BugDetail } from './components/bug-detail/bug-detail';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -24,6 +26,8 @@ export const routes: Routes = [
   { path: 'reports', component: ReportDashboard, canActivate: [authGuard] },
   { path: 'report/:id', component: ReportDetail, canActivate: [authGuard] },
   { path: 'posts', component: PostDashboard, canActivate: [authGuard] },
+  { path: 'bugs', component: BugDashboard, canActivate: [authGuard] },
+  { path: 'bug/:id', component: BugDetail, canActivate: [authGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];

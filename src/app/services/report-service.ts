@@ -18,7 +18,8 @@ export class ReportService {
     tipo: string = 'all',
     activeOnly: boolean = false,
     startDate: string = '',
-    endDate: string = ''
+    endDate: string = '',
+    estado: string = 'all'
   ): Observable<any> {
     let url = `${this.apiUrl}?page=${page}&limit=${limit}`;
     if (search) url += `&search=${encodeURIComponent(search)}`;
@@ -26,6 +27,7 @@ export class ReportService {
     if (activeOnly) url += `&activeOnly=true`;
     if (startDate) url += `&startDate=${startDate}`;
     if (endDate) url += `&endDate=${endDate}`;
+    if (estado !== 'all') url += `&estado=${estado}`;
     
     return this.http.get<any>(url);
   }
