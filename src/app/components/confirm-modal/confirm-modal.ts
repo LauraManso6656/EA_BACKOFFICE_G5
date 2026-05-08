@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfirmService, ConfirmOptions } from '../../services/confirm-service';
 import { isObservable } from 'rxjs';
@@ -14,12 +14,16 @@ export class ConfirmModal implements OnInit {
   options: ConfirmOptions | null = null;
   isProcessing = false;
 
-  constructor(private confirmService: ConfirmService) {}
+  constructor(
+    private confirmService: ConfirmService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.confirmService.confirm$.subscribe(opt => {
       this.options = opt;
       this.isProcessing = false;
+      this.cdr.detectChanges();
     });
   }
 
@@ -36,20 +40,32 @@ export class ConfirmModal implements OnInit {
 
     if (result instanceof Promise) {
       result
-        .then(() => this.confirmService.close())
+        .then(() => {
+          this.confirmService.close();
+          this.cdr.detectChanges();
+        })
         .catch(() => {
           this.isProcessing = false;
+          this.cdr.detectChanges();
         });
     } else if (isObservable(result)) {
       result.subscribe({
-        next: () => this.confirmService.close(),
+        next: () => {
+          this.confirmService.close();
+          this.cdr.detectChanges();
+        },
         error: () => {
           this.isProcessing = false;
+          this.cdr.detectChanges();
         },
-        complete: () => this.confirmService.close()
+        complete: () => {
+          this.confirmService.close();
+          this.cdr.detectChanges();
+        }
       });
     } else {
       this.confirmService.close();
+      this.cdr.detectChanges();
     }
   }
 
