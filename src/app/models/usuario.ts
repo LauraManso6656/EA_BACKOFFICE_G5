@@ -8,4 +8,5 @@ export interface Usuario {
     rol: 'admin' | 'user';
     universidad?: Universidad;
     activo: boolean;
+    privado: boolean;
 }

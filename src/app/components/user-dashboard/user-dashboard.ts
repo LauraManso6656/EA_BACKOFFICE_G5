@@ -174,4 +174,19 @@ export class UserDashboard implements OnInit {
       });
     }
   }
+
+  onTogglePrivacy(usuario: Usuario, event: any): void {
+    const checkValue = event.target.checked;
+    
+    this.api.updateUsuario(usuario._id, { privado: checkValue }).subscribe({
+      next: (res) => {
+        usuario.privado = checkValue;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Privacy toggle failed:', err);
+        event.target.checked = !checkValue; // rollback
+      }
+    });
+  }
 }

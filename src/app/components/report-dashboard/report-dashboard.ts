@@ -26,7 +26,8 @@ export class ReportDashboard implements OnInit {
     total: 0,
     user: 0,
     post: 0,
-    comment: 0
+    comment: 0,
+    chat: 0
   };
 
   // Pagination
@@ -39,7 +40,7 @@ export class ReportDashboard implements OnInit {
   searchControl = new FormControl('');
   startDateControl = new FormControl('');
   endDateControl = new FormControl('');
-  tipoFilter: 'all' | 'user' | 'post' | 'comment' = 'all';
+  tipoFilter: 'all' | 'user' | 'post' | 'comment' | 'chat' = 'all';
   estadoFilter: 'all' | 'pendiente' | 'revisado' | 'resuelto' = 'all';
   showOnlyActive = true;
   isUpdating = false;
@@ -146,7 +147,7 @@ export class ReportDashboard implements OnInit {
     }
   }
 
-  setTipoFilter(tipo: 'all' | 'user' | 'post' | 'comment'): void {
+  setTipoFilter(tipo: 'all' | 'user' | 'post' | 'comment' | 'chat'): void {
     this.tipoFilter = tipo;
     this.filterReports();
   }

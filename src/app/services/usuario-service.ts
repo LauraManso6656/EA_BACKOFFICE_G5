@@ -29,7 +29,7 @@ export class UsuarioService {
     return this.http.post<Usuario>(this.apiUrl, usuario);
   }
 
-  updateUsuario(id: string, usuario: Usuario): Observable<Usuario> {
+  updateUsuario(id: string, usuario: Partial<Usuario>): Observable<Usuario> {
     return this.http.patch<Usuario>(`${this.apiUrl}/${id}`, usuario);
   }
 

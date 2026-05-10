@@ -95,6 +95,8 @@
                                 University</th>
                             <th class="px-6 py-4 text-[11px] font-bold text-secondary uppercase tracking-widest">Status
                             </th>
+                            <th class="px-6 py-4 text-[11px] font-bold text-secondary uppercase tracking-widest">Privacy
+                            </th>
                             <th
                                 class="px-6 py-4 text-[11px] font-bold text-secondary uppercase tracking-widest text-right">
                                 Actions</th>
@@ -129,6 +131,15 @@
                                         (change)="onToggleStatus(user, $event)">
                                     <div
                                         class="w-9 h-5 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-primary-container after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-secondary">
+                                    </div>
+                                </label>
+                            </td>
+                            <td class="px-6 py-4">
+                                <label class="relative inline-flex items-center cursor-pointer" (click)="$event.stopPropagation()">
+                                    <input type="checkbox" [checked]="user.privado" class="sr-only peer"
+                                        (change)="onTogglePrivacy(user, $event)">
+                                    <div
+                                        class="w-9 h-5 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-primary-container after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary">
                                     </div>
                                 </label>
                             </td>

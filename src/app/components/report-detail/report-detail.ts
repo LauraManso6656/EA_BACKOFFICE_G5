@@ -13,11 +13,12 @@ import { catchError, of } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { ConfirmService } from '../../services/confirm-service';
 import { PostModalService } from '../../services/post-modal-service';
+import { PostDetailModal } from '../post-detail-modal/post-detail-modal';
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, Navbar],
+  imports: [CommonModule, RouterModule, Navbar, PostDetailModal],
   templateUrl: './report-detail.html',
   styleUrl: './report-detail.css'
 })
@@ -35,6 +36,7 @@ export class ReportDetail implements OnInit {
   loading = signal(true);
   isDeleting = false;
   error = signal<string | null>(null);
+  highlightedMessageId = signal<string | null>(null);
 
   // Stats para la sidebar
   targetStats = signal<{ label: string, value: any }[]>([]);
@@ -70,6 +72,8 @@ export class ReportDetail implements OnInit {
     });
   }
 
+  conversation = signal<any[]>([]);
+
   fetchTargetDetails(report: Report): void {
     let endpoint = '';
     const baseUrl = 'http://localhost:1337';
@@ -77,6 +81,7 @@ export class ReportDetail implements OnInit {
     if (report.tipo === 'user') endpoint = `${baseUrl}/usuarios/${report.objetivoId}`;
     else if (report.tipo === 'post') endpoint = `${baseUrl}/posts/${report.objetivoId}`;
     else if (report.tipo === 'comment') endpoint = `${baseUrl}/comments/${report.objetivoId}`;
+    else if (report.tipo === 'chat') endpoint = `${baseUrl}/chat/message/${report.objetivoId}`;
 
     if (!endpoint) {
       this.loading.set(false);
@@ -91,7 +96,25 @@ export class ReportDetail implements OnInit {
     ).subscribe(data => {
       this.targetData.set(data);
       this.prepareStats(report, data);
-      this.loading.set(false);
+
+      if (report.tipo === 'chat' && data) {
+        // Fetch context history
+        const chatData = data as any;
+        const userA = chatData.remitente?._id || chatData.remitente;
+        const userB = chatData.destinatario?._id || chatData.destinatario;
+        this.http.get<any[]>(`${baseUrl}/chat/context/${userA}/${userB}`).subscribe({
+          next: (messages) => {
+            this.conversation.set(messages);
+            this.loading.set(false);
+          },
+          error: (err) => {
+            console.error('Error fetching chat context:', err);
+            this.loading.set(false);
+          }
+        });
+      } else {
+        this.loading.set(false);
+      }
     });
   }
 
@@ -114,6 +137,10 @@ export class ReportDetail implements OnInit {
     } else if (report.tipo === 'comment') {
       stats.push({ label: 'Writer', value: data.usuario?.nombre || 'Unknown' });
       stats.push({ label: 'Length', value: `${data.texto?.length || 0} chars` });
+    } else if (report.tipo === 'chat') {
+      stats.push({ label: 'Sender', value: data.remitente?.nombre || 'Unknown' });
+      stats.push({ label: 'Receiver', value: data.destinatario?.nombre || 'Unknown' });
+      stats.push({ label: 'Length', value: `${data.contenido?.length || 0} chars` });
     }
 
     this.targetStats.set(stats);
@@ -156,6 +183,13 @@ export class ReportDetail implements OnInit {
     return r.usuarioReporta.nombre || 'Unknown';
   }
 
+  getReporterId(): string {
+    const r = this.report();
+    if (!r || !r.usuarioReporta) return '';
+    if (typeof r.usuarioReporta === 'string') return r.usuarioReporta;
+    return r.usuarioReporta._id || '';
+  }
+
   // --- Lógica Unificada de Modals ---
   openConfirmModal(id: string, type: 'post' | 'comment'): void {
     this.confirmService.ask({
@@ -194,8 +228,19 @@ export class ReportDetail implements OnInit {
   }
 
   // --- MODAL DETALLE POST ---
-  openPostDetailModal(post: Post): void {
-    this.postModalService.open(post);
+  openPostDetailModal(post: any): void {
+    if (!post) return;
+    
+    // Si el post es solo un ID (string), cargamos el objeto completo primero
+    if (typeof post === 'string') {
+      this.postService.getPost(post).subscribe({
+        next: (fullPost) => this.postModalService.open(fullPost),
+        error: (err) => console.error('Error loading post before modal:', err)
+      });
+    } else {
+      // Si ya es un objeto, lo pasamos directamente
+      this.postModalService.open(post);
+    }
   }
 
   openPostFromComment(): void {
@@ -220,5 +265,40 @@ export class ReportDetail implements OnInit {
   getAuthorInitial(comment: any): string {
     const name = this.getCommentAuthorName(comment);
     return name.substring(0, 1).toUpperCase();
+  }
+
+  scrollToMessage(messageId: string): void {
+    if (!isPlatformBrowser(this.platformId) || !messageId) return;
+
+    const element = document.getElementById('msg-' + messageId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      this.highlightedMessageId.set(messageId);
+      
+      setTimeout(() => {
+        if (this.highlightedMessageId() === messageId) {
+          this.highlightedMessageId.set(null);
+        }
+      }, 1500);
+    }
+  }
+
+  getParentAuthor(msg: any): string {
+    if (!msg.parentMessage) return '';
+    
+    // Si viene poblado del backend
+    if (msg.parentMessage.remitente?.nombre) {
+      return msg.parentMessage.remitente.nombre;
+    }
+    
+    // Si no, lo buscamos en la lista actual por ID
+    const parentId = typeof msg.parentMessage === 'string' ? msg.parentMessage : msg.parentMessage._id;
+    const parent = this.conversation().find(m => m._id === parentId);
+    
+    if (parent && parent.remitente?.nombre) {
+      return parent.remitente.nombre;
+    }
+    
+    return 'Deleted user';
   }
 }

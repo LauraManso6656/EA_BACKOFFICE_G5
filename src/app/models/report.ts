@@ -1,6 +1,6 @@
 import { Usuario } from './usuario';
 
-export type ReportType = 'user' | 'post' | 'comment';
+export type ReportType = 'user' | 'post' | 'comment' | 'chat';
 export type ReportStatus = 'pendiente' | 'revisado' | 'resuelto';
 
 export interface Report {

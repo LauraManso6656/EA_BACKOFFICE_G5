@@ -29,21 +29,33 @@ export class PostDetailModal implements OnInit {
   viewMode: 'comments' | 'likes' = 'comments';
 
   ngOnInit(): void {
-    this.postModalService.post$.subscribe((post: Post | null) => {
+    this.postModalService.post$.subscribe((post: any | null) => {
       if (post) {
-        // Recargamos el post completo del servidor para asegurar que los likes vienen poblados
-        this.postService.getPost(post._id).subscribe({
-          next: (fullPost) => {
-            this.selectedPost = fullPost;
-            this.loadCommentsForPost(post._id);
-            this.cdr.detectChanges();
-          },
-          error: (err) => {
-            console.error('Error reloading post details:', err);
-            this.selectedPost = post; // Fallback al post original
-            this.loadCommentsForPost(post._id);
-          }
-        });
+        const postId = typeof post === 'string' ? post : (post._id || post.id);
+        
+        if (postId) {
+          // Recargamos el post completo del servidor para asegurar que los likes vienen poblados
+          this.postService.getPost(postId).subscribe({
+            next: (fullPost) => {
+              this.selectedPost = fullPost;
+              this.loadCommentsForPost(postId);
+              this.cdr.detectChanges();
+            },
+            error: (err) => {
+              console.error('Error reloading post details:', err);
+              // Fallback: si falla la carga pero ya teníamos un objeto, lo usamos
+              if (typeof post !== 'string') {
+                this.selectedPost = post;
+                this.loadCommentsForPost(postId);
+              }
+              this.cdr.detectChanges();
+            }
+          });
+        } else if (typeof post === 'object') {
+          // Si no hay ID pero es un objeto (caso raro), lo mostramos tal cual
+          this.selectedPost = post;
+          this.cdr.detectChanges();
+        }
       } else {
         this.selectedPost = null;
         this.selectedPostComments = [];

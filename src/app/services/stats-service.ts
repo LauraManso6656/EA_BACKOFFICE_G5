@@ -16,6 +16,7 @@ export interface ReportStats {
   user: number;
   post: number;
   comment: number;
+  chat: number;
 }
 
 @Injectable({

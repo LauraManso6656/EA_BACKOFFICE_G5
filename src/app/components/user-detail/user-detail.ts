@@ -72,8 +72,9 @@ export class UserDetail implements OnInit {
       nombre: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       rol: ['user', Validators.required],
-      universidad: ['', Validators.required],
-      password: ['']
+      universidad: [''],
+      password: [''],
+      privado: [false]
     });
   }
 
@@ -88,6 +89,9 @@ export class UserDetail implements OnInit {
     }
 
     this.universidadSearch.valueChanges.subscribe(value => {
+      if (!value || value.trim() === '') {
+        this.userForm.patchValue({ universidad: null });
+      }
       this.filterUniversidades(value || '');
     });
   }
@@ -222,9 +226,14 @@ export class UserDetail implements OnInit {
     );
   }
 
-  selectUniversidad(uni: Universidad): void {
-    this.userForm.patchValue({ universidad: uni._id });
-    this.universidadSearch.setValue(uni.nombre, { emitEvent: false });
+  selectUniversidad(uni: Universidad | null): void {
+    if (uni === null) {
+      this.userForm.patchValue({ universidad: null });
+      this.universidadSearch.setValue('Sin Universidad', { emitEvent: false });
+    } else {
+      this.userForm.patchValue({ universidad: uni._id });
+      this.universidadSearch.setValue(uni.nombre, { emitEvent: false });
+    }
     this.showUniversidadesDropdown = false;
   }
 
@@ -253,7 +262,8 @@ export class UserDetail implements OnInit {
           email: user.email,
           rol: user.rol,
           universidad: user.universidad?._id || user.universidad,
-          password: ''
+          password: '',
+          privado: user.privado || false
         });
 
         const uniId = user.universidad?._id || user.universidad;
@@ -286,7 +296,8 @@ export class UserDetail implements OnInit {
         email: this.usuario.email,
         rol: this.usuario.rol,
         universidad: uniId,
-        password: ''
+        password: '',
+        privado: this.usuario.privado || false
       });
 
       if (uniId) {
@@ -297,8 +308,18 @@ export class UserDetail implements OnInit {
   }
 
   saveChanges(): void {
-    if (this.userForm.valid && this.userId) {
+    if (this.userForm.invalid) {
+      return;
+    }
+
+    if (this.userId) {
       const dataToUpdate = { ...this.userForm.value };
+      
+      // Asegurar que si la universidad está vacía se envíe null para borrarla en DB
+      if (!dataToUpdate.universidad || dataToUpdate.universidad === '') {
+        dataToUpdate.universidad = null;
+      }
+
       if (!dataToUpdate.password || dataToUpdate.password.trim() === '') {
         delete dataToUpdate.password;
       }
@@ -311,7 +332,9 @@ export class UserDetail implements OnInit {
           this.universidadSearch.disable();
           this.userForm.patchValue({ password: '' });
         },
-        error: (err: any) => console.error('Error updating user:', err)
+        error: (err: any) => {
+          console.error('Error al actualizar usuario:', err);
+        }
       });
     }
   }
