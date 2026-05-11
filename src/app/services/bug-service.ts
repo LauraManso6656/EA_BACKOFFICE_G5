@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BugReport } from '../models/bug';
 
+import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class BugService {
-  private apiUrl = 'http://localhost:1337/bugs';
+  private apiUrl = `${environment.apiUrl}/bugs`;
 
   constructor(private http: HttpClient) {}
 

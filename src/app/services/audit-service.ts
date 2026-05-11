@@ -19,12 +19,14 @@ export interface AdminLog {
   createdAt: string;
 }
 
+import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuditService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:1337/audit/logs';
+  private apiUrl = `${environment.apiUrl}/audit/logs`;
 
   getLogs(page: number = 1, limit: number = 20, filters: any = {}): Observable<any> {
     let url = `${this.apiUrl}?page=${page}&limit=${limit}`;

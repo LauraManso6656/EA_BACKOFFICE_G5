@@ -19,11 +19,13 @@ export interface ReportStats {
   chat: number;
 }
 
+import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class StatsService {
-  private apiUrl = 'http://localhost:1337/stats';
+  private apiUrl = `${environment.apiUrl}/stats`;
 
   constructor(private http: HttpClient) { }
 
