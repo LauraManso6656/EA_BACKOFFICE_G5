@@ -1,3 +1,14 @@
+# ETAPA 1: Construcción (Build)
+FROM node:20-alpine AS build-step
+
+WORKDIR /app
+
+# Copiamos los archivos de dependencias
+COPY package*.json ./
+
+# Instalamos las dependencias
+RUN npm install
+
 # Copiamos todo el proyecto
 COPY . .
 
