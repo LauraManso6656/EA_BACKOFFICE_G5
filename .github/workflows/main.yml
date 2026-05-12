@@ -8,7 +8,7 @@ on:
   push:
     branches:
         - 'production'
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows you to run this workflow manually from the Actions tabon
   workflow_dispatch:
 jobs:
 
