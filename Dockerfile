@@ -1,22 +1,18 @@
-# 1. Usamos una versión ligera de Node.js
-FROM node:20-alpine
-
-# 2. Creamos la carpeta donde vivirá el código en el contenedor
-WORKDIR /app
-
-# 3. Copiamos los archivos de dependencias y el código fuente a la vez
-COPY package*.json ./
-COPY tsconfig.json ./
+# Copiamos todo el proyecto
 COPY . .
 
-# 4. Instalamos todas las dependencias (ahora TypeScript sí encontrará la carpeta src/)
-RUN npm install
-
-# 5. Compilamos el código de TypeScript a JavaScript (ejecuta "tsc")
+# Construimos la aplicación para producción
 RUN npm run build
 
-# 6. Exponemos el puerto que configuraste en tu .env
-EXPOSE 1337
+# ETAPA 2: Servidor de producción (Nginx)
+FROM nginx:stable-alpine
 
-# 7. Arrancamos el servidor usando el código ya compilado
-CMD ["npm", "start"]
+# Copiamos los archivos compilados desde la etapa anterior al servidor Nginx
+# NOTA: La ruta dist/ea-backoffice-g5/browser es la estándar en las últimas versiones de Angular
+COPY --from=build-step /app/dist/EA_BACKOFFICE_G5/browser /usr/share/nginx/html
+
+# Exponemos el puerto 80 (puerto por defecto de Nginx)
+EXPOSE 80
+
+# Arrancamos Nginx
+CMD ["nginx", "-g", "daemon off;"]
