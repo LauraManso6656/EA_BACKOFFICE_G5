@@ -36,6 +36,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
+        no-cache: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/backoffice-ea:${{ github.event.head_commit.message }}
 
     - name: Image digest

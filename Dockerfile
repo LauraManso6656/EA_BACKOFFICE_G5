@@ -18,6 +18,8 @@ RUN npm run build
 # ETAPA 2: Servidor de producción (Nginx)
 FROM nginx:stable-alpine
 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Copiamos los archivos compilados desde la etapa anterior al servidor Nginx
 # NOTA: La ruta dist/ea-backoffice-g5/browser es la estándar en las últimas versiones de Angular
 COPY --from=build-step /app/dist/EA_BACKOFFICE_G5/browser /usr/share/nginx/html
