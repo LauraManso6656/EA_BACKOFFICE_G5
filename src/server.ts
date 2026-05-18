@@ -57,7 +57,7 @@ if (isMainModule(import.meta.url) || process.env['pm_id']) {
       throw error;
     }
 
-    Logging.info(`Node Express server listening on http://localhost:${port}`);
+    Logging.info(`Backoffice server listening on port ${port}`);
   });
 }
 

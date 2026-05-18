@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { StatsService } from '../../services/stats-service';
 import { Navbar } from '../navbar/navbar';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home-dashboard',
@@ -12,6 +13,7 @@ import { Navbar } from '../navbar/navbar';
   styleUrl: './home-dashboard.css'
 })
 export class HomeDashboard implements OnInit {
+  public environment = environment;
   // Usamos SIGNALS para una reactividad perfecta
   userCount = signal<number | null>(null);
   universityCount = signal<number | null>(null);

@@ -14,6 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ConfirmService } from '../../services/confirm-service';
 import { PostModalService } from '../../services/post-modal-service';
 import { PostDetailModal } from '../post-detail-modal/post-detail-modal';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-report-detail',
@@ -76,7 +77,7 @@ export class ReportDetail implements OnInit {
 
   fetchTargetDetails(report: Report): void {
     let endpoint = '';
-    const baseUrl = 'http://localhost:1337';
+    const baseUrl = environment.apiUrl;
 
     if (report.tipo === 'user') endpoint = `${baseUrl}/usuarios/${report.objetivoId}`;
     else if (report.tipo === 'post') endpoint = `${baseUrl}/posts/${report.objetivoId}`;
