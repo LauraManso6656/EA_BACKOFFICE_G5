@@ -22,7 +22,7 @@ export class HomeDashboard implements OnInit {
   apiStatus = signal<'online' | 'offline' | 'checking'>('checking');
   dbStatus = signal<'online' | 'offline' | 'checking'>('checking');
   webClientStatus = signal<'online' | 'offline' | 'checking'>('checking');
-  webClientUrl = 'https://www.ea5.upc.edu/';
+  webClientUrl = 'https://ea5.upc.edu/login';
 
   private platformId = inject(PLATFORM_ID);
   private statsService = inject(StatsService);
