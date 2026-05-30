@@ -6,18 +6,16 @@ import { Router, RouterModule } from '@angular/router';
   selector: 'app-navbar',
   imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css'
+  styleUrl: './navbar.css',
 })
 export class Navbar {
   constructor(private router: Router) {}
 
   logout() {
-//aqui se puede eliminar el token de sesion
+    //aqui se puede eliminar el token de sesion
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    
-    
-    
+
     // Redirigir a la página de login
     this.router.navigate(['/login']);
   }

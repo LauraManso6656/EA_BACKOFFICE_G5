@@ -4,12 +4,12 @@ export type ReportType = 'user' | 'post' | 'comment' | 'chat';
 export type ReportStatus = 'pendiente' | 'revisado' | 'resuelto';
 
 export interface Report {
-    _id: string;
-    usuarioReporta: string | Usuario;
-    tipo: ReportType;
-    objetivoId: string;
-    descripcion: string;
-    estado: ReportStatus;
-    createdAt?: string;
-    updatedAt?: string;
+  _id: string;
+  usuarioReporta: string | Usuario;
+  tipo: ReportType;
+  objetivoId: string;
+  descripcion: string;
+  estado: ReportStatus;
+  createdAt?: string;
+  updatedAt?: string;
 }

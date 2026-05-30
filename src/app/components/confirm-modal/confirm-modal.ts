@@ -8,7 +8,7 @@ import { isObservable } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './confirm-modal.html',
-  styleUrl: './confirm-modal.css'
+  styleUrl: './confirm-modal.css',
 })
 export class ConfirmModal implements OnInit {
   options: ConfirmOptions | null = null;
@@ -16,11 +16,11 @@ export class ConfirmModal implements OnInit {
 
   constructor(
     private confirmService: ConfirmService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    this.confirmService.confirm$.subscribe(opt => {
+    this.confirmService.confirm$.subscribe((opt) => {
       this.options = opt;
       this.isProcessing = false;
       this.cdr.detectChanges();
@@ -61,7 +61,7 @@ export class ConfirmModal implements OnInit {
         complete: () => {
           this.confirmService.close();
           this.cdr.detectChanges();
-        }
+        },
       });
     } else {
       this.confirmService.close();
@@ -72,11 +72,14 @@ export class ConfirmModal implements OnInit {
   getIcon(): string {
     if (this.options?.type === 'post') return 'warning';
     if (this.options?.type === 'comment') return 'chat_error';
-    
+
     switch (this.options?.type) {
-      case 'danger': return 'delete';
-      case 'warning': return 'warning';
-      default: return 'help';
+      case 'danger':
+        return 'delete';
+      case 'warning':
+        return 'warning';
+      default:
+        return 'help';
     }
   }
 }

@@ -11,7 +11,7 @@ import { environment } from '../environments/environment';
 export class CommentService {
   private apiUrl = `${environment.apiUrl}/comments`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getComments(page: number = 1, limit: number = 10): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}?page=${page}&limit=${limit}`);

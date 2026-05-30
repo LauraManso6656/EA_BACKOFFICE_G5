@@ -14,7 +14,7 @@ import { ConfirmService } from '../../services/confirm-service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './post-detail-modal.html',
-  styleUrl: './post-detail-modal.css'
+  styleUrl: './post-detail-modal.css',
 })
 export class PostDetailModal implements OnInit {
   private postModalService = inject(PostModalService);
@@ -31,8 +31,8 @@ export class PostDetailModal implements OnInit {
   ngOnInit(): void {
     this.postModalService.post$.subscribe((post: any | null) => {
       if (post) {
-        const postId = typeof post === 'string' ? post : (post._id || post.id);
-        
+        const postId = typeof post === 'string' ? post : post._id || post.id;
+
         if (postId) {
           // Recargamos el post completo del servidor para asegurar que los likes vienen poblados
           this.postService.getPost(postId).subscribe({
@@ -49,7 +49,7 @@ export class PostDetailModal implements OnInit {
                 this.loadCommentsForPost(postId);
               }
               this.cdr.detectChanges();
-            }
+            },
           });
         } else if (typeof post === 'object') {
           // Si no hay ID pero es un objeto (caso raro), lo mostramos tal cual
@@ -80,7 +80,7 @@ export class PostDetailModal implements OnInit {
         this.selectedPostComments = comments;
         this.cdr.detectChanges();
       },
-      error: (err: any) => console.error('Error loading post comments:', err)
+      error: (err: any) => console.error('Error loading post comments:', err),
     });
   }
 
@@ -93,10 +93,8 @@ export class PostDetailModal implements OnInit {
       type: 'post',
       confirmText: 'Delete',
       onConfirm: () => {
-        return this.postService.deletePost(this.selectedPost!._id).pipe(
-          tap(() => this.close())
-        );
-      }
+        return this.postService.deletePost(this.selectedPost!._id).pipe(tap(() => this.close()));
+      },
     });
   }
 
@@ -109,11 +107,13 @@ export class PostDetailModal implements OnInit {
       onConfirm: () => {
         return this.commentService.deleteComment(commentId).pipe(
           tap(() => {
-            this.selectedPostComments = this.selectedPostComments.filter(c => c._id !== commentId);
+            this.selectedPostComments = this.selectedPostComments.filter(
+              (c) => c._id !== commentId,
+            );
             this.cdr.detectChanges();
-          })
+          }),
         );
-      }
+      },
     });
   }
 
@@ -139,8 +139,8 @@ export class PostDetailModal implements OnInit {
 
   getLikers(): any[] {
     if (!this.selectedPost?.likes) return [];
-    
-    return this.selectedPost.likes.map(l => {
+
+    return this.selectedPost.likes.map((l) => {
       if (typeof l === 'string') {
         return { _id: l, nombre: 'User ' + l.substring(0, 4) };
       }
@@ -150,23 +150,19 @@ export class PostDetailModal implements OnInit {
 
   openUserDetail(userId: string): void {
     if (!userId) return;
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/usuario', userId])
-    );
+    const url = this.router.serializeUrl(this.router.createUrlTree(['/usuario', userId]));
     window.open(url, '_blank');
   }
 
   getAuthorId(): string {
     if (!this.selectedPost?.usuario) return '';
-    return typeof this.selectedPost.usuario === 'string' 
-      ? this.selectedPost.usuario 
+    return typeof this.selectedPost.usuario === 'string'
+      ? this.selectedPost.usuario
       : this.selectedPost.usuario._id;
   }
 
   getCommentAuthorId(comment: AppComment): string {
     if (!comment.usuario) return '';
-    return typeof comment.usuario === 'string' 
-      ? comment.usuario 
-      : comment.usuario._id;
+    return typeof comment.usuario === 'string' ? comment.usuario : comment.usuario._id;
   }
 }

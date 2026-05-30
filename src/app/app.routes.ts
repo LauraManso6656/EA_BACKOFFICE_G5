@@ -31,5 +31,5 @@ export const routes: Routes = [
   { path: 'bug/:id', component: BugDetail, canActivate: [authGuard] },
   { path: 'audit', component: AuditList, canActivate: [authGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', redirectTo: '/home' }
+  { path: '**', redirectTo: '/home' },
 ];

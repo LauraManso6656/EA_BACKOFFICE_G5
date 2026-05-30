@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { Post } from '../models/post';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PostModalService {
   private postSubject = new Subject<Post | null>();

@@ -10,7 +10,7 @@ import { BugReport } from '../../models/bug';
   standalone: true,
   imports: [CommonModule, RouterModule, Navbar],
   templateUrl: './bug-detail.html',
-  styleUrl: './bug-detail.css'
+  styleUrl: './bug-detail.css',
 })
 export class BugDetail implements OnInit {
   bug: BugReport | null = null;
@@ -42,7 +42,7 @@ export class BugDetail implements OnInit {
         console.error('Error loading bug:', err);
         this.loading = false;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
@@ -51,12 +51,12 @@ export class BugDetail implements OnInit {
     this.bugService.updateBugStatus(this.bug._id, newStatus).subscribe({
       next: (updated) => {
         if (this.bug && typeof this.bug.usuarioReporta !== 'string') {
-           updated.usuarioReporta = this.bug.usuarioReporta;
+          updated.usuarioReporta = this.bug.usuarioReporta;
         }
         this.bug = updated;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error updating status:', err)
+      error: (err) => console.error('Error updating status:', err),
     });
   }
 

@@ -8,7 +8,10 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:EA_BACKOFFICE_G5": "node dist/EA_BACKOFFICE_G5/server/server.mjs",
-    "postinstall": "npm install -g @angular/cli"
+    "postinstall": "npm install -g @angular/cli",
+    "prepare": "husky",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "private": true,
   "packageManager": "npm@11.8.0",
@@ -31,11 +34,19 @@
     "@angular/build": "^21.2.10",
     "@angular/cli": "^21.2.10",
     "@angular/compiler-cli": "^21.2.12",
+    "@eslint/js": "^10.0.1",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.6.0",
+    "husky": "^9.1.7",
+    "jiti": "^2.7.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",
+    "typescript-eslint": "^8.59.4",
     "vitest": "^4.0.8"
   }
 }

@@ -6,7 +6,7 @@ import { BugReport } from '../models/bug';
 import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BugService {
   private apiUrl = `${environment.apiUrl}/bugs`;
@@ -14,11 +14,11 @@ export class BugService {
   constructor(private http: HttpClient) {}
 
   getBugs(
-    page: number = 1, 
+    page: number = 1,
     limit: number = 10,
     estado: string = 'all',
     plataforma: string = 'all',
-    activeOnly: boolean = false
+    activeOnly: boolean = false,
   ): Observable<any> {
     let url = `${this.apiUrl}?page=${page}&limit=${limit}`;
     if (estado !== 'all') url += `&estado=${estado}`;

@@ -1,6 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../services/usuario-service';
 import { UniversidadService } from '../../services/universidad-service';
@@ -54,8 +60,6 @@ export class UserDetail implements OnInit {
   private confirmService = inject(ConfirmService);
   private postModalService = inject(PostModalService);
 
-
-
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
@@ -66,7 +70,7 @@ export class UserDetail implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private confirmServiceInject: ConfirmService // inject() is used above but let's be consistent if needed. Actually inject is fine.
+    private confirmServiceInject: ConfirmService, // inject() is used above but let's be consistent if needed. Actually inject is fine.
   ) {
     this.userForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -74,7 +78,7 @@ export class UserDetail implements OnInit {
       rol: ['user', Validators.required],
       universidad: [''],
       password: [''],
-      privado: [false]
+      privado: [false],
     });
   }
 
@@ -88,7 +92,7 @@ export class UserDetail implements OnInit {
       this.loadUserReports();
     }
 
-    this.universidadSearch.valueChanges.subscribe(value => {
+    this.universidadSearch.valueChanges.subscribe((value) => {
       if (!value || value.trim() === '') {
         this.userForm.patchValue({ universidad: null });
       }
@@ -109,21 +113,23 @@ export class UserDetail implements OnInit {
         this.reportsTotalDocs = res.totalDocs || 0;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error loading user reports:', err)
+      error: (err) => console.error('Error loading user reports:', err),
     });
   }
 
   loadUserComments(): void {
     if (!this.userId) return;
-    this.commentService.getCommentsFromUser(this.userId, this.commentsPage, this.pageSize).subscribe({
-      next: (res: any) => {
-        this.userComments = res.docs || [];
-        this.commentsTotalPages = res.totalPages || 1;
-        this.commentsTotalDocs = res.totalDocs || 0;
-        this.cdr.detectChanges();
-      },
-      error: (err: any) => console.error('Error loading user comments:', err)
-    });
+    this.commentService
+      .getCommentsFromUser(this.userId, this.commentsPage, this.pageSize)
+      .subscribe({
+        next: (res: any) => {
+          this.userComments = res.docs || [];
+          this.commentsTotalPages = res.totalPages || 1;
+          this.commentsTotalDocs = res.totalDocs || 0;
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => console.error('Error loading user comments:', err),
+      });
   }
 
   loadUserPosts(): void {
@@ -135,7 +141,7 @@ export class UserDetail implements OnInit {
         this.postsTotalDocs = res.totalDocs || 0;
         this.cdr.detectChanges();
       },
-      error: (err: any) => console.error('Error loading user posts:', err)
+      error: (err: any) => console.error('Error loading user posts:', err),
     });
   }
 
@@ -164,9 +170,10 @@ export class UserDetail implements OnInit {
   openConfirmModal(id: string, type: 'post' | 'comment'): void {
     this.confirmService.ask({
       title: type === 'post' ? 'Delete Post?' : 'Delete Comment?',
-      message: type === 'post' 
-        ? 'You are about to permanently delete this content. This action cannot be undone.' 
-        : 'The comment will be permanently removed. This action cannot be undone.',
+      message:
+        type === 'post'
+          ? 'You are about to permanently delete this content. This action cannot be undone.'
+          : 'The comment will be permanently removed. This action cannot be undone.',
       type: type,
       confirmText: 'Delete',
       onConfirm: () => {
@@ -176,7 +183,7 @@ export class UserDetail implements OnInit {
               this.userPosts = this.userPosts.filter((p: Post) => p._id !== id);
               this.cdr.detectChanges();
             },
-            error: (err: any) => console.error('Error deleting post:', err)
+            error: (err: any) => console.error('Error deleting post:', err),
           });
         } else {
           this.commentService.deleteComment(id).subscribe({
@@ -184,10 +191,10 @@ export class UserDetail implements OnInit {
               this.userComments = this.userComments.filter((c: AppComment) => c._id !== id);
               this.cdr.detectChanges();
             },
-            error: (err: any) => console.error('Error deleting comment:', err)
+            error: (err: any) => console.error('Error deleting comment:', err),
           });
         }
-      }
+      },
     });
   }
 
@@ -204,7 +211,7 @@ export class UserDetail implements OnInit {
       next: (post: Post) => {
         this.openPostDetailModal(post);
       },
-      error: (err: any) => console.error('Error loading post from comment:', err)
+      error: (err: any) => console.error('Error loading post from comment:', err),
     });
   }
 
@@ -221,8 +228,8 @@ export class UserDetail implements OnInit {
 
   filterUniversidades(query: string): void {
     const term = query.toLowerCase();
-    this.filteredUniversidades = this.universidades.filter(u =>
-      u.nombre.toLowerCase().includes(term)
+    this.filteredUniversidades = this.universidades.filter((u) =>
+      u.nombre.toLowerCase().includes(term),
     );
   }
 
@@ -238,7 +245,7 @@ export class UserDetail implements OnInit {
   }
 
   getUniversidadNombre(id: string): string {
-    const uni = this.universidades.find(u => u._id === id);
+    const uni = this.universidades.find((u) => u._id === id);
     return uni ? uni.nombre : '';
   }
 
@@ -249,7 +256,7 @@ export class UserDetail implements OnInit {
         this.universidades = data;
         this.filteredUniversidades = data;
       },
-      error: (err: any) => console.error('Error loading universities:', err)
+      error: (err: any) => console.error('Error loading universities:', err),
     });
   }
 
@@ -263,19 +270,19 @@ export class UserDetail implements OnInit {
           rol: user.rol,
           universidad: user.universidad?._id || user.universidad,
           password: '',
-          privado: user.privado || false
+          privado: user.privado || false,
         });
 
         const uniId = user.universidad?._id || user.universidad;
         if (uniId) {
-          const uni = this.universidades.find(u => u._id === uniId);
+          const uni = this.universidades.find((u) => u._id === uniId);
           if (uni) this.universidadSearch.setValue(uni.nombre, { emitEvent: false });
         }
 
         this.userForm.disable();
         this.universidadSearch.disable();
       },
-      error: (err: any) => console.error('Error loading user:', err)
+      error: (err: any) => console.error('Error loading user:', err),
     });
   }
 
@@ -297,11 +304,11 @@ export class UserDetail implements OnInit {
         rol: this.usuario.rol,
         universidad: uniId,
         password: '',
-        privado: this.usuario.privado || false
+        privado: this.usuario.privado || false,
       });
 
       if (uniId) {
-        const uni = this.universidades.find(u => u._id === uniId);
+        const uni = this.universidades.find((u) => u._id === uniId);
         if (uni) this.universidadSearch.setValue(uni.nombre, { emitEvent: false });
       }
     }
@@ -314,7 +321,7 @@ export class UserDetail implements OnInit {
 
     if (this.userId) {
       const dataToUpdate = { ...this.userForm.value };
-      
+
       // Asegurar que si la universidad está vacía se envíe null para borrarla en DB
       if (!dataToUpdate.universidad || dataToUpdate.universidad === '') {
         dataToUpdate.universidad = null;
@@ -334,7 +341,7 @@ export class UserDetail implements OnInit {
         },
         error: (err: any) => {
           console.error('Error al actualizar usuario:', err);
-        }
+        },
       });
     }
   }

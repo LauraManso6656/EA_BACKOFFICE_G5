@@ -11,7 +11,7 @@ import { environment } from '../environments/environment';
 export class PostService {
   private apiUrl = `${environment.apiUrl}/posts`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getPosts(page: number = 1, limit: number = 10, search: string = ''): Observable<any> {
     let url = `${this.apiUrl}?page=${page}&limit=${limit}`;

@@ -23,7 +23,7 @@ export class PostDashboard implements OnInit {
   loading = false;
   errorMsg = '';
   totalPostsCount = 0;
-  
+
   // Pagination
   currentPage = 1;
   pageSize = 10;
@@ -38,20 +38,19 @@ export class PostDashboard implements OnInit {
     private statsService: StatsService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private confirmService: ConfirmService
+    private confirmService: ConfirmService,
   ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.load();
-      
-      this.searchControl.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged()
-      ).subscribe(() => {
-        this.currentPage = 1;
-        this.load();
-      });
+
+      this.searchControl.valueChanges
+        .pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe(() => {
+          this.currentPage = 1;
+          this.load();
+        });
     }
   }
 
@@ -82,7 +81,7 @@ export class PostDashboard implements OnInit {
       next: (res) => {
         this.totalPostsCount = res.count;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
@@ -108,15 +107,17 @@ export class PostDashboard implements OnInit {
           next: () => {
             this.load();
           },
-          error: (err) => console.error('Error deleting post:', err)
+          error: (err) => console.error('Error deleting post:', err),
         });
-      }
+      },
     });
   }
 
   getAuthorName(post: Post): string {
     if (!post || !post.usuario) return 'Unknown User';
-    return typeof post.usuario === 'object' ? (post.usuario as any).nombre : 'User ID: ' + post.usuario;
+    return typeof post.usuario === 'object'
+      ? (post.usuario as any).nombre
+      : 'User ID: ' + post.usuario;
   }
 
   getAuthorInitial(post: Post): string {
@@ -127,6 +128,6 @@ export class PostDashboard implements OnInit {
   getPopulatedComments(post: Post | null): Comment[] {
     if (!post || !post.comments) return [];
     // Filtramos los que son objetos (Comment) y no IDs (string)
-    return post.comments.filter(c => typeof c !== 'string') as Comment[];
+    return post.comments.filter((c) => typeof c !== 'string') as Comment[];
   }
 }

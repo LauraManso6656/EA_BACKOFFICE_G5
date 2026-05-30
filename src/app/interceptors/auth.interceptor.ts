@@ -1,4 +1,9 @@
-import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn } from '@angular/common/http';
+import {
+  HttpInterceptorFn,
+  HttpErrorResponse,
+  HttpRequest,
+  HttpHandlerFn,
+} from '@angular/common/http';
 import { inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
@@ -17,15 +22,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   let clonedReq = req;
   if (token) {
     clonedReq = req.clone({
-      setHeaders: { Authorization: `Bearer ${token}` }
+      setHeaders: { Authorization: `Bearer ${token}` },
     });
   }
 
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
       // Si es un 401 y no es la propia petición de login
-      if (error.status === 401 && !req.url.includes('/auth/login') && isPlatformBrowser(platformId)) {
-
+      if (
+        error.status === 401 &&
+        !req.url.includes('/auth/login') &&
+        isPlatformBrowser(platformId)
+      ) {
         // Si ya nos dio error en el propio refresh, hacemos logout directo
         if (req.url.includes('/auth/refresh')) {
           authService.logout();
@@ -39,22 +47,22 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         // Esperamos a la decisión del usuario
         return sessionService.sessionDecision$.pipe(
           take(1),
-          switchMap(extend => {
+          switchMap((extend) => {
             if (extend) {
               // Intentar refrescar el token
               return authService.refreshToken().pipe(
-                switchMap(res => {
+                switchMap((res) => {
                   // Reintentar la petición original con el nuevo token
                   const newRequest = req.clone({
-                    setHeaders: { Authorization: `Bearer ${res.accessToken}` }
+                    setHeaders: { Authorization: `Bearer ${res.accessToken}` },
                   });
                   return next(newRequest);
                 }),
-                catchError(err => {
+                catchError((err) => {
                   authService.logout();
                   router.navigate(['/login']);
                   return throwError(() => err);
-                })
+                }),
               );
             } else {
               // El usuario eligió cerrar sesión
@@ -62,10 +70,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               router.navigate(['/login']);
               return of(); // Opcional: silenciar el error original
             }
-          })
+          }),
         );
       }
       return throwError(() => error);
-    })
+    }),
   );
 };

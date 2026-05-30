@@ -12,16 +12,16 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private platformId = inject(PLATFORM_ID);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
-      tap(res => {
+      tap((res) => {
         if (isPlatformBrowser(this.platformId)) {
           if (res.accessToken) localStorage.setItem('token', res.accessToken);
           if (res.refreshToken) localStorage.setItem('refreshToken', res.refreshToken);
         }
-      })
+      }),
     );
   }
 
@@ -36,12 +36,12 @@ export class AuthService {
   refreshToken(): Observable<any> {
     const refreshToken = this.getRefreshToken();
     return this.http.post<any>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
-      tap(res => {
+      tap((res) => {
         if (res.accessToken && isPlatformBrowser(this.platformId)) {
           localStorage.setItem('token', res.accessToken);
           if (res.refreshToken) localStorage.setItem('refreshToken', res.refreshToken);
         }
-      })
+      }),
     );
   }
 

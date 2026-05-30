@@ -9,7 +9,7 @@ import Logging from '../../../library/Logging';
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrl: './login.css',
 })
 export class Login implements OnInit {
   loginForm: FormGroup;
@@ -18,11 +18,11 @@ export class Login implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -51,7 +51,7 @@ export class Login implements OnInit {
         error: (err: any) => {
           Logging.error(`Error en login: ${err}`);
           this.errorMsg = 'Credenciales incorrectas o error en el servidor.';
-        }
+        },
       });
     }
   }

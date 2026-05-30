@@ -12,7 +12,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, Navbar, RouterModule, ReactiveFormsModule],
   templateUrl: './audit-list.html',
-  styleUrl: './audit-list.css'
+  styleUrl: './audit-list.css',
 })
 export class AuditList implements OnInit {
   private auditService = inject(AuditService);
@@ -23,18 +23,23 @@ export class AuditList implements OnInit {
   currentPage = signal(1);
   totalPages = signal(1);
   loading = signal(true);
-  
+
   // Filters
   searchControl = new FormControl('');
   startDateControl = new FormControl('');
   endDateControl = new FormControl('');
   actionControl = new FormControl('');
   adminControl = new FormControl('');
-  
+
   admins = signal<any[]>([]);
   actions = [
-    'UPDATE_REPORT', 'DELETE_REPORT', 'DELETE_POST', 
-    'DELETE_COMMENT', 'CHANGE_ROLE', 'BAN_USER', 'UPDATE_USER'
+    'UPDATE_REPORT',
+    'DELETE_REPORT',
+    'DELETE_POST',
+    'DELETE_COMMENT',
+    'CHANGE_ROLE',
+    'BAN_USER',
+    'UPDATE_USER',
   ];
 
   ngOnInit(): void {
@@ -44,10 +49,9 @@ export class AuditList implements OnInit {
   }
 
   setupFilters(): void {
-    this.searchControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(() => this.resetAndLoad());
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe(() => this.resetAndLoad());
 
     this.startDateControl.valueChanges.subscribe(() => this.resetAndLoad());
     this.endDateControl.valueChanges.subscribe(() => this.resetAndLoad());
@@ -57,7 +61,7 @@ export class AuditList implements OnInit {
 
   loadAdmins(): void {
     // Buscamos usuarios con rol admin
-    this.usuarioService.getUsuarios(1, 100, '').subscribe(res => {
+    this.usuarioService.getUsuarios(1, 100, '').subscribe((res) => {
       this.admins.set(res.docs.filter((u: any) => u.rol === 'admin'));
     });
   }
@@ -69,13 +73,13 @@ export class AuditList implements OnInit {
 
   loadLogs(page: number = 1): void {
     this.loading.set(true);
-    
+
     const filters = {
       search: this.searchControl.value,
       startDate: this.startDateControl.value,
       endDate: this.endDateControl.value,
       accion: this.actionControl.value,
-      adminId: this.adminControl.value
+      adminId: this.adminControl.value,
     };
 
     this.auditService.getLogs(page, 20, filters).subscribe({
@@ -89,7 +93,7 @@ export class AuditList implements OnInit {
       error: (err) => {
         console.error('Error loading logs:', err);
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -109,18 +113,24 @@ export class AuditList implements OnInit {
 
   getActionClass(action: string): string {
     if (action.includes('DELETE')) return 'bg-error/10 text-error border-error/20';
-    if (action.includes('UPDATE') || action.includes('CHANGE')) return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
+    if (action.includes('UPDATE') || action.includes('CHANGE'))
+      return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
     if (action.includes('BAN')) return 'bg-error text-white';
     return 'bg-secondary/10 text-secondary border-secondary/20';
   }
 
   getTargetIcon(type: string): string {
     switch (type) {
-      case 'report': return 'flag';
-      case 'post': return 'image';
-      case 'comment': return 'chat_bubble';
-      case 'user': return 'person';
-      default: return 'settings';
+      case 'report':
+        return 'flag';
+      case 'post':
+        return 'image';
+      case 'comment':
+        return 'chat_bubble';
+      case 'user':
+        return 'person';
+      default:
+        return 'settings';
     }
   }
 }

@@ -25,7 +25,7 @@ export class UniversityDashboard implements OnInit {
   errorMsg = '';
   totalUsersCount = 0;
   totalUniversitiesCount = 0;
-  
+
   // Pagination
   currentPage = 1;
   pageSize = 10;
@@ -34,25 +34,24 @@ export class UniversityDashboard implements OnInit {
   private platformId = inject(PLATFORM_ID);
 
   constructor(
-    private universidadService: UniversidadService, 
+    private universidadService: UniversidadService,
     private usuarioService: UsuarioService,
     private statsService: StatsService,
-    private cdr: ChangeDetectorRef, 
+    private cdr: ChangeDetectorRef,
     private router: Router,
-    private confirmService: ConfirmService
+    private confirmService: ConfirmService,
   ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.load();
-      
-      this.searchControl.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged()
-      ).subscribe(value => {
-        this.currentPage = 1; // Reset to first page on search
-        this.load();
-      });
+
+      this.searchControl.valueChanges
+        .pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe((value) => {
+          this.currentPage = 1; // Reset to first page on search
+          this.load();
+        });
     }
   }
 
@@ -62,34 +61,36 @@ export class UniversityDashboard implements OnInit {
     this.cdr.detectChanges();
 
     const searchTerm = this.searchControl.value ?? '';
-    this.universidadService.getUniversidades(this.currentPage, this.pageSize, searchTerm).subscribe({
-      next: (res) => {
-        this.universities = res.docs;
-        this.universitiesFiltradas = this.universities;
-        this.backendTotalPages = res.totalPages;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error(err);
-        this.errorMsg = 'No se han podido cargar las universidades.';
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-    });
+    this.universidadService
+      .getUniversidades(this.currentPage, this.pageSize, searchTerm)
+      .subscribe({
+        next: (res) => {
+          this.universities = res.docs;
+          this.universitiesFiltradas = this.universities;
+          this.backendTotalPages = res.totalPages;
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+          this.errorMsg = 'No se han podido cargar las universidades.';
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+      });
 
     this.statsService.getUserCount().subscribe({
       next: (res) => {
         this.totalUsersCount = res.count;
         this.cdr.detectChanges();
-      }
+      },
     });
 
     this.statsService.getUniversityCount().subscribe({
       next: (res) => {
         this.totalUniversitiesCount = res.count;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
@@ -134,9 +135,9 @@ export class UniversityDashboard implements OnInit {
       onConfirm: () => {
         this.universidadService.deleteUniversidad(university._id).subscribe({
           next: () => this.load(),
-          error: (err) => console.error('Error deleting university:', err)
+          error: (err) => console.error('Error deleting university:', err),
         });
-      }
+      },
     });
   }
 }

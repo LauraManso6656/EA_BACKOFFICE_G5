@@ -21,7 +21,7 @@ import { environment } from '../../environments/environment';
   standalone: true,
   imports: [CommonModule, RouterModule, Navbar, PostDetailModal],
   templateUrl: './report-detail.html',
-  styleUrl: './report-detail.css'
+  styleUrl: './report-detail.css',
 })
 export class ReportDetail implements OnInit {
   private route = inject(ActivatedRoute);
@@ -40,7 +40,7 @@ export class ReportDetail implements OnInit {
   highlightedMessageId = signal<string | null>(null);
 
   // Stats para la sidebar
-  targetStats = signal<{ label: string, value: any }[]>([]);
+  targetStats = signal<{ label: string; value: any }[]>([]);
 
   // --- MODAL DE ALERTAS GENÉRICO ---
   private confirmService = inject(ConfirmService);
@@ -50,7 +50,7 @@ export class ReportDetail implements OnInit {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.route.params.subscribe(params => {
+      this.route.params.subscribe((params) => {
         if (params['id']) {
           this.loadReport(params['id']);
         }
@@ -69,7 +69,7 @@ export class ReportDetail implements OnInit {
         console.error('Error loading report:', err);
         this.loading.set(false);
         this.error.set('Could not load report details');
-      }
+      },
     });
   }
 
@@ -89,34 +89,37 @@ export class ReportDetail implements OnInit {
       return;
     }
 
-    this.http.get(endpoint).pipe(
-      catchError(err => {
-        console.error('Error fetching target details:', err);
-        return of(null);
-      })
-    ).subscribe(data => {
-      this.targetData.set(data);
-      this.prepareStats(report, data);
+    this.http
+      .get(endpoint)
+      .pipe(
+        catchError((err) => {
+          console.error('Error fetching target details:', err);
+          return of(null);
+        }),
+      )
+      .subscribe((data) => {
+        this.targetData.set(data);
+        this.prepareStats(report, data);
 
-      if (report.tipo === 'chat' && data) {
-        // Fetch context history
-        const chatData = data as any;
-        const userA = chatData.remitente?._id || chatData.remitente;
-        const userB = chatData.destinatario?._id || chatData.destinatario;
-        this.http.get<any[]>(`${baseUrl}/chat/context/${userA}/${userB}`).subscribe({
-          next: (messages) => {
-            this.conversation.set(messages);
-            this.loading.set(false);
-          },
-          error: (err) => {
-            console.error('Error fetching chat context:', err);
-            this.loading.set(false);
-          }
-        });
-      } else {
-        this.loading.set(false);
-      }
-    });
+        if (report.tipo === 'chat' && data) {
+          // Fetch context history
+          const chatData = data as any;
+          const userA = chatData.remitente?._id || chatData.remitente;
+          const userB = chatData.destinatario?._id || chatData.destinatario;
+          this.http.get<any[]>(`${baseUrl}/chat/context/${userA}/${userB}`).subscribe({
+            next: (messages) => {
+              this.conversation.set(messages);
+              this.loading.set(false);
+            },
+            error: (err) => {
+              console.error('Error fetching chat context:', err);
+              this.loading.set(false);
+            },
+          });
+        } else {
+          this.loading.set(false);
+        }
+      });
   }
 
   prepareStats(report: Report, data: any): void {
@@ -125,7 +128,7 @@ export class ReportDetail implements OnInit {
       return;
     }
 
-    const stats: { label: string, value: any }[] = [];
+    const stats: { label: string; value: any }[] = [];
 
     if (report.tipo === 'user') {
       stats.push({ label: 'Full Name', value: data.nombre });
@@ -155,7 +158,7 @@ export class ReportDetail implements OnInit {
       next: (updated) => {
         this.report.set(updated);
       },
-      error: (err) => console.error('Error updating status:', err)
+      error: (err) => console.error('Error updating status:', err),
     });
   }
 
@@ -171,9 +174,9 @@ export class ReportDetail implements OnInit {
       onConfirm: () => {
         this.reportService.deleteReport(current._id).subscribe({
           next: () => this.router.navigate(['/reports']),
-          error: (err) => console.error('Error deleting report:', err)
+          error: (err) => console.error('Error deleting report:', err),
         });
-      }
+      },
     });
   }
 
@@ -195,9 +198,10 @@ export class ReportDetail implements OnInit {
   openConfirmModal(id: string, type: 'post' | 'comment'): void {
     this.confirmService.ask({
       title: type === 'post' ? 'Delete Post?' : 'Delete Comment?',
-      message: type === 'post' 
-        ? 'You are about to delete this content permanently. This action cannot be undone.' 
-        : 'The comment will be removed permanently. This action cannot be undone.',
+      message:
+        type === 'post'
+          ? 'You are about to delete this content permanently. This action cannot be undone.'
+          : 'The comment will be removed permanently. This action cannot be undone.',
       type: type,
       confirmText: 'Delete',
       onConfirm: () => {
@@ -206,7 +210,7 @@ export class ReportDetail implements OnInit {
             next: () => {
               this.loadReport(this.report()?._id || '');
             },
-            error: (err: any) => console.error('Error deleting post:', err)
+            error: (err: any) => console.error('Error deleting post:', err),
           });
         } else {
           this.commentService.deleteComment(id).subscribe({
@@ -216,10 +220,10 @@ export class ReportDetail implements OnInit {
               }
               this.cdr.detectChanges();
             },
-            error: (err: any) => console.error('Error deleting comment:', err)
+            error: (err: any) => console.error('Error deleting comment:', err),
           });
         }
-      }
+      },
     });
   }
 
@@ -231,12 +235,12 @@ export class ReportDetail implements OnInit {
   // --- MODAL DETALLE POST ---
   openPostDetailModal(post: any): void {
     if (!post) return;
-    
+
     // Si el post es solo un ID (string), cargamos el objeto completo primero
     if (typeof post === 'string') {
       this.postService.getPost(post).subscribe({
         next: (fullPost) => this.postModalService.open(fullPost),
-        error: (err) => console.error('Error loading post before modal:', err)
+        error: (err) => console.error('Error loading post before modal:', err),
       });
     } else {
       // Si ya es un objeto, lo pasamos directamente
@@ -253,7 +257,7 @@ export class ReportDetail implements OnInit {
       next: (post: Post) => {
         this.openPostDetailModal(post);
       },
-      error: (err: any) => console.error('Error loading post from comment:', err)
+      error: (err: any) => console.error('Error loading post from comment:', err),
     });
   }
 
@@ -275,7 +279,7 @@ export class ReportDetail implements OnInit {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       this.highlightedMessageId.set(messageId);
-      
+
       setTimeout(() => {
         if (this.highlightedMessageId() === messageId) {
           this.highlightedMessageId.set(null);
@@ -286,20 +290,21 @@ export class ReportDetail implements OnInit {
 
   getParentAuthor(msg: any): string {
     if (!msg.parentMessage) return '';
-    
+
     // Si viene poblado del backend
     if (msg.parentMessage.remitente?.nombre) {
       return msg.parentMessage.remitente.nombre;
     }
-    
+
     // Si no, lo buscamos en la lista actual por ID
-    const parentId = typeof msg.parentMessage === 'string' ? msg.parentMessage : msg.parentMessage._id;
-    const parent = this.conversation().find(m => m._id === parentId);
-    
+    const parentId =
+      typeof msg.parentMessage === 'string' ? msg.parentMessage : msg.parentMessage._id;
+    const parent = this.conversation().find((m) => m._id === parentId);
+
     if (parent && parent.remitente?.nombre) {
       return parent.remitente.nombre;
     }
-    
+
     return 'Deleted user';
   }
 }

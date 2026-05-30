@@ -22,7 +22,7 @@ export interface AdminLog {
 import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuditService {
   private http = inject(HttpClient);
@@ -30,8 +30,8 @@ export class AuditService {
 
   getLogs(page: number = 1, limit: number = 20, filters: any = {}): Observable<any> {
     let url = `${this.apiUrl}?page=${page}&limit=${limit}`;
-    
-    Object.keys(filters).forEach(key => {
+
+    Object.keys(filters).forEach((key) => {
       if (filters[key]) {
         url += `&${key}=${filters[key]}`;
       }

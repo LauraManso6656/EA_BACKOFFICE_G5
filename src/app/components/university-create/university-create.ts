@@ -18,11 +18,11 @@ export class UniversityCreate {
   constructor(
     private fb: FormBuilder,
     private universidadService: UniversidadService,
-    private router: Router
+    private router: Router,
   ) {
     this.universityForm = this.fb.group({
       nombre: ['', Validators.required],
-      ubicacion: ['', Validators.required]
+      ubicacion: ['', Validators.required],
     });
   }
 
@@ -30,7 +30,7 @@ export class UniversityCreate {
     if (this.universityForm.valid) {
       this.isSubmitting = true;
       const newUniversity = { ...this.universityForm.value };
-      
+
       this.universidadService.createUniversidad(newUniversity).subscribe({
         next: () => {
           this.router.navigate(['/universidades']);
@@ -38,7 +38,7 @@ export class UniversityCreate {
         error: (err) => {
           console.error('Error creating university:', err);
           this.isSubmitting = false;
-        }
+        },
       });
     } else {
       this.universityForm.markAllAsTouched();

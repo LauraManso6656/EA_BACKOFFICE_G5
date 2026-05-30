@@ -22,14 +22,14 @@ export class UserCreate implements OnInit {
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
     private universidadService: UniversidadService,
-    private router: Router
+    private router: Router,
   ) {
     this.userForm = this.fb.group({
       nombre: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       rol: ['user', Validators.required],
-      universidad: ['', Validators.required]
+      universidad: ['', Validators.required],
     });
   }
 
@@ -42,7 +42,7 @@ export class UserCreate implements OnInit {
       next: (res: any) => {
         this.universidades = res.docs || [];
       },
-      error: (err) => console.error('Error loading universities:', err)
+      error: (err) => console.error('Error loading universities:', err),
     });
   }
 
@@ -50,7 +50,7 @@ export class UserCreate implements OnInit {
     if (this.userForm.valid) {
       this.isSubmitting = true;
       const newUser = { ...this.userForm.value };
-      
+
       this.usuarioService.createUsuario(newUser).subscribe({
         next: () => {
           this.router.navigate(['/usuarios']);
@@ -58,7 +58,7 @@ export class UserCreate implements OnInit {
         error: (err) => {
           console.error('Error creating user:', err);
           this.isSubmitting = false;
-        }
+        },
       });
     } else {
       this.userForm.markAllAsTouched();

@@ -12,11 +12,11 @@ import { tap } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, RouterModule, Navbar],
   templateUrl: './bug-dashboard.html',
-  styleUrl: './bug-dashboard.css'
+  styleUrl: './bug-dashboard.css',
 })
 export class BugDashboard implements OnInit {
   bugs: BugReport[] = [];
-  
+
   // Pagination
   currentPage = 1;
   pageSize = 10;
@@ -35,7 +35,7 @@ export class BugDashboard implements OnInit {
 
   constructor(
     private bugService: BugService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -46,26 +46,28 @@ export class BugDashboard implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.bugService.getBugs(
-      this.currentPage, 
-      this.pageSize,
-      this.estadoFilter,
-      this.plataformaFilter,
-      this.showOnlyActive
-    ).subscribe({
-      next: (res) => {
-        this.bugs = res.docs;
-        this.totalPages = res.totalPages;
-        this.totalDocs = res.totalDocs || 0;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error loading bugs:', err);
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
+    this.bugService
+      .getBugs(
+        this.currentPage,
+        this.pageSize,
+        this.estadoFilter,
+        this.plataformaFilter,
+        this.showOnlyActive,
+      )
+      .subscribe({
+        next: (res) => {
+          this.bugs = res.docs;
+          this.totalPages = res.totalPages;
+          this.totalDocs = res.totalDocs || 0;
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error loading bugs:', err);
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   filterBugs(): void {
@@ -82,7 +84,10 @@ export class BugDashboard implements OnInit {
 
   toggleActiveFilter(): void {
     this.showOnlyActive = !this.showOnlyActive;
-    if (this.showOnlyActive && (this.estadoFilter === 'resuelto' || this.estadoFilter === 'rechazado')) {
+    if (
+      this.showOnlyActive &&
+      (this.estadoFilter === 'resuelto' || this.estadoFilter === 'rechazado')
+    ) {
       this.estadoFilter = 'all'; // Reset status if active only is turned on and we were viewing resolved/rejected
     }
     this.filterBugs();
@@ -111,7 +116,7 @@ export class BugDashboard implements OnInit {
           updated.usuarioReporta = existingReporter;
         }
 
-        const index = this.bugs.findIndex(b => b._id === updated._id);
+        const index = this.bugs.findIndex((b) => b._id === updated._id);
         if (index !== -1) this.bugs[index] = updated;
         this.isUpdating = false;
         this.cdr.detectChanges();
@@ -119,7 +124,7 @@ export class BugDashboard implements OnInit {
       error: (err) => {
         console.error('Error updating status:', err);
         this.isUpdating = false;
-      }
+      },
     });
   }
 
@@ -132,11 +137,11 @@ export class BugDashboard implements OnInit {
       onConfirm: () => {
         return this.bugService.deleteBug(bug._id).pipe(
           tap(() => {
-            this.bugs = this.bugs.filter(b => b._id !== bug._id);
+            this.bugs = this.bugs.filter((b) => b._id !== bug._id);
             this.filterBugs();
-          })
+          }),
         );
-      }
+      },
     });
   }
 

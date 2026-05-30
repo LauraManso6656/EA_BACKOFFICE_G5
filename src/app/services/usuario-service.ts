@@ -9,9 +9,9 @@ import { environment } from '../environments/environment';
 })
 export class UsuarioService {
   private baseUrl = environment.apiUrl;
-  private apiUrl = this.baseUrl +'/usuarios';
+  private apiUrl = this.baseUrl + '/usuarios';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getUsuarios(page: number = 1, limit: number = 10, search: string = ''): Observable<any> {
     let url = `${this.apiUrl}?page=${page}&limit=${limit}`;

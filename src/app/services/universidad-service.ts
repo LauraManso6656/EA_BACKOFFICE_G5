@@ -9,9 +9,9 @@ import { environment } from '../environments/environment';
 })
 export class UniversidadService {
   private baseUrl = environment.apiUrl;
-  private apiUrl = this.baseUrl +'/universidades';
+  private apiUrl = this.baseUrl + '/universidades';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getUniversidades(page: number = 1, limit: number = 10, search: string = ''): Observable<any> {
     let url = `${this.apiUrl}?page=${page}&limit=${limit}`;

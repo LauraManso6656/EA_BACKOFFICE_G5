@@ -1,7 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef, inject, PLATFORM_ID } from '@angular/core';
 import { Usuario } from '../../models/usuario';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Router, RouterModule } from '@angular/router';
 import { Universidad } from '../../models/universidad';
@@ -10,7 +16,6 @@ import { UniversidadService } from '../../services/universidad-service';
 import { StatsService } from '../../services/stats-service';
 import { Navbar } from '../navbar/navbar';
 import { ConfirmService } from '../../services/confirm-service';
-
 
 @Component({
   selector: 'app-user-dashboard',
@@ -41,20 +46,19 @@ export class UserDashboard implements OnInit {
     private universidadService: UniversidadService,
     private statsService: StatsService,
     private cdr: ChangeDetectorRef,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.load();
 
-      this.searchControl.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged()
-      ).subscribe(value => {
-        this.currentPage = 1;
-        this.load();
-      });
+      this.searchControl.valueChanges
+        .pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe((value) => {
+          this.currentPage = 1;
+          this.load();
+        });
     }
   }
 
@@ -85,14 +89,14 @@ export class UserDashboard implements OnInit {
       next: (res) => {
         this.totalUsuarios = res.count;
         this.cdr.detectChanges();
-      }
+      },
     });
 
     this.statsService.getUniversityCount().subscribe({
       next: (res) => {
         this.totalUniversidades = res.count;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
@@ -113,7 +117,12 @@ export class UserDashboard implements OnInit {
 
   getInitials(name: string): string {
     if (!name) return '??';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   }
 
   //Función: obtener nombre de universidad para mostrar en la tabla
@@ -138,9 +147,9 @@ export class UserDashboard implements OnInit {
       onConfirm: () => {
         this.api.hardDeleteUsuario(usuario._id).subscribe({
           next: () => this.load(),
-          error: (err) => console.error('Error deleting user:', err)
+          error: (err) => console.error('Error deleting user:', err),
         });
-      }
+      },
     });
   }
 
@@ -158,7 +167,7 @@ export class UserDashboard implements OnInit {
         error: (err) => {
           console.error('Recovery failed:', err);
           event.target.checked = false; // rollback
-        }
+        },
       });
     } else {
       // Switch is OFF -> Soft Delete
@@ -170,14 +179,14 @@ export class UserDashboard implements OnInit {
         error: (err) => {
           console.error('Soft delete failed:', err);
           event.target.checked = true; // rollback
-        }
+        },
       });
     }
   }
 
   onTogglePrivacy(usuario: Usuario, event: any): void {
     const checkValue = event.target.checked;
-    
+
     this.api.updateUsuario(usuario._id, { privado: checkValue }).subscribe({
       next: (res) => {
         usuario.privado = checkValue;
@@ -186,7 +195,7 @@ export class UserDashboard implements OnInit {
       error: (err) => {
         console.error('Privacy toggle failed:', err);
         event.target.checked = !checkValue; // rollback
-      }
+      },
     });
   }
 }

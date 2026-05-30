@@ -14,20 +14,20 @@ import { ConfirmService } from '../../services/confirm-service';
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule, Navbar],
   templateUrl: './report-dashboard.html',
-  styleUrl: './report-dashboard.css'
+  styleUrl: './report-dashboard.css',
 })
 export class ReportDashboard implements OnInit {
   reports: Report[] = [];
   filteredReports: Report[] = [];
   visibleReports: Report[] = [];
-  
+
   // Stats
   reportStats: ReportStats = {
     total: 0,
     user: 0,
     post: 0,
     comment: 0,
-    chat: 0
+    chat: 0,
   };
 
   // Pagination
@@ -52,17 +52,16 @@ export class ReportDashboard implements OnInit {
   constructor(
     private reportService: ReportService,
     private statsService: StatsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.load();
-      
-      this.searchControl.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged()
-      ).subscribe(() => this.filterReports());
+
+      this.searchControl.valueChanges
+        .pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe(() => this.filterReports());
       this.startDateControl.valueChanges.subscribe(() => this.filterReports());
       this.endDateControl.valueChanges.subscribe(() => this.filterReports());
     }
@@ -79,30 +78,32 @@ export class ReportDashboard implements OnInit {
     const startDate = this.startDateControl.value ?? '';
     const endDate = this.endDateControl.value ?? '';
 
-    this.reportService.getReports(
-      this.currentPage, 
-      this.pageSize,
-      search,
-      this.tipoFilter,
-      this.showOnlyActive,
-      startDate,
-      endDate,
-      this.estadoFilter
-    ).subscribe({
-      next: (res) => {
-        this.reports = res.docs;
-        this.totalPages = res.totalPages;
-        this.totalDocs = res.totalDocs || 0;
-        this.visibleReports = this.reports;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error loading reports:', err);
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
+    this.reportService
+      .getReports(
+        this.currentPage,
+        this.pageSize,
+        search,
+        this.tipoFilter,
+        this.showOnlyActive,
+        startDate,
+        endDate,
+        this.estadoFilter,
+      )
+      .subscribe({
+        next: (res) => {
+          this.reports = res.docs;
+          this.totalPages = res.totalPages;
+          this.totalDocs = res.totalDocs || 0;
+          this.visibleReports = this.reports;
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error loading reports:', err);
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   loadStats(): void {
@@ -111,7 +112,7 @@ export class ReportDashboard implements OnInit {
         this.reportStats = data;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error loading report stats:', err)
+      error: (err) => console.error('Error loading report stats:', err),
     });
   }
 
@@ -163,7 +164,7 @@ export class ReportDashboard implements OnInit {
           updated.usuarioReporta = existingReporter;
         }
 
-        const index = this.reports.findIndex(r => r._id === updated._id);
+        const index = this.reports.findIndex((r) => r._id === updated._id);
         if (index !== -1) this.reports[index] = updated;
         this.filterReports();
         this.loadStats();
@@ -172,7 +173,7 @@ export class ReportDashboard implements OnInit {
       error: (err) => {
         console.error('Error updating status:', err);
         this.isUpdating = false;
-      }
+      },
     });
   }
 
@@ -185,12 +186,12 @@ export class ReportDashboard implements OnInit {
       onConfirm: () => {
         return this.reportService.deleteReport(report._id).pipe(
           tap(() => {
-            this.reports = this.reports.filter(r => r._id !== report._id);
+            this.reports = this.reports.filter((r) => r._id !== report._id);
             this.filterReports();
             this.loadStats();
-          })
+          }),
         );
-      }
+      },
     });
   }
 

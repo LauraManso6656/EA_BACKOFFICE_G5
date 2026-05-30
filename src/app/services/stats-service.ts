@@ -27,7 +27,7 @@ import { environment } from '../environments/environment';
 export class StatsService {
   private apiUrl = `${environment.apiUrl}/stats`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getGlobalStats(): Observable<GlobalStats> {
     return this.http.get<GlobalStats>(`${this.apiUrl}/all`);

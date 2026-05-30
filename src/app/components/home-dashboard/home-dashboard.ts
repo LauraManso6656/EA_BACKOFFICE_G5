@@ -5,13 +5,12 @@ import { StatsService } from '../../services/stats-service';
 import { Navbar } from '../navbar/navbar';
 import { environment } from '../../environments/environment';
 
-
 @Component({
   selector: 'app-home-dashboard',
   standalone: true,
   imports: [CommonModule, RouterModule, Navbar],
   templateUrl: './home-dashboard.html',
-  styleUrl: './home-dashboard.css'
+  styleUrl: './home-dashboard.css',
 })
 export class HomeDashboard implements OnInit {
   public environment = environment;
@@ -57,8 +56,8 @@ export class HomeDashboard implements OnInit {
       error: (err) => {
         console.error('Error fetching global stats:', err);
         this.apiStatus.set('offline'); // El servidor no ha contestado
-        this.dbStatus.set('offline');  // Si el servidor no contesta, asumimos DB offline también
-      }
+        this.dbStatus.set('offline'); // Si el servidor no contesta, asumimos DB offline también
+      },
     });
 
     this.checkWebClientStatus();

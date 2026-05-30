@@ -33,11 +33,11 @@ export class UniversityDetail implements OnInit {
     private universidadService: UniversidadService,
     private usuarioService: UsuarioService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {
     this.universityForm = this.fb.group({
       nombre: ['', Validators.required],
-      ubicacion: ['', Validators.required]
+      ubicacion: ['', Validators.required],
     });
   }
 
@@ -62,14 +62,15 @@ export class UniversityDetail implements OnInit {
   applyUserSearch(): void {
     const term = this.searchTerm.toLowerCase().trim();
     if (!term) {
-        this.filteredUsers = [...this.universityUsers];
-        return;
+      this.filteredUsers = [...this.universityUsers];
+      return;
     }
 
-    this.filteredUsers = this.universityUsers.filter(u => 
+    this.filteredUsers = this.universityUsers.filter(
+      (u) =>
         u.nombre.toLowerCase().includes(term) ||
         u.email.toLowerCase().includes(term) ||
-        u.rol.toLowerCase().includes(term)
+        u.rol.toLowerCase().includes(term),
     );
   }
 
@@ -79,11 +80,11 @@ export class UniversityDetail implements OnInit {
         this.university = uni;
         this.universityForm.patchValue({
           nombre: uni.nombre,
-          ubicacion: uni.ubicacion
+          ubicacion: uni.ubicacion,
         });
         this.filterUniversityUsers();
       },
-      error: (err) => console.error('Error loading university:', err)
+      error: (err) => console.error('Error loading university:', err),
     });
   }
 
@@ -114,14 +115,19 @@ export class UniversityDetail implements OnInit {
           if (field === 'ubicacion') this.isEditingUbicacion = false;
           this.filterUniversityUsers();
         },
-        error: (err) => console.error('Error updating university:', err)
+        error: (err) => console.error('Error updating university:', err),
       });
     }
   }
 
   getInitials(name: string): string {
     if (!name) return '??';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   }
 
   openUnlinkModal(user: Usuario): void {
@@ -134,9 +140,9 @@ export class UniversityDetail implements OnInit {
         const dataToUpdate = { universidad: null };
         this.usuarioService.updateUsuario(user._id, dataToUpdate as any).subscribe({
           next: () => this.loadUniversity(),
-          error: (err: any) => console.error('Error unlinking user:', err)
+          error: (err: any) => console.error('Error unlinking user:', err),
         });
-      }
+      },
     });
   }
 }

@@ -11,13 +11,13 @@ export interface ConfirmOptions {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfirmService {
   private confirmSubject = new Subject<ConfirmOptions | null>();
   confirm$ = this.confirmSubject.asObservable();
 
-  constructor() { }
+  constructor() {}
 
   /**
    * Abre un modal de confirmación.

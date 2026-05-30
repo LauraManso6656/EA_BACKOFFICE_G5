@@ -2,12 +2,12 @@ import { Injectable, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SessionService {
   // Signal para controlar la visibilidad del modal
   isVisible = signal(false);
-  
+
   // Subject para emitir la decisión del usuario (true = extender, false = logout)
   private sessionDecision = new Subject<boolean>();
   sessionDecision$ = this.sessionDecision.asObservable();

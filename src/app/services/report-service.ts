@@ -6,7 +6,7 @@ import { Report } from '../models/report';
 import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportService {
   private apiUrl = `${environment.apiUrl}/reports`;
@@ -14,14 +14,14 @@ export class ReportService {
   constructor(private http: HttpClient) {}
 
   getReports(
-    page: number = 1, 
+    page: number = 1,
     limit: number = 10,
     search: string = '',
     tipo: string = 'all',
     activeOnly: boolean = false,
     startDate: string = '',
     endDate: string = '',
-    estado: string = 'all'
+    estado: string = 'all',
   ): Observable<any> {
     let url = `${this.apiUrl}?page=${page}&limit=${limit}`;
     if (search) url += `&search=${encodeURIComponent(search)}`;
@@ -30,7 +30,7 @@ export class ReportService {
     if (startDate) url += `&startDate=${startDate}`;
     if (endDate) url += `&endDate=${endDate}`;
     if (estado !== 'all') url += `&estado=${estado}`;
-    
+
     return this.http.get<any>(url);
   }
 
