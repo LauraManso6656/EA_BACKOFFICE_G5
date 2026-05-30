@@ -3,7 +3,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { StatsService } from '../../services/stats-service';
 import { Navbar } from '../navbar/navbar';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-home-dashboard',
