@@ -13,14 +13,14 @@ describe('UserDashboard', () => {
       imports: [UserDashboard],
       providers: [
         provideRouter([]),
-        provideHttpClient(),        // Permite que los servicios HTTP del componente se configuren
-        provideHttpClientTesting()  // Intercepta las llamadas a la API de la UPC para que den un 200 ficticio y no fallen
+        provideHttpClient(), // Permite que los servicios HTTP del componente se configuren
+        provideHttpClientTesting(), // Intercepta las llamadas a la API de la UPC para que den un 200 ficticio y no fallen
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserDashboard);
     component = fixture.componentInstance;
-    
+
     fixture.detectChanges();
     await fixture.whenStable();
   });
@@ -29,4 +29,4 @@ describe('UserDashboard', () => {
     expect(component).toBeTruthy();
   });
 });
-//cambio 
+//cambio

@@ -11,7 +11,8 @@
     "postinstall": "npm install -g @angular/cli",
     "prepare": "husky",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "format": "prettier . --write"
   },
   "private": true,
   "packageManager": "npm@11.8.0",

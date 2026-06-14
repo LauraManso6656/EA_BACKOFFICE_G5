@@ -1,94 +1,146 @@
 <!-- TopNavBar -->
-<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-primary-container/40 backdrop-blur-md border-b border-outline-variant/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
-    <div class="flex items-center gap-4">
-        <button class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-container-highest/50" [routerLink]="['/usuarios']">
-            <span class="material-symbols-outlined">arrow_back</span>
-            <span class="text-sm font-bold">Volver</span>
-        </button>
+<nav
+  class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-primary-container/40 backdrop-blur-md border-b border-outline-variant/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]"
+>
+  <div class="flex items-center gap-4">
+    <button
+      class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-container-highest/50"
+      [routerLink]="['/usuarios']"
+    >
+      <span class="material-symbols-outlined">arrow_back</span>
+      <span class="text-sm font-bold">Volver</span>
+    </button>
+  </div>
+
+  <div class="absolute left-1/2 -translate-x-1/2">
+    <span class="text-xl font-bold tracking-tight text-white">AdminPanel</span>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <div
+      class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 backdrop-blur-sm shadow-sm border border-outline-variant/20"
+    >
+      <span class="text-[11px] font-semibold tracking-wider uppercase text-secondary">Admin</span>
+      <img
+        alt="Admin profile avatar"
+        class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/30"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAThWY8GEDdX3rTREctzL1H8A_n0zL-qGnTlq8L3mE5l9mot1LdyOB769PIdsaQ6assJ1wP8yYnkg_sIRbEW8USMhdbQpWbCpX8RpGyx9aOKx1mXyq_5nOo_2N4HnOjSAwv4TUIalX0tZRoFDHKUeQXQXZw7pbOYn-cilQrHrWXMbOxkd0ABKzi8vexVkeCzbHImdWdjPXMH0lamAT_rcTFlzn3KT7SIN1dV3Rbek2dtEr-iMuuGJNxXrXSGOFtZg5wCT1ncI3rXLSV"
+      />
     </div>
-    
-    <div class="absolute left-1/2 -translate-x-1/2">
-        <span class="text-xl font-bold tracking-tight text-white">AdminPanel</span>
-    </div>
-    
-    <div class="flex items-center gap-4">
-        <div class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 backdrop-blur-sm shadow-sm border border-outline-variant/20">
-            <span class="text-[11px] font-semibold tracking-wider uppercase text-secondary">Admin</span>
-            <img alt="Admin profile avatar" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAThWY8GEDdX3rTREctzL1H8A_n0zL-qGnTlq8L3mE5l9mot1LdyOB769PIdsaQ6assJ1wP8yYnkg_sIRbEW8USMhdbQpWbCpX8RpGyx9aOKx1mXyq_5nOo_2N4HnOjSAwv4TUIalX0tZRoFDHKUeQXQXZw7pbOYn-cilQrHrWXMbOxkd0ABKzi8vexVkeCzbHImdWdjPXMH0lamAT_rcTFlzn3KT7SIN1dV3Rbek2dtEr-iMuuGJNxXrXSGOFtZg5wCT1ncI3rXLSV"/>
-        </div>
-    </div>
+  </div>
 </nav>
 
 <div class="pt-16 min-h-screen flex items-center justify-center p-6">
-    <div class="w-full max-w-xl">
-        <div class="bg-primary-container rounded-2xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30">
-            <div class="mb-10 text-center">
-                <h2 class="text-2xl font-bold text-white mb-2">Crear Usuario</h2>
-                <p class="text-on-surface-variant text-sm">Añadir un nuevo usuario al sistema</p>
-            </div>
+  <div class="w-full max-w-xl">
+    <div
+      class="bg-primary-container rounded-2xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30"
+    >
+      <div class="mb-10 text-center">
+        <h2 class="text-2xl font-bold text-white mb-2">Crear Usuario</h2>
+        <p class="text-on-surface-variant text-sm">Añadir un nuevo usuario al sistema</p>
+      </div>
 
-            <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-6">
-                <!-- Nombre -->
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Nombre</label>
-                    <input type="text" formControlName="nombre" placeholder="Nombre completo"
-                           class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white">
-                    <div *ngIf="userForm.get('nombre')?.invalid && userForm.get('nombre')?.touched" class="text-red-400 text-xs font-semibold pl-1">
-                        El nombre es obligatorio.
-                    </div>
-                </div>
-
-                <!-- Email -->
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Email</label>
-                    <input type="email" formControlName="email" placeholder="ejemplo@correo.com"
-                           class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white">
-                    <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-red-400 text-xs font-semibold pl-1">
-                        Debe ser un email válido.
-                    </div>
-                </div>
-
-                <!-- Contraseña -->
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Contraseña</label>
-                    <input type="password" formControlName="password" placeholder="Mínimo 6 caracteres"
-                           class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white">
-                    <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="text-red-400 text-xs font-semibold pl-1">
-                        La contraseña debe tener al menos 6 caracteres.
-                    </div>
-                </div>
-
-                <!-- Rol -->
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Rol</label>
-                    <select formControlName="rol" 
-                            class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white appearance-none">
-                        <option value="user">Usuario</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-                </div>
-
-                <!-- Organización / Universidad -->
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Organización / Universidad</label>
-                    <select formControlName="universidad" 
-                            class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white appearance-none">
-                        <option value="" disabled selected>Seleccione una organización</option>
-                        <option *ngFor="let uni of universidades" [value]="uni._id">{{ uni.nombre }}</option>
-                    </select>
-                    <div *ngIf="userForm.get('universidad')?.invalid && userForm.get('universidad')?.touched" class="text-red-400 text-xs font-semibold pl-1">
-                        La organización es obligatoria.
-                    </div>
-                </div>
-
-                <div class="pt-4">
-                    <button type="submit" [disabled]="userForm.invalid || isSubmitting"
-                            class="w-full bg-gradient-to-br from-secondary to-primary-container text-on-secondary-fixed py-3.5 rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                        <span *ngIf="!isSubmitting">Crear Usuario</span>
-                        <span *ngIf="isSubmitting">Creando...</span>
-                    </button>
-                </div>
-            </form>
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Nombre -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1"
+            >Nombre</label
+          >
+          <input
+            type="text"
+            formControlName="nombre"
+            placeholder="Nombre completo"
+            class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white"
+          />
+          <div
+            *ngIf="userForm.get('nombre')?.invalid && userForm.get('nombre')?.touched"
+            class="text-red-400 text-xs font-semibold pl-1"
+          >
+            El nombre es obligatorio.
+          </div>
         </div>
+
+        <!-- Email -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1"
+            >Email</label
+          >
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="ejemplo@correo.com"
+            class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white"
+          />
+          <div
+            *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+            class="text-red-400 text-xs font-semibold pl-1"
+          >
+            Debe ser un email válido.
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1"
+            >Contraseña</label
+          >
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="Mínimo 6 caracteres"
+            class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white"
+          />
+          <div
+            *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched"
+            class="text-red-400 text-xs font-semibold pl-1"
+          >
+            La contraseña debe tener al menos 6 caracteres.
+          </div>
+        </div>
+
+        <!-- Rol -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Rol</label>
+          <select
+            formControlName="rol"
+            class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white appearance-none"
+          >
+            <option value="user">Usuario</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+
+        <!-- Organización / Universidad -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1"
+            >Organización / Universidad</label
+          >
+          <select
+            formControlName="universidad"
+            class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white appearance-none"
+          >
+            <option value="" disabled selected>Seleccione una organización</option>
+            <option *ngFor="let uni of universidades" [value]="uni._id">{{ uni.nombre }}</option>
+          </select>
+          <div
+            *ngIf="userForm.get('universidad')?.invalid && userForm.get('universidad')?.touched"
+            class="text-red-400 text-xs font-semibold pl-1"
+          >
+            La organización es obligatoria.
+          </div>
+        </div>
+
+        <div class="pt-4">
+          <button
+            type="submit"
+            [disabled]="userForm.invalid || isSubmitting"
+            class="w-full bg-gradient-to-br from-secondary to-primary-container text-on-secondary-fixed py-3.5 rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!isSubmitting">Crear Usuario</span>
+            <span *ngIf="isSubmitting">Creando...</span>
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>

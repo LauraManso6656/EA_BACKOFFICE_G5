@@ -7,83 +7,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
     <script>
       tailwind.config = {
-        darkMode: "class",
+        darkMode: 'class',
         theme: {
           extend: {
             colors: {
-              "secondary-container": "#79c7ee",
-              "primary-container": "#003754",
-              "surface-container-lowest": "#001e2e",
-              "error-container": "#ff1744",
-              "surface-bright": "#002a42",
-              "primary": "#79c7ee",
-              "on-secondary-fixed": "#001e2b",
-              "on-primary-fixed": "#001e30",
-              "secondary": "#79c7ee",
-              "on-error-container": "#ffdad6",
-              "primary-fixed-dim": "#a2cbef",
-              "surface-container-highest": "#003754",
-              "surface-container-low": "#002b40",
-              "tertiary-fixed": "#ffdcc6",
-              "surface-container": "#00314a",
-              "on-secondary-fixed-variant": "#004d66",
-              "outline": "#8b9297",
-              "tertiary-fixed-dim": "#fbb88a",
-              "tertiary": "#fbb88a",
-              "outline-variant": "#42474d",
-              "surface-tint": "#79c7ee",
-              "on-primary": "#00344d",
-              "on-background": "#e1e2e1",
-              "on-surface": "#e1e2e1",
-              "secondary-fixed": "#c1e8ff",
-              "on-tertiary-fixed": "#301400",
-              "on-primary-container": "#cbe6ff",
-              "inverse-primary": "#0062a1",
-              "surface": "#002134",
-              "on-tertiary": "#4c2800",
-              "surface-dim": "#001e2e",
-              "tertiary-container": "#693b18",
-              "secondary-fixed-dim": "#82d0f7",
-              "background": "#002134",
-              "inverse-on-surface": "#002134",
-              "on-secondary": "#003549",
-              "on-tertiary-container": "#ffdcbe",
-              "primary-fixed": "#cbe6ff",
-              "on-surface-variant": "#c2c7ce",
-              "on-error": "#ffffff",
-              "on-tertiary-fixed-variant": "#693b18",
-              "on-secondary-container": "#001e2b",
-              "surface-container-high": "#003754",
-              "on-primary-fixed-variant": "#004a77",
-              "error": "#ff5252",
-              "surface-variant": "#42474d",
-              "inverse-surface": "#e1e2e1"
+              'secondary-container': '#79c7ee',
+              'primary-container': '#003754',
+              'surface-container-lowest': '#001e2e',
+              'error-container': '#ff1744',
+              'surface-bright': '#002a42',
+              primary: '#79c7ee',
+              'on-secondary-fixed': '#001e2b',
+              'on-primary-fixed': '#001e30',
+              secondary: '#79c7ee',
+              'on-error-container': '#ffdad6',
+              'primary-fixed-dim': '#a2cbef',
+              'surface-container-highest': '#003754',
+              'surface-container-low': '#002b40',
+              'tertiary-fixed': '#ffdcc6',
+              'surface-container': '#00314a',
+              'on-secondary-fixed-variant': '#004d66',
+              outline: '#8b9297',
+              'tertiary-fixed-dim': '#fbb88a',
+              tertiary: '#fbb88a',
+              'outline-variant': '#42474d',
+              'surface-tint': '#79c7ee',
+              'on-primary': '#00344d',
+              'on-background': '#e1e2e1',
+              'on-surface': '#e1e2e1',
+              'secondary-fixed': '#c1e8ff',
+              'on-tertiary-fixed': '#301400',
+              'on-primary-container': '#cbe6ff',
+              'inverse-primary': '#0062a1',
+              surface: '#002134',
+              'on-tertiary': '#4c2800',
+              'surface-dim': '#001e2e',
+              'tertiary-container': '#693b18',
+              'secondary-fixed-dim': '#82d0f7',
+              background: '#002134',
+              'inverse-on-surface': '#002134',
+              'on-secondary': '#003549',
+              'on-tertiary-container': '#ffdcbe',
+              'primary-fixed': '#cbe6ff',
+              'on-surface-variant': '#c2c7ce',
+              'on-error': '#ffffff',
+              'on-tertiary-fixed-variant': '#693b18',
+              'on-secondary-container': '#001e2b',
+              'surface-container-high': '#003754',
+              'on-primary-fixed-variant': '#004a77',
+              error: '#ff5252',
+              'surface-variant': '#42474d',
+              'inverse-surface': '#e1e2e1',
             },
             fontFamily: {
-              "headline": ["Inter"],
-              "body": ["Inter"],
-              "label": ["Inter"]
+              headline: ['Inter'],
+              body: ['Inter'],
+              label: ['Inter'],
             },
-            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            borderRadius: { DEFAULT: '0.25rem', lg: '0.5rem', xl: '0.75rem', full: '9999px' },
           },
         },
-      }
+      };
     </script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #002134;
-            background-image: radial-gradient(circle at top left, rgba(121, 199, 238, 0.05), transparent 40%),
-                              radial-gradient(circle at bottom right, rgba(0, 55, 84, 0.2), transparent 40%);
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            vertical-align: middle;
-        }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #002134;
+        background-image:
+          radial-gradient(circle at top left, rgba(121, 199, 238, 0.05), transparent 40%),
+          radial-gradient(circle at bottom right, rgba(0, 55, 84, 0.2), transparent 40%);
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+        vertical-align: middle;
+      }
     </style>
   </head>
   <body class="min-h-screen text-on-surface antialiased bg-background">

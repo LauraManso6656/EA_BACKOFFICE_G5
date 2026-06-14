@@ -1,151 +1,238 @@
 <!-- Modal Detalle Post (Estilo Instagram) -->
-<div *ngIf="selectedPost" (click)="close()"
-    class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer">
-    
-    <div (click)="$event.stopPropagation()"
-        class="bg-primary-container w-full max-w-5xl h-[80vh] rounded-3xl border border-outline-variant/30 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] overflow-hidden flex cursor-default">
-        
-        <!-- Column Izda: Imagen -->
-        <div class="flex-1 bg-black flex items-center justify-center relative">
-            <img *ngIf="selectedPost.imageUrl" [src]="selectedPost.imageUrl" class="max-w-full max-h-full object-contain">
-            <div *ngIf="!selectedPost.imageUrl" class="flex flex-col items-center text-outline-variant">
-                <span class="material-symbols-outlined text-6xl">image_not_supported</span>
-                <p class="text-xs mt-4 uppercase tracking-[0.2em] font-bold">No Image</p>
-            </div>
-            
-            <button (click)="close()" class="absolute top-4 left-4 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all hover:scale-110">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
+<div
+  *ngIf="selectedPost"
+  (click)="close()"
+  class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer"
+>
+  <div
+    (click)="$event.stopPropagation()"
+    class="bg-primary-container w-full max-w-5xl h-[80vh] rounded-3xl border border-outline-variant/30 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] overflow-hidden flex cursor-default"
+  >
+    <!-- Column Izda: Imagen -->
+    <div class="flex-1 bg-black flex items-center justify-center relative">
+      <img
+        *ngIf="selectedPost.imageUrl"
+        [src]="selectedPost.imageUrl"
+        class="max-w-full max-h-full object-contain"
+      />
+      <div *ngIf="!selectedPost.imageUrl" class="flex flex-col items-center text-outline-variant">
+        <span class="material-symbols-outlined text-6xl">image_not_supported</span>
+        <p class="text-xs mt-4 uppercase tracking-[0.2em] font-bold">No Image</p>
+      </div>
 
-        <!-- Column Derecha: Info y Comentarios -->
-        <div class="w-[400px] flex flex-col bg-surface-container-lowest border-l border-outline-variant/20">
-            
-            <!-- Header con info del autor -->
-            <div class="p-6 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container/10">
-                <div class="flex items-center gap-3 cursor-pointer group/author" (click)="openUserDetail(getAuthorId())">
-                    <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary-container font-black text-xs shadow-lg group-hover/author:scale-110 transition-transform">
-                        {{ getAuthorInitial() }}
-                    </div>
-                    <div>
-                        <p class="text-white font-bold text-sm leading-none group-hover/author:text-secondary transition-colors">{{ getAuthorName() }}</p>
-                        <p class="text-on-surface-variant text-[10px] mt-1 uppercase tracking-widest">Active Post</p>
-                    </div>
-                </div>
-                <button (click)="deletePost()" 
-                        class="text-error-container hover:text-error transition-all hover:scale-110 p-2"
-                        title="Delete this post">
-                    <span class="material-symbols-outlined text-xl">delete_sweep</span>
-                </button>
-            </div>
-
-            <!-- Lista de Contenido (Scrollable) -->
-            <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
-                
-                <!-- Caption original -->
-                <div class="mb-8 p-4 bg-surface-container/50 rounded-2xl border border-outline-variant/10 italic text-on-surface text-sm leading-relaxed relative">
-                    <span class="absolute -top-2.5 left-4 px-2 bg-surface-container-lowest text-[9px] font-bold text-secondary uppercase tracking-widest border border-outline-variant/10 rounded">Caption</span>
-                    "{{ selectedPost.caption || 'No description' }}"
-                    <p class="text-[8px] text-on-surface-variant/50 mt-2 font-bold uppercase tracking-tighter not-italic">{{ selectedPost.createdAt | date:'short' }}</p>
-                </div>
-
-                <!-- Modo Comentarios -->
-                <ng-container *ngIf="viewMode === 'comments'">
-                    <div class="flex items-center justify-between mb-4">
-                        <h4 class="text-[10px] font-bold text-secondary uppercase tracking-[0.2em]">Comments</h4>
-                        <span class="text-[10px] font-bold text-on-surface-variant/40">{{ selectedPostComments.length }} TOTAL</span>
-                    </div>
-
-                    <!-- Lista de Cards de comentarios -->
-                    <div class="space-y-4">
-                        <div *ngFor="let comment of selectedPostComments" class="group/comment flex items-start gap-3 p-3 rounded-xl hover:bg-surface-container/30 transition-colors">
-                            <div class="w-8 h-8 rounded-full bg-surface-container-highest shrink-0 flex items-center justify-center text-[10px] font-bold text-secondary shadow-sm cursor-pointer hover:scale-110 transition-transform"
-                                 (click)="openUserDetail(getCommentAuthorId(comment))">
-                                {{ getCommentAuthorInitial(comment) }}
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="text-white font-bold text-[11px] truncate cursor-pointer hover:text-secondary transition-colors"
-                                          (click)="openUserDetail(getCommentAuthorId(comment))">
-                                        {{ getCommentAuthorName(comment) }}
-                                    </span>
-                                    <button (click)="$event.stopPropagation(); deleteComment(comment._id)" 
-                                            class="opacity-0 group-hover/comment:opacity-100 transition-all text-error/60 hover:text-error hover:scale-110">
-                                        <span class="material-symbols-outlined text-sm">delete_outline</span>
-                                    </button>
-                                </div>
-                                <p class="text-on-surface/80 text-[12px] leading-snug mt-1">
-                                    {{ comment.texto }}
-                                </p>
-                                <p class="text-[8px] text-on-surface-variant/50 mt-2 font-bold uppercase tracking-tighter">{{ comment.createdAt | date:'short' }}</p>
-                            </div>
-                        </div>
-
-                        <!-- Si no hay comentarios -->
-                        <div *ngIf="selectedPostComments.length === 0" class="py-12 text-center opacity-30 select-none">
-                            <span class="material-symbols-outlined text-4xl mb-2">forum</span>
-                            <p class="text-[10px] font-bold uppercase tracking-widest">No comments yet</p>
-                        </div>
-                    </div>
-                </ng-container>
-
-                <!-- Modo Likes -->
-                <ng-container *ngIf="viewMode === 'likes'">
-                    <div class="flex items-center justify-between mb-6">
-                        <h4 class="text-[10px] font-bold text-secondary uppercase tracking-[0.2em]">Liked by</h4>
-                        <span class="text-[10px] font-bold text-on-surface-variant/40">{{ selectedPost.likes.length }} TOTAL</span>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div *ngFor="let liker of getLikers()" 
-                             (click)="openUserDetail(liker._id)"
-                             class="flex items-center gap-4 p-3 rounded-2xl bg-surface-container/20 border border-outline-variant/5 hover:bg-surface-container/40 transition-all cursor-pointer group/liker">
-                            <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold text-xs shadow-inner group-hover/liker:bg-secondary group-hover/liker:text-primary-container transition-colors">
-                                {{ (liker.nombre || '??').substring(0,2) | uppercase }}
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-white font-bold text-sm leading-none">{{ liker.nombre || 'Unknown User' }}</p>
-                                <p class="text-[9px] text-on-surface-variant/60 mt-1 uppercase tracking-tighter">Member</p>
-                            </div>
-                            <span class="material-symbols-outlined text-secondary opacity-0 group-hover/liker:opacity-100 transition-opacity">chevron_right</span>
-                        </div>
-
-                        <!-- Si no hay likes poblados o lista vacía -->
-                        <div *ngIf="getLikers().length === 0" class="py-20 text-center opacity-20">
-                            <span class="material-symbols-outlined text-6xl mb-4">favorite_border</span>
-                            <p class="text-[10px] font-bold uppercase tracking-[0.2em]">No likes found</p>
-                        </div>
-                    </div>
-                </ng-container>
-            </div>
-
-            <!-- Footer: Tabs Interactivos -->
-            <div class="p-6 border-t border-outline-variant/20 bg-surface-container/40">
-                <div class="flex items-center justify-between">
-                    <div class="flex gap-8">
-                        <!-- Botón Likes -->
-                        <button (click)="setViewMode('likes')" 
-                                [class.text-secondary]="viewMode === 'likes'"
-                                [class.text-on-surface-variant]="viewMode !== 'likes'"
-                                class="flex items-center gap-2 group/tab transition-all hover:scale-110">
-                            <span class="material-symbols-outlined text-sm" 
-                                  [style.font-variation-settings]="viewMode === 'likes' ? '\'FILL\' 1' : '\'FILL\' 0'">favorite</span>
-                            <span class="text-xs font-bold" [class.text-white]="viewMode === 'likes'">{{ selectedPost.likes.length || 0 }}</span>
-                        </button>
-
-                        <!-- Botón Comentarios -->
-                        <button (click)="setViewMode('comments')" 
-                                [class.text-secondary]="viewMode === 'comments'"
-                                [class.text-on-surface-variant]="viewMode !== 'comments'"
-                                class="flex items-center gap-2 group/tab transition-all hover:scale-110">
-                            <span class="material-symbols-outlined text-sm"
-                                  [style.font-variation-settings]="viewMode === 'comments' ? '\'FILL\' 1' : '\'FILL\' 0'">chat_bubble</span>
-                            <span class="text-xs font-bold" [class.text-white]="viewMode === 'comments'">{{ selectedPostComments.length }}</span>
-                        </button>
-                    </div>
-                    <span class="text-[9px] font-bold text-on-surface-variant/40 uppercase tracking-widest">{{ selectedPost.createdAt | date:'longDate' }}</span>
-                </div>
-            </div>
-        </div>
+      <button
+        (click)="close()"
+        class="absolute top-4 left-4 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all hover:scale-110"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
     </div>
+
+    <!-- Column Derecha: Info y Comentarios -->
+    <div
+      class="w-[400px] flex flex-col bg-surface-container-lowest border-l border-outline-variant/20"
+    >
+      <!-- Header con info del autor -->
+      <div
+        class="p-6 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container/10"
+      >
+        <div
+          class="flex items-center gap-3 cursor-pointer group/author"
+          (click)="openUserDetail(getAuthorId())"
+        >
+          <div
+            class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary-container font-black text-xs shadow-lg group-hover/author:scale-110 transition-transform"
+          >
+            {{ getAuthorInitial() }}
+          </div>
+          <div>
+            <p
+              class="text-white font-bold text-sm leading-none group-hover/author:text-secondary transition-colors"
+            >
+              {{ getAuthorName() }}
+            </p>
+            <p class="text-on-surface-variant text-[10px] mt-1 uppercase tracking-widest">
+              Active Post
+            </p>
+          </div>
+        </div>
+        <button
+          (click)="deletePost()"
+          class="text-error-container hover:text-error transition-all hover:scale-110 p-2"
+          title="Delete this post"
+        >
+          <span class="material-symbols-outlined text-xl">delete_sweep</span>
+        </button>
+      </div>
+
+      <!-- Lista de Contenido (Scrollable) -->
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
+        <!-- Caption original -->
+        <div
+          class="mb-8 p-4 bg-surface-container/50 rounded-2xl border border-outline-variant/10 italic text-on-surface text-sm leading-relaxed relative"
+        >
+          <span
+            class="absolute -top-2.5 left-4 px-2 bg-surface-container-lowest text-[9px] font-bold text-secondary uppercase tracking-widest border border-outline-variant/10 rounded"
+            >Caption</span
+          >
+          "{{ selectedPost.caption || 'No description' }}"
+          <p
+            class="text-[8px] text-on-surface-variant/50 mt-2 font-bold uppercase tracking-tighter not-italic"
+          >
+            {{ selectedPost.createdAt | date: 'short' }}
+          </p>
+        </div>
+
+        <!-- Modo Comentarios -->
+        <ng-container *ngIf="viewMode === 'comments'">
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-[10px] font-bold text-secondary uppercase tracking-[0.2em]">
+              Comments
+            </h4>
+            <span class="text-[10px] font-bold text-on-surface-variant/40"
+              >{{ selectedPostComments.length }} TOTAL</span
+            >
+          </div>
+
+          <!-- Lista de Cards de comentarios -->
+          <div class="space-y-4">
+            <div
+              *ngFor="let comment of selectedPostComments"
+              class="group/comment flex items-start gap-3 p-3 rounded-xl hover:bg-surface-container/30 transition-colors"
+            >
+              <div
+                class="w-8 h-8 rounded-full bg-surface-container-highest shrink-0 flex items-center justify-center text-[10px] font-bold text-secondary shadow-sm cursor-pointer hover:scale-110 transition-transform"
+                (click)="openUserDetail(getCommentAuthorId(comment))"
+              >
+                {{ getCommentAuthorInitial(comment) }}
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span
+                    class="text-white font-bold text-[11px] truncate cursor-pointer hover:text-secondary transition-colors"
+                    (click)="openUserDetail(getCommentAuthorId(comment))"
+                  >
+                    {{ getCommentAuthorName(comment) }}
+                  </span>
+                  <button
+                    (click)="$event.stopPropagation(); deleteComment(comment._id)"
+                    class="opacity-0 group-hover/comment:opacity-100 transition-all text-error/60 hover:text-error hover:scale-110"
+                  >
+                    <span class="material-symbols-outlined text-sm">delete_outline</span>
+                  </button>
+                </div>
+                <p class="text-on-surface/80 text-[12px] leading-snug mt-1">
+                  {{ comment.texto }}
+                </p>
+                <p
+                  class="text-[8px] text-on-surface-variant/50 mt-2 font-bold uppercase tracking-tighter"
+                >
+                  {{ comment.createdAt | date: 'short' }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Si no hay comentarios -->
+            <div
+              *ngIf="selectedPostComments.length === 0"
+              class="py-12 text-center opacity-30 select-none"
+            >
+              <span class="material-symbols-outlined text-4xl mb-2">forum</span>
+              <p class="text-[10px] font-bold uppercase tracking-widest">No comments yet</p>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Modo Likes -->
+        <ng-container *ngIf="viewMode === 'likes'">
+          <div class="flex items-center justify-between mb-6">
+            <h4 class="text-[10px] font-bold text-secondary uppercase tracking-[0.2em]">
+              Liked by
+            </h4>
+            <span class="text-[10px] font-bold text-on-surface-variant/40"
+              >{{ selectedPost.likes.length }} TOTAL</span
+            >
+          </div>
+
+          <div class="space-y-4">
+            <div
+              *ngFor="let liker of getLikers()"
+              (click)="openUserDetail(liker._id)"
+              class="flex items-center gap-4 p-3 rounded-2xl bg-surface-container/20 border border-outline-variant/5 hover:bg-surface-container/40 transition-all cursor-pointer group/liker"
+            >
+              <div
+                class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold text-xs shadow-inner group-hover/liker:bg-secondary group-hover/liker:text-primary-container transition-colors"
+              >
+                {{ (liker.nombre || '??').substring(0, 2) | uppercase }}
+              </div>
+              <div class="flex-1">
+                <p class="text-white font-bold text-sm leading-none">
+                  {{ liker.nombre || 'Unknown User' }}
+                </p>
+                <p class="text-[9px] text-on-surface-variant/60 mt-1 uppercase tracking-tighter">
+                  Member
+                </p>
+              </div>
+              <span
+                class="material-symbols-outlined text-secondary opacity-0 group-hover/liker:opacity-100 transition-opacity"
+                >chevron_right</span
+              >
+            </div>
+
+            <!-- Si no hay likes poblados o lista vacía -->
+            <div *ngIf="getLikers().length === 0" class="py-20 text-center opacity-20">
+              <span class="material-symbols-outlined text-6xl mb-4">favorite_border</span>
+              <p class="text-[10px] font-bold uppercase tracking-[0.2em]">No likes found</p>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Footer: Tabs Interactivos -->
+      <div class="p-6 border-t border-outline-variant/20 bg-surface-container/40">
+        <div class="flex items-center justify-between">
+          <div class="flex gap-8">
+            <!-- Botón Likes -->
+            <button
+              (click)="setViewMode('likes')"
+              [class.text-secondary]="viewMode === 'likes'"
+              [class.text-on-surface-variant]="viewMode !== 'likes'"
+              class="flex items-center gap-2 group/tab transition-all hover:scale-110"
+            >
+              <span
+                class="material-symbols-outlined text-sm"
+                [style.font-variation-settings]="viewMode === 'likes' ? '\'FILL\' 1' : '\'FILL\' 0'"
+                >favorite</span
+              >
+              <span class="text-xs font-bold" [class.text-white]="viewMode === 'likes'">{{
+                selectedPost.likes.length || 0
+              }}</span>
+            </button>
+
+            <!-- Botón Comentarios -->
+            <button
+              (click)="setViewMode('comments')"
+              [class.text-secondary]="viewMode === 'comments'"
+              [class.text-on-surface-variant]="viewMode !== 'comments'"
+              class="flex items-center gap-2 group/tab transition-all hover:scale-110"
+            >
+              <span
+                class="material-symbols-outlined text-sm"
+                [style.font-variation-settings]="
+                  viewMode === 'comments' ? '\'FILL\' 1' : '\'FILL\' 0'
+                "
+                >chat_bubble</span
+              >
+              <span class="text-xs font-bold" [class.text-white]="viewMode === 'comments'">{{
+                selectedPostComments.length
+              }}</span>
+            </button>
+          </div>
+          <span class="text-[9px] font-bold text-on-surface-variant/40 uppercase tracking-widest">{{
+            selectedPost.createdAt | date: 'longDate'
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

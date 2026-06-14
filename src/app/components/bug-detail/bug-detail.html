@@ -1,137 +1,206 @@
 <app-navbar></app-navbar>
 
 <div class="flex min-h-screen pt-16">
-    <main class="flex-1 p-8 overflow-y-auto max-w-5xl mx-auto">
-        <!-- Loading State -->
-        <div *ngIf="loading" class="flex flex-col justify-center items-center h-64 gap-4">
-            <span class="material-symbols-outlined animate-spin text-4xl text-secondary">progress_activity</span>
-            <span class="text-on-surface-variant font-medium tracking-widest uppercase text-sm">Loading Bug Details...</span>
+  <main class="flex-1 p-8 overflow-y-auto max-w-5xl mx-auto">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex flex-col justify-center items-center h-64 gap-4">
+      <span class="material-symbols-outlined animate-spin text-4xl text-secondary"
+        >progress_activity</span
+      >
+      <span class="text-on-surface-variant font-medium tracking-widest uppercase text-sm"
+        >Loading Bug Details...</span
+      >
+    </div>
+
+    <!-- Detail Content -->
+    <div *ngIf="!loading && bug" class="animate-fade-in">
+      <!-- Header Actions -->
+      <div class="flex items-center justify-between mb-8">
+        <button
+          (click)="goBack()"
+          class="flex items-center gap-2 text-on-surface-variant hover:text-white transition-colors group"
+        >
+          <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform"
+            >arrow_back</span
+          >
+          <span class="text-sm font-bold tracking-widest uppercase">Back to Dashboard</span>
+        </button>
+
+        <div class="flex items-center gap-3">
+          <button
+            *ngIf="bug.estado !== 'en_progreso' && bug.estado !== 'resuelto'"
+            (click)="updateStatus('en_progreso')"
+            class="px-4 py-2 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors border border-amber-500/20"
+          >
+            Mark In Progress
+          </button>
+          <button
+            *ngIf="bug.estado !== 'resuelto'"
+            (click)="updateStatus('resuelto')"
+            class="px-4 py-2 bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors border border-green-500/20"
+          >
+            Mark Resolved
+          </button>
+          <button
+            *ngIf="bug.estado !== 'rechazado'"
+            (click)="updateStatus('rechazado')"
+            class="px-4 py-2 bg-error/10 text-error hover:bg-error/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors border border-error/20"
+          >
+            Reject
+          </button>
         </div>
+      </div>
 
-        <!-- Detail Content -->
-        <div *ngIf="!loading && bug" class="animate-fade-in">
-            <!-- Header Actions -->
-            <div class="flex items-center justify-between mb-8">
-                <button (click)="goBack()" 
-                        class="flex items-center gap-2 text-on-surface-variant hover:text-white transition-colors group">
-                    <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
-                    <span class="text-sm font-bold tracking-widest uppercase">Back to Dashboard</span>
-                </button>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Content Info -->
+        <div class="lg:col-span-2 space-y-6">
+          <div
+            class="bg-primary-container p-8 rounded-2xl border border-outline-variant/30 shadow-lg relative overflow-hidden"
+          >
+            <div
+              class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 blur-[50px] rounded-full"
+            ></div>
 
-                <div class="flex items-center gap-3">
-                    <button *ngIf="bug.estado !== 'en_progreso' && bug.estado !== 'resuelto'" 
-                            (click)="updateStatus('en_progreso')"
-                            class="px-4 py-2 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors border border-amber-500/20">
-                        Mark In Progress
-                    </button>
-                    <button *ngIf="bug.estado !== 'resuelto'" 
-                            (click)="updateStatus('resuelto')"
-                            class="px-4 py-2 bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors border border-green-500/20">
-                        Mark Resolved
-                    </button>
-                    <button *ngIf="bug.estado !== 'rechazado'" 
-                            (click)="updateStatus('rechazado')"
-                            class="px-4 py-2 bg-error/10 text-error hover:bg-error/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors border border-error/20">
-                        Reject
-                    </button>
-                </div>
+            <div class="flex items-center gap-3 mb-6">
+              <div
+                [ngClass]="{
+                  'bg-error text-white': bug.estado === 'pendiente',
+                  'bg-amber-500 text-white': bug.estado === 'en_progreso',
+                  'bg-green-500 text-white': bug.estado === 'resuelto',
+                  'bg-gray-500 text-white': bug.estado === 'rechazado',
+                }"
+                class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest"
+              >
+                {{ bug.estado.replace('_', ' ') }}
+              </div>
+              <div
+                [ngClass]="{
+                  'bg-blue-500/10 text-blue-400 border-blue-500/20': bug.plataforma === 'web',
+                  'bg-purple-500/10 text-purple-400 border-purple-500/20': bug.plataforma === 'app',
+                  'bg-surface-variant text-on-surface-variant border-outline-variant/20':
+                    bug.plataforma === 'otro',
+                }"
+                class="px-3 py-1 rounded-lg text-[10px] font-black border uppercase tracking-widest"
+              >
+                {{ bug.plataforma }}
+              </div>
+              <span class="text-xs font-mono text-on-surface-variant">{{
+                bug.createdAt | date: 'medium'
+              }}</span>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Main Content Info -->
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="bg-primary-container p-8 rounded-2xl border border-outline-variant/30 shadow-lg relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 blur-[50px] rounded-full"></div>
-                        
-                        <div class="flex items-center gap-3 mb-6">
-                            <div [ngClass]="{
-                                'bg-error text-white': bug.estado === 'pendiente',
-                                'bg-amber-500 text-white': bug.estado === 'en_progreso',
-                                'bg-green-500 text-white': bug.estado === 'resuelto',
-                                'bg-gray-500 text-white': bug.estado === 'rechazado'
-                            }" class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">
-                                {{ bug.estado.replace('_', ' ') }}
-                            </div>
-                            <div [ngClass]="{
-                                'bg-blue-500/10 text-blue-400 border-blue-500/20': bug.plataforma === 'web',
-                                'bg-purple-500/10 text-purple-400 border-purple-500/20': bug.plataforma === 'app',
-                                'bg-surface-variant text-on-surface-variant border-outline-variant/20': bug.plataforma === 'otro'
-                            }" class="px-3 py-1 rounded-lg text-[10px] font-black border uppercase tracking-widest">
-                                {{ bug.plataforma }}
-                            </div>
-                            <span class="text-xs font-mono text-on-surface-variant">{{ bug.createdAt | date:'medium' }}</span>
-                        </div>
+            <h1 class="text-2xl font-bold text-white mb-4">{{ bug.titulo }}</h1>
 
-                        <h1 class="text-2xl font-bold text-white mb-4">{{ bug.titulo }}</h1>
-                        
-                        <div class="space-y-6">
-                            <div>
-                                <h3 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-[14px]">description</span> Description
-                                </h3>
-                                <p class="text-white text-sm leading-relaxed whitespace-pre-wrap">{{ bug.descripcion }}</p>
-                            </div>
-                            
-                            <div *ngIf="bug.comoReplicarlo">
-                                <div class="w-full h-px bg-outline-variant/20 my-4"></div>
-                                <h3 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-[14px]">bug_report</span> How to replicate
-                                </h3>
-                                <p class="text-white text-sm leading-relaxed whitespace-pre-wrap bg-surface-container-highest/20 p-4 rounded-xl border border-outline-variant/10 font-mono">{{ bug.comoReplicarlo }}</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="space-y-6">
+              <div>
+                <h3
+                  class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-[14px]">description</span> Description
+                </h3>
+                <p class="text-white text-sm leading-relaxed whitespace-pre-wrap">
+                  {{ bug.descripcion }}
+                </p>
+              </div>
 
-                    <!-- Images -->
-                    <div *ngIf="bug.imageUrls && bug.imageUrls.length > 0" class="bg-primary-container p-8 rounded-2xl border border-outline-variant/30 shadow-lg">
-                        <h3 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-4 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[14px]">image</span> Attached Screenshots
-                        </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div *ngFor="let img of bug.imageUrls" class="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-container-highest flex justify-center items-center relative group">
-                                <img [src]="img" alt="Bug Screenshot" class="max-w-full max-h-64 object-contain" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'">
-                                <a [href]="img" target="_blank" class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-white text-3xl">open_in_new</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar Info -->
-                <div class="space-y-6">
-                    <div class="bg-primary-container p-6 rounded-2xl border border-outline-variant/30 shadow-lg">
-                        <h3 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-4 border-b border-outline-variant/20 pb-2">Reporter Details</h3>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full bg-secondary text-primary-container flex items-center justify-center font-bold text-lg shadow-inner">
-                                {{ getInitials() }}
-                            </div>
-                            <div>
-                                <p class="font-semibold text-white">{{ getAuthorName() }}</p>
-                                <p class="text-xs text-on-surface-variant mt-0.5">User Reporter</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-primary-container p-6 rounded-2xl border border-outline-variant/30 shadow-lg">
-                        <h3 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-4 border-b border-outline-variant/20 pb-2">Metadata</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <p class="text-xs text-on-surface-variant">Bug ID</p>
-                                <p class="text-sm font-mono text-white mt-1">{{ bug._id }}</p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-on-surface-variant">Created</p>
-                                <p class="text-sm text-white mt-1">{{ bug.createdAt | date:'medium' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-on-surface-variant">Last Updated</p>
-                                <p class="text-sm text-white mt-1">{{ bug.updatedAt | date:'medium' }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <div *ngIf="bug.comoReplicarlo">
+                <div class="w-full h-px bg-outline-variant/20 my-4"></div>
+                <h3
+                  class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2 flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-[14px]">bug_report</span> How to
+                  replicate
+                </h3>
+                <p
+                  class="text-white text-sm leading-relaxed whitespace-pre-wrap bg-surface-container-highest/20 p-4 rounded-xl border border-outline-variant/10 font-mono"
+                >
+                  {{ bug.comoReplicarlo }}
+                </p>
+              </div>
             </div>
+          </div>
+
+          <!-- Images -->
+          <div
+            *ngIf="bug.imageUrls && bug.imageUrls.length > 0"
+            class="bg-primary-container p-8 rounded-2xl border border-outline-variant/30 shadow-lg"
+          >
+            <h3
+              class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-4 flex items-center gap-2"
+            >
+              <span class="material-symbols-outlined text-[14px]">image</span> Attached Screenshots
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div
+                *ngFor="let img of bug.imageUrls"
+                class="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-container-highest flex justify-center items-center relative group"
+              >
+                <img
+                  [src]="img"
+                  alt="Bug Screenshot"
+                  class="max-w-full max-h-64 object-contain"
+                  onerror="this.src = 'https://via.placeholder.com/400x300?text=Image+Not+Found'"
+                />
+                <a
+                  [href]="img"
+                  target="_blank"
+                  class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                >
+                  <span class="material-symbols-outlined text-white text-3xl">open_in_new</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-    </main>
+
+        <!-- Sidebar Info -->
+        <div class="space-y-6">
+          <div
+            class="bg-primary-container p-6 rounded-2xl border border-outline-variant/30 shadow-lg"
+          >
+            <h3
+              class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-4 border-b border-outline-variant/20 pb-2"
+            >
+              Reporter Details
+            </h3>
+            <div class="flex items-center gap-4">
+              <div
+                class="w-12 h-12 rounded-full bg-secondary text-primary-container flex items-center justify-center font-bold text-lg shadow-inner"
+              >
+                {{ getInitials() }}
+              </div>
+              <div>
+                <p class="font-semibold text-white">{{ getAuthorName() }}</p>
+                <p class="text-xs text-on-surface-variant mt-0.5">User Reporter</p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-primary-container p-6 rounded-2xl border border-outline-variant/30 shadow-lg"
+          >
+            <h3
+              class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-4 border-b border-outline-variant/20 pb-2"
+            >
+              Metadata
+            </h3>
+            <div class="space-y-3">
+              <div>
+                <p class="text-xs text-on-surface-variant">Bug ID</p>
+                <p class="text-sm font-mono text-white mt-1">{{ bug._id }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-on-surface-variant">Created</p>
+                <p class="text-sm text-white mt-1">{{ bug.createdAt | date: 'medium' }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-on-surface-variant">Last Updated</p>
+                <p class="text-sm text-white mt-1">{{ bug.updatedAt | date: 'medium' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>

@@ -1,175 +1,244 @@
 <!-- TopNavBar -->
 <nav
-    class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-primary-container/40 backdrop-blur-md border-b border-outline-variant/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
-    <div class="flex items-center gap-4">
-        <button
-            class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-container-highest/50"
-            [routerLink]="['/universidades']">
-            <span class="material-symbols-outlined">arrow_back</span>
-            <span class="text-sm font-bold">Volver</span>
-        </button>
-    </div>
+  class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-primary-container/40 backdrop-blur-md border-b border-outline-variant/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]"
+>
+  <div class="flex items-center gap-4">
+    <button
+      class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-container-highest/50"
+      [routerLink]="['/universidades']"
+    >
+      <span class="material-symbols-outlined">arrow_back</span>
+      <span class="text-sm font-bold">Volver</span>
+    </button>
+  </div>
 
-    <div class="absolute left-1/2 -translate-x-1/2">
-        <span class="text-xl font-bold tracking-tight text-white">Backoffice</span>
-    </div>
+  <div class="absolute left-1/2 -translate-x-1/2">
+    <span class="text-xl font-bold tracking-tight text-white">Backoffice</span>
+  </div>
 
-    <div class="flex items-center gap-4">
-        <div
-            class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 backdrop-blur-sm shadow-sm border border-outline-variant/20">
-            <span class="text-[11px] font-semibold tracking-wider uppercase text-secondary">Admin</span>
-        </div>
+  <div class="flex items-center gap-4">
+    <div
+      class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 backdrop-blur-sm shadow-sm border border-outline-variant/20"
+    >
+      <span class="text-[11px] font-semibold tracking-wider uppercase text-secondary">Admin</span>
     </div>
+  </div>
 </nav>
 
 <div class="pt-24 min-h-screen p-8 flex flex-col gap-10">
-    <!-- Top University Info Card -->
-    <div class="max-w-4xl mx-auto w-full">
-        <div
-            class="bg-primary-container rounded-2xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30">
-            <div class="mb-10 flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Detalles de la Universidad</h2>
-                    <p class="text-on-surface-variant text-sm italic">Gestión de datos de la institución</p>
-                </div>
-                <div class="w-12 h-12 bg-secondary/20 text-secondary rounded-xl flex items-center justify-center">
-                    <span class="material-symbols-outlined text-3xl">domain</span>
-                </div>
-            </div>
-
-            <form [formGroup]="universityForm" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Nombre -->
-                <div
-                    class="space-y-3 p-4 rounded-xl bg-surface-container-lowest/30 border border-outline-variant/10 group">
-                    <div class="flex items-center justify-between">
-                        <label class="text-[11px] font-bold text-secondary uppercase tracking-widest">Nombre</label>
-                        <button *ngIf="!isEditingNombre" (click)="toggleEdit('nombre')"
-                            class="p-1 px-2 rounded-md hover:bg-secondary/10 text-secondary transition-all opacity-0 group-hover:opacity-100 flex items-center gap-1">
-                            <span class="material-symbols-outlined text-sm">edit</span>
-                            <span class="text-[10px] font-bold uppercase">Editar</span>
-                        </button>
-                    </div>
-
-                    <div *ngIf="!isEditingNombre" class="text-lg font-semibold text-white truncate pl-1">
-                        {{ university?.nombre }}
-                    </div>
-
-                    <div *ngIf="isEditingNombre" class="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
-                        <input type="text" formControlName="nombre"
-                            class="w-full bg-surface-container-lowest border border-secondary/50 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white shadow-inner">
-                        <div class="flex gap-2 justify-end">
-                            <button (click)="cancelEdit('nombre')"
-                                class="px-3 py-1.5 rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors">Cancelar</button>
-                            <button (click)="saveField('nombre')" [disabled]="universityForm.get('nombre')?.invalid"
-                                class="px-3 py-1.5 rounded-lg text-xs font-bold bg-secondary text-primary-container shadow-lg hover:opacity-90 transition-all disabled:opacity-50">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Ubicación -->
-                <div
-                    class="space-y-3 p-4 rounded-xl bg-surface-container-lowest/30 border border-outline-variant/10 group">
-                    <div class="flex items-center justify-between">
-                        <label class="text-[11px] font-bold text-secondary uppercase tracking-widest">Ubicación</label>
-                        <button *ngIf="!isEditingUbicacion" (click)="toggleEdit('ubicacion')"
-                            class="p-1 px-2 rounded-md hover:bg-secondary/10 text-secondary transition-all opacity-0 group-hover:opacity-100 flex items-center gap-1">
-                            <span class="material-symbols-outlined text-sm">edit</span>
-                            <span class="text-[10px] font-bold uppercase">Editar</span>
-                        </button>
-                    </div>
-
-                    <div *ngIf="!isEditingUbicacion" class="text-lg font-semibold text-white truncate pl-1">
-                        {{ university?.ubicacion }}
-                    </div>
-
-                    <div *ngIf="isEditingUbicacion"
-                        class="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
-                        <input type="text" formControlName="ubicacion"
-                            class="w-full bg-surface-container-lowest border border-secondary/50 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white shadow-inner">
-                        <div class="flex gap-2 justify-end">
-                            <button (click)="cancelEdit('ubicacion')"
-                                class="px-3 py-1.5 rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors">Cancelar</button>
-                            <button (click)="saveField('ubicacion')"
-                                [disabled]="universityForm.get('ubicacion')?.invalid"
-                                class="px-3 py-1.5 rounded-lg text-xs font-bold bg-secondary text-primary-container shadow-lg hover:opacity-90 transition-all disabled:opacity-50">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-[15px] text-secondary font-mono mt-2 opacity-60">ID: {{ university?._id }}</p>
-            </form>
+  <!-- Top University Info Card -->
+  <div class="max-w-4xl mx-auto w-full">
+    <div
+      class="bg-primary-container rounded-2xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30"
+    >
+      <div class="mb-10 flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-white mb-2">Detalles de la Universidad</h2>
+          <p class="text-on-surface-variant text-sm italic">Gestión de datos de la institución</p>
         </div>
-    </div>
-
-    <!-- Bottom User List Card -->
-    <div class="max-w-6xl mx-auto w-full">
         <div
-            class="bg-primary-container rounded-2xl overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30">
-            <div
-                class="p-6 border-b border-outline-variant/20 bg-surface-container-highest/20 flex flex-col md:flex-row justify-between items-center gap-4">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2 min-w-fit">
-                    <span class="material-symbols-outlined text-secondary">group</span>
-                    Usuarios de la Universidad
-                </h3>
-
-                <div class="flex items-center gap-4 w-full md:w-auto">
-                    <!-- Search Bar -->
-                    <div class="relative flex-1 md:w-64">
-                        <span
-                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
-                        <input type="text" (input)="onSearchChange($any($event.target).value)"
-                            placeholder="Buscar por nombre, email o rol..."
-                            class="w-full bg-surface-container-lowest/50 border border-outline-variant/20 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-lg py-1.5 pl-9 pr-4 text-xs transition-all outline-none text-white">
-                    </div>
-
-                    <span
-                        class="px-3 py-1.5 rounded-full bg-secondary/10 text-secondary text-xs font-bold border border-secondary/20 flex items-center gap-2 min-w-fit shadow-sm">
-                        {{ universityUsers.length }}
-                        <span class="material-symbols-outlined text-sm">person</span>
-                    </span>
-                </div>
-            </div>
-
-            <div class="p-6">
-                <div class="flex flex-col gap-3">
-                    <a *ngFor="let user of filteredUsers" 
-                       [routerLink]="['/usuario', user._id]" target="_blank"
-                       class="bg-surface-container-lowest/30 rounded-2xl p-4 border border-outline-variant/10 hover:border-secondary transition-all group flex items-center justify-between no-underline">
-                        
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-bold text-sm shadow-inner border border-secondary/20">
-                                {{ getInitials(user.nombre) }}
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-bold text-white text-base group-hover:text-secondary transition-colors">{{ user.nombre }}</span>
-                                <span class="text-xs text-on-surface-variant font-medium">{{ user.email }}</span>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-6">
-                            <span class="px-3 py-1 rounded-lg text-[10px] font-black border border-outline-variant/30 text-secondary bg-secondary/5 uppercase tracking-[0.2em]">
-                                {{ user.rol }}
-                            </span>
-                            
-                            <button (click)="$event.preventDefault(); $event.stopPropagation(); openUnlinkModal(user)"
-                                class="p-2.5 text-error/60 hover:bg-error/20 rounded-xl transition-all hover:text-error group-hover:scale-110"
-                                title="Desvincular Usuario">
-                                <span class="material-symbols-outlined text-xl">delete_forever</span>
-                            </button>
-                        </div>
-                    </a>
-
-                    <!-- Empty State -->
-                    <div *ngIf="filteredUsers.length === 0" 
-                         class="py-16 text-center bg-surface-container/20 rounded-3xl border-2 border-dashed border-outline-variant/10">
-                        <div class="flex flex-col items-center gap-3 opacity-40">
-                            <span class="material-symbols-outlined text-5xl">search_off</span>
-                            <p class="text-sm font-bold uppercase tracking-widest">
-                                {{ searchTerm ? 'No users matching search' : 'No users linked to this university' }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          class="w-12 h-12 bg-secondary/20 text-secondary rounded-xl flex items-center justify-center"
+        >
+          <span class="material-symbols-outlined text-3xl">domain</span>
         </div>
+      </div>
+
+      <form [formGroup]="universityForm" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Nombre -->
+        <div
+          class="space-y-3 p-4 rounded-xl bg-surface-container-lowest/30 border border-outline-variant/10 group"
+        >
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-secondary uppercase tracking-widest"
+              >Nombre</label
+            >
+            <button
+              *ngIf="!isEditingNombre"
+              (click)="toggleEdit('nombre')"
+              class="p-1 px-2 rounded-md hover:bg-secondary/10 text-secondary transition-all opacity-0 group-hover:opacity-100 flex items-center gap-1"
+            >
+              <span class="material-symbols-outlined text-sm">edit</span>
+              <span class="text-[10px] font-bold uppercase">Editar</span>
+            </button>
+          </div>
+
+          <div *ngIf="!isEditingNombre" class="text-lg font-semibold text-white truncate pl-1">
+            {{ university?.nombre }}
+          </div>
+
+          <div
+            *ngIf="isEditingNombre"
+            class="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200"
+          >
+            <input
+              type="text"
+              formControlName="nombre"
+              class="w-full bg-surface-container-lowest border border-secondary/50 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white shadow-inner"
+            />
+            <div class="flex gap-2 justify-end">
+              <button
+                (click)="cancelEdit('nombre')"
+                class="px-3 py-1.5 rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                (click)="saveField('nombre')"
+                [disabled]="universityForm.get('nombre')?.invalid"
+                class="px-3 py-1.5 rounded-lg text-xs font-bold bg-secondary text-primary-container shadow-lg hover:opacity-90 transition-all disabled:opacity-50"
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ubicación -->
+        <div
+          class="space-y-3 p-4 rounded-xl bg-surface-container-lowest/30 border border-outline-variant/10 group"
+        >
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-secondary uppercase tracking-widest"
+              >Ubicación</label
+            >
+            <button
+              *ngIf="!isEditingUbicacion"
+              (click)="toggleEdit('ubicacion')"
+              class="p-1 px-2 rounded-md hover:bg-secondary/10 text-secondary transition-all opacity-0 group-hover:opacity-100 flex items-center gap-1"
+            >
+              <span class="material-symbols-outlined text-sm">edit</span>
+              <span class="text-[10px] font-bold uppercase">Editar</span>
+            </button>
+          </div>
+
+          <div *ngIf="!isEditingUbicacion" class="text-lg font-semibold text-white truncate pl-1">
+            {{ university?.ubicacion }}
+          </div>
+
+          <div
+            *ngIf="isEditingUbicacion"
+            class="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200"
+          >
+            <input
+              type="text"
+              formControlName="ubicacion"
+              class="w-full bg-surface-container-lowest border border-secondary/50 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white shadow-inner"
+            />
+            <div class="flex gap-2 justify-end">
+              <button
+                (click)="cancelEdit('ubicacion')"
+                class="px-3 py-1.5 rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                (click)="saveField('ubicacion')"
+                [disabled]="universityForm.get('ubicacion')?.invalid"
+                class="px-3 py-1.5 rounded-lg text-xs font-bold bg-secondary text-primary-container shadow-lg hover:opacity-90 transition-all disabled:opacity-50"
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="text-[15px] text-secondary font-mono mt-2 opacity-60">
+          ID: {{ university?._id }}
+        </p>
+      </form>
     </div>
+  </div>
+
+  <!-- Bottom User List Card -->
+  <div class="max-w-6xl mx-auto w-full">
+    <div
+      class="bg-primary-container rounded-2xl overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30"
+    >
+      <div
+        class="p-6 border-b border-outline-variant/20 bg-surface-container-highest/20 flex flex-col md:flex-row justify-between items-center gap-4"
+      >
+        <h3 class="text-lg font-bold text-white flex items-center gap-2 min-w-fit">
+          <span class="material-symbols-outlined text-secondary">group</span>
+          Usuarios de la Universidad
+        </h3>
+
+        <div class="flex items-center gap-4 w-full md:w-auto">
+          <!-- Search Bar -->
+          <div class="relative flex-1 md:w-64">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"
+              >search</span
+            >
+            <input
+              type="text"
+              (input)="onSearchChange($any($event.target).value)"
+              placeholder="Buscar por nombre, email o rol..."
+              class="w-full bg-surface-container-lowest/50 border border-outline-variant/20 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-lg py-1.5 pl-9 pr-4 text-xs transition-all outline-none text-white"
+            />
+          </div>
+
+          <span
+            class="px-3 py-1.5 rounded-full bg-secondary/10 text-secondary text-xs font-bold border border-secondary/20 flex items-center gap-2 min-w-fit shadow-sm"
+          >
+            {{ universityUsers.length }}
+            <span class="material-symbols-outlined text-sm">person</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="p-6">
+        <div class="flex flex-col gap-3">
+          <a
+            *ngFor="let user of filteredUsers"
+            [routerLink]="['/usuario', user._id]"
+            target="_blank"
+            class="bg-surface-container-lowest/30 rounded-2xl p-4 border border-outline-variant/10 hover:border-secondary transition-all group flex items-center justify-between no-underline"
+          >
+            <div class="flex items-center gap-4">
+              <div
+                class="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-bold text-sm shadow-inner border border-secondary/20"
+              >
+                {{ getInitials(user.nombre) }}
+              </div>
+              <div class="flex flex-col">
+                <span
+                  class="font-bold text-white text-base group-hover:text-secondary transition-colors"
+                  >{{ user.nombre }}</span
+                >
+                <span class="text-xs text-on-surface-variant font-medium">{{ user.email }}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+              <span
+                class="px-3 py-1 rounded-lg text-[10px] font-black border border-outline-variant/30 text-secondary bg-secondary/5 uppercase tracking-[0.2em]"
+              >
+                {{ user.rol }}
+              </span>
+
+              <button
+                (click)="$event.preventDefault(); $event.stopPropagation(); openUnlinkModal(user)"
+                class="p-2.5 text-error/60 hover:bg-error/20 rounded-xl transition-all hover:text-error group-hover:scale-110"
+                title="Desvincular Usuario"
+              >
+                <span class="material-symbols-outlined text-xl">delete_forever</span>
+              </button>
+            </div>
+          </a>
+
+          <!-- Empty State -->
+          <div
+            *ngIf="filteredUsers.length === 0"
+            class="py-16 text-center bg-surface-container/20 rounded-3xl border-2 border-dashed border-outline-variant/10"
+          >
+            <div class="flex flex-col items-center gap-3 opacity-40">
+              <span class="material-symbols-outlined text-5xl">search_off</span>
+              <p class="text-sm font-bold uppercase tracking-widest">
+                {{ searchTerm ? 'No users matching search' : 'No users linked to this university' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

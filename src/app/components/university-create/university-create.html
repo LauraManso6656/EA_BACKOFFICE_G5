@@ -1,60 +1,92 @@
 <!-- TopNavBar -->
-<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-primary-container/40 backdrop-blur-md border-b border-outline-variant/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
-    <div class="flex items-center gap-4">
-        <button class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-container-highest/50" [routerLink]="['/universidades']">
-            <span class="material-symbols-outlined">arrow_back</span>
-            <span class="text-sm font-bold">Volver</span>
-        </button>
+<nav
+  class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-primary-container/40 backdrop-blur-md border-b border-outline-variant/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]"
+>
+  <div class="flex items-center gap-4">
+    <button
+      class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-container-highest/50"
+      [routerLink]="['/universidades']"
+    >
+      <span class="material-symbols-outlined">arrow_back</span>
+      <span class="text-sm font-bold">Volver</span>
+    </button>
+  </div>
+
+  <div class="absolute left-1/2 -translate-x-1/2">
+    <span class="text-xl font-bold tracking-tight text-white">Backoffice</span>
+  </div>
+
+  <div class="flex items-center gap-4 invisible">
+    <div
+      class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 backdrop-blur-sm shadow-sm border border-outline-variant/20"
+    >
+      <span class="text-[11px] font-semibold tracking-wider uppercase text-secondary">Admin</span>
     </div>
-    
-    <div class="absolute left-1/2 -translate-x-1/2">
-        <span class="text-xl font-bold tracking-tight text-white">Backoffice</span>
-    </div>
-    
-    <div class="flex items-center gap-4 invisible">
-        <div class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 backdrop-blur-sm shadow-sm border border-outline-variant/20">
-            <span class="text-[11px] font-semibold tracking-wider uppercase text-secondary">Admin</span>
-        </div>
-    </div>
+  </div>
 </nav>
 
 <div class="pt-16 min-h-screen flex items-center justify-center p-6">
-    <div class="w-full max-w-xl">
-        <div class="bg-primary-container rounded-2xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30">
-            <div class="mb-10 text-center">
-                <h2 class="text-2xl font-bold text-white mb-2">Crear Universidad</h2>
-                <p class="text-on-surface-variant text-sm">Añadir una nueva universidad al sistema</p>
-            </div>
+  <div class="w-full max-w-xl">
+    <div
+      class="bg-primary-container rounded-2xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30"
+    >
+      <div class="mb-10 text-center">
+        <h2 class="text-2xl font-bold text-white mb-2">Crear Universidad</h2>
+        <p class="text-on-surface-variant text-sm">Añadir una nueva universidad al sistema</p>
+      </div>
 
-            <form [formGroup]="universityForm" (ngSubmit)="onSubmit()" class="space-y-6">
-                <!-- Nombre -->
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Nombre de la Universidad</label>
-                    <input type="text" formControlName="nombre" placeholder="Nombre completo de la institución"
-                           class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white">
-                    <div *ngIf="universityForm.get('nombre')?.invalid && universityForm.get('nombre')?.touched" class="text-red-400 text-xs font-semibold pl-1">
-                        El nombre es obligatorio.
-                    </div>
-                </div>
-
-                <!-- Ubicación -->
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1">Localización</label>
-                    <input type="text" formControlName="ubicacion" placeholder="Ciudad, País"
-                           class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white">
-                    <div *ngIf="universityForm.get('ubicacion')?.invalid && universityForm.get('ubicacion')?.touched" class="text-red-400 text-xs font-semibold pl-1">
-                        La ubicación es obligatoria.
-                    </div>
-                </div>
-
-                <div class="pt-4">
-                    <button type="submit" [disabled]="universityForm.invalid || isSubmitting"
-                            class="w-full bg-gradient-to-br from-secondary to-primary-container text-on-secondary-fixed py-3.5 rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                        <span *ngIf="!isSubmitting">Crear Universidad</span>
-                        <span *ngIf="isSubmitting">Creando...</span>
-                    </button>
-                </div>
-            </form>
+      <form [formGroup]="universityForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Nombre -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1"
+            >Nombre de la Universidad</label
+          >
+          <input
+            type="text"
+            formControlName="nombre"
+            placeholder="Nombre completo de la institución"
+            class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white"
+          />
+          <div
+            *ngIf="universityForm.get('nombre')?.invalid && universityForm.get('nombre')?.touched"
+            class="text-red-400 text-xs font-semibold pl-1"
+          >
+            El nombre es obligatorio.
+          </div>
         </div>
+
+        <!-- Ubicación -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-secondary uppercase tracking-widest pl-1"
+            >Localización</label
+          >
+          <input
+            type="text"
+            formControlName="ubicacion"
+            placeholder="Ciudad, País"
+            class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 px-4 text-sm transition-all outline-none text-white"
+          />
+          <div
+            *ngIf="
+              universityForm.get('ubicacion')?.invalid && universityForm.get('ubicacion')?.touched
+            "
+            class="text-red-400 text-xs font-semibold pl-1"
+          >
+            La ubicación es obligatoria.
+          </div>
+        </div>
+
+        <div class="pt-4">
+          <button
+            type="submit"
+            [disabled]="universityForm.invalid || isSubmitting"
+            class="w-full bg-gradient-to-br from-secondary to-primary-container text-on-secondary-fixed py-3.5 rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!isSubmitting">Crear Universidad</span>
+            <span *ngIf="isSubmitting">Creando...</span>
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>

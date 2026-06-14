@@ -1,42 +1,56 @@
-<div *ngIf="options" (click)="cancel()"
-    class="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 cursor-pointer">
-    
-    <div (click)="$event.stopPropagation()" 
-         class="bg-primary-container w-full max-w-md rounded-2xl p-8 border border-outline-variant/30 shadow-2xl cursor-default">
-        
-        <div class="flex flex-col items-center text-center">
-            <!-- Dynamic Icon based on type -->
-            <div [ngClass]="{
-                    'bg-error/10 text-error': options.type === 'danger' || options.type === 'post' || options.type === 'comment',
-                    'bg-amber-500/10 text-amber-500': options.type === 'warning',
-                    'bg-secondary/10 text-secondary': options.type === 'info' || !options.type
-                 }" 
-                 class="w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <span class="material-symbols-outlined text-3xl">{{ getIcon() }}</span>
-            </div>
+<div
+  *ngIf="options"
+  (click)="cancel()"
+  class="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 cursor-pointer"
+>
+  <div
+    (click)="$event.stopPropagation()"
+    class="bg-primary-container w-full max-w-md rounded-2xl p-8 border border-outline-variant/30 shadow-2xl cursor-default"
+  >
+    <div class="flex flex-col items-center text-center">
+      <!-- Dynamic Icon based on type -->
+      <div
+        [ngClass]="{
+          'bg-error/10 text-error':
+            options.type === 'danger' || options.type === 'post' || options.type === 'comment',
+          'bg-amber-500/10 text-amber-500': options.type === 'warning',
+          'bg-secondary/10 text-secondary': options.type === 'info' || !options.type,
+        }"
+        class="w-16 h-16 rounded-full flex items-center justify-center mb-6"
+      >
+        <span class="material-symbols-outlined text-3xl">{{ getIcon() }}</span>
+      </div>
 
-            <h3 class="text-xl font-bold text-white mb-2">{{ options.title }}</h3>
-            <p class="text-on-surface-variant text-sm mb-8">
-                {{ options.message }}
-            </p>
+      <h3 class="text-xl font-bold text-white mb-2">{{ options.title }}</h3>
+      <p class="text-on-surface-variant text-sm mb-8">
+        {{ options.message }}
+      </p>
 
-            <div class="flex w-full gap-4">
-                <button (click)="cancel()"
-                    class="flex-1 px-6 py-3 rounded-xl bg-surface-container-highest text-white text-sm font-bold hover:bg-surface-container transition-colors">
-                    {{ options.cancelText || 'Cancel' }}
-                </button>
-                <button (click)="confirm()"
-                    [disabled]="isProcessing"
-                    [ngClass]="{
-                        'bg-error': options.type === 'danger' || options.type === 'post' || options.type === 'comment',
-                        'bg-amber-500': options.type === 'warning',
-                        'bg-secondary text-primary-container': options.type === 'info' || !options.type
-                    }"
-                    class="flex-1 px-6 py-3 rounded-xl text-white text-sm font-bold hover:opacity-90 transition-all shadow-lg flex items-center justify-center gap-2">
-                    <span *ngIf="isProcessing" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                    {{ isProcessing ? 'Processing...' : (options.confirmText || 'Confirm') }}
-                </button>
-            </div>
-        </div>
+      <div class="flex w-full gap-4">
+        <button
+          (click)="cancel()"
+          class="flex-1 px-6 py-3 rounded-xl bg-surface-container-highest text-white text-sm font-bold hover:bg-surface-container transition-colors"
+        >
+          {{ options.cancelText || 'Cancel' }}
+        </button>
+        <button
+          (click)="confirm()"
+          [disabled]="isProcessing"
+          [ngClass]="{
+            'bg-error':
+              options.type === 'danger' || options.type === 'post' || options.type === 'comment',
+            'bg-amber-500': options.type === 'warning',
+            'bg-secondary text-primary-container': options.type === 'info' || !options.type,
+          }"
+          class="flex-1 px-6 py-3 rounded-xl text-white text-sm font-bold hover:opacity-90 transition-all shadow-lg flex items-center justify-center gap-2"
+        >
+          <span
+            *ngIf="isProcessing"
+            class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
+          ></span>
+          {{ isProcessing ? 'Processing...' : options.confirmText || 'Confirm' }}
+        </button>
+      </div>
     </div>
+  </div>
 </div>

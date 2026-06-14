@@ -1,191 +1,279 @@
 <app-navbar></app-navbar>
 
 <div class="flex min-h-screen pt-16">
-    <main class="flex-1 p-8 overflow-y-auto">
-        <header class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-semibold text-white">System Audit Logs</h1>
-                <p class="text-on-surface-variant text-sm mt-1">Track and monitor all administrative actions across the platform.</p>
-            </div>
-            
-            <div class="flex items-center gap-3">
-                <!-- Refresh Button -->
-                <button (click)="refresh()" 
-                        [disabled]="loading()"
-                        class="flex items-center gap-2 px-4 py-2.5 bg-primary-container hover:bg-surface-container-highest text-white rounded-xl border border-outline-variant/20 transition-all group active:scale-95 shadow-lg">
-                    <span class="material-symbols-outlined text-secondary group-active:rotate-180 transition-transform duration-500"
-                          [ngClass]="{'animate-spin': loading()}">refresh</span>
-                    <span class="text-sm font-bold uppercase tracking-widest">Refresh</span>
-                </button>
+  <main class="flex-1 p-8 overflow-y-auto">
+    <header class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold text-white">System Audit Logs</h1>
+        <p class="text-on-surface-variant text-sm mt-1">
+          Track and monitor all administrative actions across the platform.
+        </p>
+      </div>
 
-                <!-- Divider -->
-                <div class="w-px h-8 bg-outline-variant/30 ms-1 me-1"></div>
+      <div class="flex items-center gap-3">
+        <!-- Refresh Button -->
+        <button
+          (click)="refresh()"
+          [disabled]="loading()"
+          class="flex items-center gap-2 px-4 py-2.5 bg-primary-container hover:bg-surface-container-highest text-white rounded-xl border border-outline-variant/20 transition-all group active:scale-95 shadow-lg"
+        >
+          <span
+            class="material-symbols-outlined text-secondary group-active:rotate-180 transition-transform duration-500"
+            [ngClass]="{ 'animate-spin': loading() }"
+            >refresh</span
+          >
+          <span class="text-sm font-bold uppercase tracking-widest">Refresh</span>
+        </button>
 
-                <!-- Stats Box -->
-                <div class="flex items-center gap-4 bg-primary-container/30 px-6 py-3 rounded-2xl border border-outline-variant/10">
-                    <span class="material-symbols-outlined text-secondary">history</span>
-                    <div class="flex flex-col">
-                        <span class="text-white font-bold text-lg leading-none">{{ totalLogs() }}</span>
-                        <span class="text-[10px] text-on-surface-variant font-black uppercase tracking-tighter">Total Actions</span>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <!-- Divider -->
+        <div class="w-px h-8 bg-outline-variant/30 ms-1 me-1"></div>
 
-        <!-- Search & Filters Bar -->
-        <div class="mb-8 flex flex-wrap items-center gap-4 w-full animate-in">
-            <!-- Search Bar (Target ID or Details) -->
-            <div class="relative flex-1 min-w-[300px] group">
-                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-secondary transition-colors">search</span>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 pl-12 pr-4 text-sm transition-all outline-none shadow-inner text-white"
-                       placeholder="Search by Target ID or details..." type="text" [formControl]="searchControl" />
-            </div>
-
-            <!-- Date Range -->
-            <div class="flex items-center gap-4 bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-5 h-[48px] shadow-inner">
-                <div class="flex items-center gap-3">
-                    <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">From:</span>
-                    <input type="date" [formControl]="startDateControl"
-                           class="bg-transparent border-none text-white text-xs outline-none cursor-pointer [color-scheme:dark] p-0 w-24">
-                </div>
-                <div class="w-px h-6 bg-outline-variant/30"></div>
-                <div class="flex items-center gap-3">
-                    <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">To:</span>
-                    <input type="date" [formControl]="endDateControl"
-                           class="bg-transparent border-none text-white text-xs outline-none cursor-pointer [color-scheme:dark] p-0 w-24">
-                </div>
-            </div>
-
-            <!-- Action Dropdown -->
-            <div class="relative min-w-[180px]">
-                <select [formControl]="actionControl" 
-                        class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary rounded-xl py-3 px-4 text-xs font-bold text-white outline-none cursor-pointer shadow-inner uppercase tracking-wider">
-                    <option value="">All Actions</option>
-                    <option *ngFor="let action of actions" [value]="action">{{ getActionLabel(action) }}</option>
-                </select>
-            </div>
-
-            <!-- Admin Dropdown -->
-            <div class="relative min-w-[180px]">
-                <select [formControl]="adminControl" 
-                        class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary rounded-xl py-3 px-4 text-xs font-bold text-white outline-none cursor-pointer shadow-inner uppercase tracking-wider">
-                    <option value="">All Admins</option>
-                    <option *ngFor="let admin of admins()" [value]="admin._id">{{ admin.nombre }}</option>
-                </select>
-            </div>
+        <!-- Stats Box -->
+        <div
+          class="flex items-center gap-4 bg-primary-container/30 px-6 py-3 rounded-2xl border border-outline-variant/10"
+        >
+          <span class="material-symbols-outlined text-secondary">history</span>
+          <div class="flex flex-col">
+            <span class="text-white font-bold text-lg leading-none">{{ totalLogs() }}</span>
+            <span class="text-[10px] text-on-surface-variant font-black uppercase tracking-tighter"
+              >Total Actions</span
+            >
+          </div>
         </div>
+      </div>
+    </header>
 
-        <!-- Table Container -->
-        <div class="bg-primary-container rounded-3xl border border-outline-variant/30 shadow-2xl overflow-hidden min-h-[600px] flex flex-col">
-        
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-surface-container-highest/40 border-b border-outline-variant/20">
-                    <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">Administrator</th>
-                    <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">Action</th>
-                    <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">Details</th>
-                    <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">Target</th>
-                    <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">Timestamp</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-outline-variant/20">
-                <!-- Loading State -->
-                <tr *ngIf="loading()">
-                    <td colspan="5" class="py-20">
-                        <div class="flex flex-col items-center justify-center gap-4 opacity-40">
-                            <div class="w-12 h-12 border-4 border-secondary/30 border-t-secondary rounded-full animate-spin"></div>
-                            <p class="text-xs font-bold uppercase tracking-widest">Retrieving audit history...</p>
-                        </div>
-                    </td>
-                </tr>
+    <!-- Search & Filters Bar -->
+    <div class="mb-8 flex flex-wrap items-center gap-4 w-full animate-in">
+      <!-- Search Bar (Target ID or Details) -->
+      <div class="relative flex-1 min-w-[300px] group">
+        <span
+          class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-secondary transition-colors"
+          >search</span
+        >
+        <input
+          class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl py-3 pl-12 pr-4 text-sm transition-all outline-none shadow-inner text-white"
+          placeholder="Search by Target ID or details..."
+          type="text"
+          [formControl]="searchControl"
+        />
+      </div>
 
-                <!-- Empty State -->
-                <tr *ngIf="!loading() && logs().length === 0">
-                    <td colspan="5" class="py-20 text-center">
-                        <div class="flex flex-col items-center justify-center gap-6">
-                            <div class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center text-outline-variant">
-                                <span class="material-symbols-outlined text-5xl">manage_search</span>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-white mb-2">No logs found</h3>
-                                <p class="text-on-surface-variant text-sm">Everything is quiet. No admin actions have been recorded yet.</p>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- Logs List -->
-                <tr *ngFor="let log of logs()" class="hover:bg-surface-container/30 transition-colors group">
-                    <!-- Admin Info -->
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-secondary text-primary-container flex items-center justify-center font-bold text-xs shadow-lg">
-                                {{ log.admin.nombre.substring(0,2) | uppercase }}
-                            </div>
-                            <div class="flex flex-col min-w-0">
-                                <span class="font-semibold text-white text-sm">{{ log.admin.nombre }}</span>
-                                <span class="text-[10px] text-on-surface-variant font-mono truncate uppercase">{{ log.admin.email }}</span>
-                            </div>
-                        </div>
-                    </td>
-
-                    <!-- Action Badge -->
-                    <td class="px-6 py-4">
-                        <span [ngClass]="getActionClass(log.accion)"
-                              class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border border-current inline-block whitespace-nowrap">
-                            {{ getActionLabel(log.accion) }}
-                        </span>
-                    </td>
-
-                    <!-- Details -->
-                    <td class="px-6 py-4">
-                        <p class="text-sm text-on-surface-variant max-w-md italic leading-tight">
-                            "{{ log.detalles }}"
-                        </p>
-                    </td>
-
-                    <!-- Target -->
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-secondary transition-colors border border-outline-variant/10">
-                                <span class="material-symbols-outlined text-lg">{{ getTargetIcon(log.tipoObjetivo) }}</span>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-black text-secondary uppercase tracking-widest leading-none mb-1">{{ log.tipoObjetivo }}</span>
-                                <span class="text-[9px] font-mono text-on-surface-variant break-all leading-tight max-w-[150px]">{{ log.objetivoId || '---' }}</span>
-                            </div>
-                        </div>
-                    </td>
-
-                    <!-- Timestamp -->
-                    <td class="px-6 py-4">
-                        <div class="flex flex-col">
-                            <span class="text-white font-semibold text-sm">{{ log.createdAt | date:'mediumDate' }}</span>
-                            <span class="text-[10px] text-on-surface-variant font-mono uppercase tracking-widest">{{ log.createdAt | date:'shortTime' }}</span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Pagination Footer -->
-        <div *ngIf="totalPages() > 1" class="p-6 bg-surface-container/30 border-t border-outline-variant/20 flex items-center justify-between">
-            <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-                Showing page {{ currentPage() }} of {{ totalPages() }}
-            </span>
-            <div class="flex gap-2">
-                <button (click)="changePage(currentPage() - 1)" 
-                        [disabled]="currentPage() === 1"
-                        class="px-4 py-2 bg-surface-container-highest text-white rounded-xl text-xs font-bold hover:bg-secondary hover:text-primary-container disabled:opacity-30 disabled:pointer-events-none transition-all">
-                    Previous
-                </button>
-                <button (click)="changePage(currentPage() + 1)" 
-                        [disabled]="currentPage() === totalPages()"
-                        class="px-4 py-2 bg-surface-container-highest text-white rounded-xl text-xs font-bold hover:bg-secondary hover:text-primary-container disabled:opacity-30 disabled:pointer-events-none transition-all">
-                    Next
-                </button>
-            </div>
+      <!-- Date Range -->
+      <div
+        class="flex items-center gap-4 bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-5 h-[48px] shadow-inner"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap"
+            >From:</span
+          >
+          <input
+            type="date"
+            [formControl]="startDateControl"
+            class="bg-transparent border-none text-white text-xs outline-none cursor-pointer [color-scheme:dark] p-0 w-24"
+          />
         </div>
+        <div class="w-px h-6 bg-outline-variant/30"></div>
+        <div class="flex items-center gap-3">
+          <span
+            class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap"
+            >To:</span
+          >
+          <input
+            type="date"
+            [formControl]="endDateControl"
+            class="bg-transparent border-none text-white text-xs outline-none cursor-pointer [color-scheme:dark] p-0 w-24"
+          />
+        </div>
+      </div>
+
+      <!-- Action Dropdown -->
+      <div class="relative min-w-[180px]">
+        <select
+          [formControl]="actionControl"
+          class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary rounded-xl py-3 px-4 text-xs font-bold text-white outline-none cursor-pointer shadow-inner uppercase tracking-wider"
+        >
+          <option value="">All Actions</option>
+          <option *ngFor="let action of actions" [value]="action">
+            {{ getActionLabel(action) }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Admin Dropdown -->
+      <div class="relative min-w-[180px]">
+        <select
+          [formControl]="adminControl"
+          class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary rounded-xl py-3 px-4 text-xs font-bold text-white outline-none cursor-pointer shadow-inner uppercase tracking-wider"
+        >
+          <option value="">All Admins</option>
+          <option *ngFor="let admin of admins()" [value]="admin._id">{{ admin.nombre }}</option>
+        </select>
+      </div>
     </div>
-</main>
+
+    <!-- Table Container -->
+    <div
+      class="bg-primary-container rounded-3xl border border-outline-variant/30 shadow-2xl overflow-hidden min-h-[600px] flex flex-col"
+    >
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-surface-container-highest/40 border-b border-outline-variant/20">
+            <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">
+              Administrator
+            </th>
+            <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">
+              Action
+            </th>
+            <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">
+              Details
+            </th>
+            <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">
+              Target
+            </th>
+            <th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-widest">
+              Timestamp
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/20">
+          <!-- Loading State -->
+          <tr *ngIf="loading()">
+            <td colspan="5" class="py-20">
+              <div class="flex flex-col items-center justify-center gap-4 opacity-40">
+                <div
+                  class="w-12 h-12 border-4 border-secondary/30 border-t-secondary rounded-full animate-spin"
+                ></div>
+                <p class="text-xs font-bold uppercase tracking-widest">
+                  Retrieving audit history...
+                </p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="!loading() && logs().length === 0">
+            <td colspan="5" class="py-20 text-center">
+              <div class="flex flex-col items-center justify-center gap-6">
+                <div
+                  class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center text-outline-variant"
+                >
+                  <span class="material-symbols-outlined text-5xl">manage_search</span>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-white mb-2">No logs found</h3>
+                  <p class="text-on-surface-variant text-sm">
+                    Everything is quiet. No admin actions have been recorded yet.
+                  </p>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Logs List -->
+          <tr
+            *ngFor="let log of logs()"
+            class="hover:bg-surface-container/30 transition-colors group"
+          >
+            <!-- Admin Info -->
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-secondary text-primary-container flex items-center justify-center font-bold text-xs shadow-lg"
+                >
+                  {{ log.admin.nombre.substring(0, 2) | uppercase }}
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span class="font-semibold text-white text-sm">{{ log.admin.nombre }}</span>
+                  <span class="text-[10px] text-on-surface-variant font-mono truncate uppercase">{{
+                    log.admin.email
+                  }}</span>
+                </div>
+              </div>
+            </td>
+
+            <!-- Action Badge -->
+            <td class="px-6 py-4">
+              <span
+                [ngClass]="getActionClass(log.accion)"
+                class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border border-current inline-block whitespace-nowrap"
+              >
+                {{ getActionLabel(log.accion) }}
+              </span>
+            </td>
+
+            <!-- Details -->
+            <td class="px-6 py-4">
+              <p class="text-sm text-on-surface-variant max-w-md italic leading-tight">
+                "{{ log.detalles }}"
+              </p>
+            </td>
+
+            <!-- Target -->
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-secondary transition-colors border border-outline-variant/10"
+                >
+                  <span class="material-symbols-outlined text-lg">{{
+                    getTargetIcon(log.tipoObjetivo)
+                  }}</span>
+                </div>
+                <div class="flex flex-col">
+                  <span
+                    class="text-[10px] font-black text-secondary uppercase tracking-widest leading-none mb-1"
+                    >{{ log.tipoObjetivo }}</span
+                  >
+                  <span
+                    class="text-[9px] font-mono text-on-surface-variant break-all leading-tight max-w-[150px]"
+                    >{{ log.objetivoId || '---' }}</span
+                  >
+                </div>
+              </div>
+            </td>
+
+            <!-- Timestamp -->
+            <td class="px-6 py-4">
+              <div class="flex flex-col">
+                <span class="text-white font-semibold text-sm">{{
+                  log.createdAt | date: 'mediumDate'
+                }}</span>
+                <span
+                  class="text-[10px] text-on-surface-variant font-mono uppercase tracking-widest"
+                  >{{ log.createdAt | date: 'shortTime' }}</span
+                >
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination Footer -->
+      <div
+        *ngIf="totalPages() > 1"
+        class="p-6 bg-surface-container/30 border-t border-outline-variant/20 flex items-center justify-between"
+      >
+        <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+          Showing page {{ currentPage() }} of {{ totalPages() }}
+        </span>
+        <div class="flex gap-2">
+          <button
+            (click)="changePage(currentPage() - 1)"
+            [disabled]="currentPage() === 1"
+            class="px-4 py-2 bg-surface-container-highest text-white rounded-xl text-xs font-bold hover:bg-secondary hover:text-primary-container disabled:opacity-30 disabled:pointer-events-none transition-all"
+          >
+            Previous
+          </button>
+          <button
+            (click)="changePage(currentPage() + 1)"
+            [disabled]="currentPage() === totalPages()"
+            class="px-4 py-2 bg-surface-container-highest text-white rounded-xl text-xs font-bold hover:bg-secondary hover:text-primary-container disabled:opacity-30 disabled:pointer-events-none transition-all"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>

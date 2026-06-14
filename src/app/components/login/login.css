@@ -15,9 +15,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: radial-gradient(circle at top right, rgba(121, 199, 238, 0.15), transparent 50%),
-                    radial-gradient(circle at bottom left, rgba(0, 55, 84, 0.8), transparent 50%);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-image:
+    radial-gradient(circle at top right, rgba(121, 199, 238, 0.15), transparent 50%),
+    radial-gradient(circle at bottom left, rgba(0, 55, 84, 0.8), transparent 50%);
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 .login-container {
@@ -31,7 +36,7 @@
   padding: 40px;
   border-radius: 16px;
   /* Light blue accent on top border */
-  border-top: 5px solid #79c7ee; 
+  border-top: 5px solid #79c7ee;
   box-shadow: 0 10px 40px rgba(0, 55, 84, 0.08); /* Dark blue subtle shadow */
 }
 
@@ -122,8 +127,6 @@
 .form-actions {
   margin-top: 5px;
 }
-
-
 
 .btn-submit {
   width: 100%;
