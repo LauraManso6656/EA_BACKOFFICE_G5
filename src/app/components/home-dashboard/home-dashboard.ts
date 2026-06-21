@@ -2,9 +2,9 @@ import { Component, OnInit, signal, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { StatsService } from '../../services/stats-service';
+import { EventoService } from '../../services/evento-service';
 import { Navbar } from '../navbar/navbar';
 import { environment } from '../../environments/environment';
-
 
 @Component({
   selector: 'app-home-dashboard',
@@ -15,25 +15,28 @@ import { environment } from '../../environments/environment';
 })
 export class HomeDashboard implements OnInit {
   public environment = environment;
-  // Usamos SIGNALS para una reactividad perfecta
+  
   userCount = signal<number | null>(null);
   universityCount = signal<number | null>(null);
   postCount = signal<number | null>(null);
   commentCount = signal<number | null>(null);
   reportCount = signal<number | null>(null);
+  eventCount = signal<number | null>(null);
 
   apiStatus = signal<'online' | 'offline' | 'checking'>('checking');
   dbStatus = signal<'online' | 'offline' | 'checking'>('checking');
   webClientStatus = signal<'online' | 'offline' | 'checking'>('checking');
   webClientUrl = 'https://ea5.upc.edu/login';
+  matomoStatus = signal<'online' | 'offline' | 'checking'>('checking');
+  matomoUrl = 'https://ea5-ws.upc.edu/';
 
   private platformId = inject(PLATFORM_ID);
   private statsService = inject(StatsService);
+  private eventoService = inject(EventoService);
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.loadAllStats();
-      this.checkWebClientStatus();
     }
   }
 
@@ -61,15 +64,32 @@ export class HomeDashboard implements OnInit {
       }
     });
 
+    // Cargar estadísticas de eventos desde el EventoService
+    this.eventoService.getEventos().subscribe({
+      next: (eventos) => {
+        this.eventCount.set(eventos ? eventos.length : 0);
+      },
+      error: (err) => {
+        console.error('Error loading events for dashboard stats:', err);
+        this.eventCount.set(0);
+      }
+    });
+
     this.checkWebClientStatus();
+    this.checkMatomoStatus();
   }
 
   checkWebClientStatus(): void {
     this.webClientStatus.set('checking');
-    // Intentamos cargar el index de la web cliente (ajusta la URL según necesites)
-    // Usamos mode: 'no-cors' para evitar problemas de CORS en un ping básico
     fetch(this.webClientUrl, { mode: 'no-cors' })
       .then(() => this.webClientStatus.set('online'))
       .catch(() => this.webClientStatus.set('offline'));
+  }
+
+  checkMatomoStatus(): void {
+    this.matomoStatus.set('checking');
+    fetch(this.matomoUrl, { mode: 'no-cors' })
+      .then(() => this.matomoStatus.set('online'))
+      .catch(() => this.matomoStatus.set('offline'));
   }
 }

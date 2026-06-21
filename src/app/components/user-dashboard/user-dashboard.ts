@@ -27,6 +27,7 @@ export class UserDashboard implements OnInit {
   errorMsg = '';
   totalUsuarios = 0;
   totalUniversidades = 0;
+  activeSockets = 0;
 
   // Pagination
   currentPage = 1;
@@ -93,6 +94,14 @@ export class UserDashboard implements OnInit {
         this.totalUniversidades = res.count;
         this.cdr.detectChanges();
       }
+    });
+
+    this.statsService.getActiveSockets().subscribe({
+      next: (res) => {
+        this.activeSockets = res.count;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error loading active sockets:', err)
     });
   }
 

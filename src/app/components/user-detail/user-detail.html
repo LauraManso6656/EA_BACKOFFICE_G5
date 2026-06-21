@@ -14,13 +14,27 @@
         <span class="text-xl font-bold tracking-tight text-white">AdminPanel</span>
     </div>
 
-    <div class="flex items-center gap-4">
-        <div
-            class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 backdrop-blur-sm shadow-sm border border-outline-variant/20">
+    <div class="flex items-center gap-4 relative">
+        <button (click)="toggleProfileDropdown()" title="Open Profile Menu"
+            class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 hover:bg-surface-container-highest transition-colors backdrop-blur-sm shadow-sm border border-outline-variant/20 group">
             <span class="text-[11px] font-semibold tracking-wider uppercase text-secondary">Admin</span>
             <img alt="Admin profile avatar" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/30"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAThWY8GEDdX3rTREctzL1H8A_n0zL-qGnTlq8L3mE5l9mot1LdyOB769PIdsaQ6assJ1wP8yYnkg_sIRbEW8USMhdbQpWbCpX8RpGyx9aOKx1mXyq_5nOo_2N4HnOjSAwv4TUIalX0tZRoFDHKUeQXQXZw7pbOYn-cilQrHrWXMbOxkd0ABKzi8vexVkeCzbHImdWdjPXMH0lamAT_rcTFlzn3KT7SIN1dV3Rbek2dtEr-iMuuGJNxXrXSGOFtZg5wCT1ncI3rXLSV" />
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div *ngIf="showProfileDropdown" 
+            class="absolute right-0 top-full mt-2 w-48 bg-surface-container-highest border border-outline-variant/20 rounded-xl shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
+            <button (click)="logout()" 
+                class="w-full text-left px-4 py-2.5 hover:bg-error/10 text-error hover:text-red-400 text-sm font-bold flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                Cerrar Sesión
+            </button>
         </div>
+
+        <!-- Click outside overlay to close -->
+        <div *ngIf="showProfileDropdown" (click)="showProfileDropdown = false" 
+            class="fixed inset-0 z-50"></div>
     </div>
 </nav>
 
@@ -45,6 +59,14 @@
                 class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
                 <span class="material-symbols-outlined">explore</span>
                 Posts
+            </button>
+
+            <button (click)="setActiveTab('unimatch')" [class.bg-secondary]="activeTab === 'unimatch'"
+                [class.text-primary-container]="activeTab === 'unimatch'"
+                [class.text-on-surface-variant]="activeTab !== 'unimatch'"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
+                <span class="material-symbols-outlined">photo_library</span>
+                UniMatch Photos
             </button>
 
             <button (click)="setActiveTab('comments')" [class.bg-secondary]="activeTab === 'comments'"
@@ -82,9 +104,21 @@
         <!-- Profile Tab -->
         <div *ngIf="activeTab === 'profile'"
             class="bg-primary-container rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div class="mb-10">
-                <h2 class="text-2xl font-bold text-white mb-2">Profile Information</h2>
-                <p class="text-on-surface-variant text-sm">Manage main data and access level.</p>
+            <div class="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-2">Profile Information</h2>
+                    <p class="text-on-surface-variant text-sm">Manage main data and access level.</p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="px-5 py-3 bg-surface-container-lowest/60 rounded-2xl border border-outline-variant/20 shadow-inner flex flex-col items-center min-w-[100px]">
+                        <span class="text-2xl font-extrabold text-white">{{ usuario?.seguidores?.length || 0 }}</span>
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mt-1">Followers</span>
+                    </div>
+                    <div class="px-5 py-3 bg-surface-container-lowest/60 rounded-2xl border border-outline-variant/20 shadow-inner flex flex-col items-center min-w-[100px]">
+                        <span class="text-2xl font-extrabold text-white">{{ usuario?.seguidos?.length || 0 }}</span>
+                        <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mt-1">Following</span>
+                    </div>
+                </div>
             </div>
 
             <form [formGroup]="userForm" class="space-y-6">
@@ -390,6 +424,56 @@
                         <span class="material-symbols-outlined">chevron_right</span>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- UniMatch Tab -->
+        <div *ngIf="activeTab === 'unimatch'"
+            class="bg-primary-container rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div class="mb-10 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-2">UniMatch Photos</h2>
+                    <p class="text-on-surface-variant text-sm">Photos uploaded by this user for the UniMatch discovery feed.</p>
+                </div>
+                <div class="px-4 py-2 bg-surface-container rounded-2xl border border-secondary/20">
+                    <span class="text-xs font-bold text-secondary">{{ unimatchPhotos.length }} Total Photos</span>
+                </div>
+            </div>
+
+            <!-- Photos Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div *ngFor="let photo of unimatchPhotos" 
+                    class="group relative bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden hover:border-secondary transition-all aspect-[3/4] flex flex-col justify-end">
+                    
+                    <!-- Image -->
+                    <img [src]="photo.imageUrl" class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105 duration-300">
+                    
+                    <!-- Gradient overlay on hover for delete button -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-4">
+                        <div class="flex justify-between items-center w-full">
+                            <span class="bg-primary/20 text-secondary border border-secondary/30 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-widest uppercase">
+                                Order #{{ photo.order }}
+                            </span>
+                            <button (click)="deleteUnimatchPhoto(photo._id)"
+                                class="p-2 bg-error-container/20 text-error hover:bg-error hover:text-white rounded-lg transition-colors backdrop-blur-md"
+                                title="Delete Photo">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </button>
+                        </div>
+                        <div class="w-full">
+                            <p class="text-[10px] font-mono text-white/50 truncate">{{ photo._id }}</p>
+                            <p class="text-[10px] text-white/40 truncate">{{ photo.createdAt | date:'short' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="unimatchPhotos.length === 0"
+                class="py-20 text-center bg-surface-container/30 rounded-3xl border-2 border-dashed border-outline-variant/20">
+                <span class="material-symbols-outlined text-6xl text-outline-variant mb-4">no_photography</span>
+                <h3 class="text-lg font-bold text-white uppercase tracking-widest">No Photos</h3>
+                <p class="text-on-surface-variant text-sm mt-2">This user has not uploaded any photos for UniMatch yet.</p>
             </div>
         </div>
     </div>

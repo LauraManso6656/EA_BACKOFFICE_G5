@@ -9,4 +9,6 @@ export interface Usuario {
     universidad?: Universidad;
     activo: boolean;
     privado: boolean;
+    seguidores?: any[];
+    seguidos?: any[];
 }

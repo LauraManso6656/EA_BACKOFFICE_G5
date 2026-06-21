@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'https://ea5-api.upc.edu'
+  apiUrl: 'http://localhost:1337'
 };

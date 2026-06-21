@@ -14,19 +14,78 @@
         <span class="text-xl font-bold tracking-tight text-white">Backoffice</span>
     </div>
 
-    <div class="flex items-center gap-4">
-        <div
-            class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 backdrop-blur-sm shadow-sm border border-outline-variant/20">
+    <div class="flex items-center gap-4 relative">
+        <button (click)="toggleProfileDropdown()" title="Open Profile Menu"
+            class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 hover:bg-surface-container-highest transition-colors backdrop-blur-sm shadow-sm border border-outline-variant/20 group">
             <span class="text-[11px] font-semibold tracking-wider uppercase text-secondary">Admin</span>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div *ngIf="showProfileDropdown" 
+            class="absolute right-0 top-full mt-2 w-48 bg-surface-container-highest border border-outline-variant/20 rounded-xl shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
+            <button (click)="logout()" 
+                class="w-full text-left px-4 py-2.5 hover:bg-error/10 text-error hover:text-red-400 text-sm font-bold flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                Cerrar Sesión
+            </button>
         </div>
+
+        <!-- Click outside overlay to close -->
+        <div *ngIf="showProfileDropdown" (click)="showProfileDropdown = false" 
+            class="fixed inset-0 z-50"></div>
     </div>
 </nav>
 
-<div class="pt-24 min-h-screen p-8 flex flex-col gap-10">
-    <!-- Top University Info Card -->
-    <div class="max-w-4xl mx-auto w-full">
+<div class="pt-24 min-h-screen flex p-8 gap-8 max-w-7xl mx-auto items-start">
+    <!-- Sidebar Navigation Card -->
+    <div class="w-72 shrink-0 sticky top-24">
         <div
-            class="bg-primary-container rounded-2xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30">
+            class="bg-primary-container rounded-3xl p-6 border border-outline-variant/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] flex flex-col gap-3">
+            <h3 class="text-sm font-bold text-secondary uppercase tracking-[0.2em] mb-4 text-center">University Info</h3>
+
+            <button (click)="setActiveTab('details')" [class.bg-secondary]="activeTab === 'details'"
+                [class.text-primary-container]="activeTab === 'details'"
+                [class.text-on-surface-variant]="activeTab !== 'details'"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
+                <span class="material-symbols-outlined">info</span>
+                Details
+            </button>
+
+            <button (click)="setActiveTab('users')" [class.bg-secondary]="activeTab === 'users'"
+                [class.text-primary-container]="activeTab === 'users'"
+                [class.text-on-surface-variant]="activeTab !== 'users'"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
+                <span class="material-symbols-outlined">group</span>
+                Users
+            </button>
+
+            <button (click)="setActiveTab('grados')" [class.bg-secondary]="activeTab === 'grados'"
+                [class.text-primary-container]="activeTab === 'grados'"
+                [class.text-on-surface-variant]="activeTab !== 'grados'"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
+                <span class="material-symbols-outlined">school</span>
+                Degrees
+            </button>
+
+            <div class="mt-8 pt-6 border-t border-outline-variant/20">
+                <div class="flex flex-col items-center">
+                    <div
+                        class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center font-bold text-lg text-secondary mb-3 shadow-inner">
+                        {{ university?.nombre?.substring(0,2) | uppercase }}
+                    </div>
+                    <span class="text-white font-bold text-sm text-center leading-tight">{{ university?.nombre }}</span>
+                    <span class="text-on-surface-variant text-[10px] uppercase tracking-widest mt-1">{{ university?.ubicacion }}</span>
+                    <span class="text-secondary/80 text-[10px] font-mono mt-3 bg-surface-container-highest px-3 py-1 rounded-lg shadow-inner border border-outline-variant/10 truncate max-w-full">{{ university?._id }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1">
+        <!-- Details Tab -->
+        <div *ngIf="activeTab === 'details'"
+            class="bg-primary-container rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
             <div class="mb-10 flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-bold text-white mb-2">Detalles de la Universidad</h2>
@@ -95,15 +154,12 @@
                         </div>
                     </div>
                 </div>
-                <p class="text-[15px] text-secondary font-mono mt-2 opacity-60">ID: {{ university?._id }}</p>
             </form>
         </div>
-    </div>
 
-    <!-- Bottom User List Card -->
-    <div class="max-w-6xl mx-auto w-full">
-        <div
-            class="bg-primary-container rounded-2xl overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30">
+        <!-- Users Tab -->
+        <div *ngIf="activeTab === 'users'"
+            class="bg-primary-container rounded-3xl overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-outline-variant/30 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
             <div
                 class="p-6 border-b border-outline-variant/20 bg-surface-container-highest/20 flex flex-col md:flex-row justify-between items-center gap-4">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2 min-w-fit">
@@ -168,6 +224,117 @@
                             </p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grados Tab -->
+        <div *ngIf="activeTab === 'grados'"
+            class="animate-in fade-in slide-in-from-bottom-4 duration-500 w-full flex flex-col md:flex-row gap-8">
+            
+            <!-- Left Side: Degrees List -->
+            <div class="bg-primary-container rounded-3xl p-6 border border-outline-variant/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] md:w-96 shrink-0">
+                <div class="mb-6 flex justify-between items-center">
+                    <h3 class="text-base font-bold text-white">Grados de la Institución</h3>
+                    <span class="text-xs font-bold text-secondary px-2.5 py-1 bg-secondary/10 rounded-lg border border-secondary/20">{{ grados.length }}</span>
+                </div>
+
+                <!-- Create Grado Form -->
+                <div class="mb-6 p-4 rounded-2xl bg-surface-container-lowest/30 border border-outline-variant/15 flex flex-col gap-3">
+                    <label class="text-[10px] font-black text-secondary uppercase tracking-widest">Crear Nuevo Grado</label>
+                    <div class="flex gap-2">
+                        <input type="text" [(ngModel)]="newGradoNombre" (keyup.enter)="createGrado()" placeholder="Nombre del grado..."
+                            class="flex-1 bg-surface-container-lowest border border-outline-variant/30 focus:border-secondary focus:ring-2 focus:ring-secondary/15 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                        <button (click)="createGrado()" [disabled]="!newGradoNombre.trim()"
+                            class="px-3 bg-secondary text-primary-container rounded-xl text-xs font-bold shadow-lg hover:opacity-90 transition-all disabled:opacity-50 active:scale-95 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-base">add</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Degrees Listing -->
+                <div class="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+                    <div *ngFor="let grado of grados" (click)="selectGrado(grado)"
+                        [class.border-secondary]="selectedGrado?._id === grado._id"
+                        [class.bg-surface-container-lowest/50]="selectedGrado?._id === grado._id"
+                        [class.bg-surface-container-lowest/10]="selectedGrado?._id !== grado._id"
+                        class="p-4 rounded-2xl border border-outline-variant/10 hover:border-secondary/50 cursor-pointer transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-white truncate max-w-[200px]">{{ grado.nombre }}</span>
+                        
+                        <button (click)="deleteGrado(grado._id, $event)"
+                            class="p-1.5 text-error/60 hover:bg-error/15 hover:text-error rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                            title="Eliminar Grado">
+                            <span class="material-symbols-outlined text-base">delete</span>
+                        </button>
+                    </div>
+
+                    <!-- Degrees Empty State -->
+                    <div *ngIf="grados.length === 0" class="py-12 text-center opacity-40">
+                        <span class="material-symbols-outlined text-4xl mb-2">school</span>
+                        <p class="text-xs font-bold uppercase tracking-wider">No hay grados creados</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Subjects details -->
+            <div class="flex-1 bg-primary-container rounded-3xl p-6 border border-outline-variant/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
+                <div *ngIf="selectedGrado">
+                    <div class="mb-8 border-b border-outline-variant/15 pb-4 flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">Asignaturas del Grado</span>
+                            <h3 class="text-lg font-bold text-white mt-1">{{ selectedGrado.nombre }}</h3>
+                        </div>
+                        <div class="text-xs font-semibold text-on-surface-variant font-mono bg-surface-container px-3 py-1 rounded-lg shadow-inner border border-outline-variant/10">
+                            ID: {{ selectedGrado._id }}
+                        </div>
+                    </div>
+
+                    <!-- Create Asignatura Form -->
+                    <div class="mb-8 p-5 bg-surface-container-lowest/20 border border-outline-variant/10 rounded-2xl">
+                        <h4 class="text-xs font-bold text-white mb-3">Añadir Asignatura</h4>
+                        <div class="flex gap-4">
+                            <input type="text" [(ngModel)]="newAsignaturaNombre" (keyup.enter)="createAsignatura()" placeholder="Nombre de la asignatura (ej. Base de Datos)..."
+                                class="flex-1 bg-surface-container-lowest border border-outline-variant/20 focus:border-secondary focus:ring-4 focus:ring-secondary/10 rounded-xl px-4 py-3 text-sm text-white outline-none">
+                            <button (click)="createAsignatura()" [disabled]="!newAsignaturaNombre.trim()"
+                                class="px-6 bg-secondary text-primary-container rounded-xl text-sm font-bold shadow-lg hover:opacity-90 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">add</span>
+                                Añadir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Subjects Listing -->
+                    <div class="space-y-3">
+                        <div *ngFor="let asig of gradoAsignaturas"
+                            class="p-4 bg-surface-container-lowest/30 rounded-2xl border border-outline-variant/10 flex items-center justify-between hover:border-purple-500/30 transition-all group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-lg">book</span>
+                                </div>
+                                <span class="text-sm font-bold text-white">{{ asig.nombre }}</span>
+                            </div>
+                            
+                            <button (click)="deleteAsignatura(asig._id)"
+                                class="p-2 text-error/60 hover:bg-error/15 hover:text-error rounded-xl opacity-0 group-hover:opacity-100 transition-all"
+                                title="Quitar Asignatura">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </div>
+
+                        <!-- Subjects Empty State -->
+                        <div *ngIf="gradoAsignaturas.length === 0" class="py-20 text-center bg-surface-container/20 rounded-3xl border border-dashed border-outline-variant/10">
+                            <span class="material-symbols-outlined text-5xl text-outline-variant mb-3">auto_stories</span>
+                            <h4 class="text-sm font-bold text-white uppercase tracking-widest">Sin asignaturas</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Este grado todavía no tiene asignaturas asociadas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Degree Not Selected state -->
+                <div *ngIf="!selectedGrado" class="h-full flex flex-col items-center justify-center py-20 text-center opacity-40">
+                    <span class="material-symbols-outlined text-6xl mb-4">school</span>
+                    <h3 class="text-base font-bold uppercase tracking-widest text-white">Selecciona un Grado</h3>
+                    <p class="text-xs text-on-surface-variant mt-2">Selecciona un grado del listado lateral para administrar sus asignaturas.</p>
                 </div>
             </div>
         </div>

@@ -47,4 +47,13 @@ export class UsuarioService {
   recoveryUsuario(id: string): Observable<Usuario> {
     return this.http.patch<Usuario>(`${this.apiUrl}/${id}/recovery`, {});
   }
+
+  // UniMatch Photos Management
+  getUnimatchPhotos(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/unimatch/photos/${userId}`);
+  }
+
+  deleteUnimatchPhoto(photoId: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/unimatch/photos/${photoId}`);
+  }
 }

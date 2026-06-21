@@ -19,7 +19,7 @@
     </header>
 
     <!-- Stats Grid (Bento Style) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
       
       <!-- Users Card -->
       <div [routerLink]="['/usuarios']"
@@ -60,6 +60,20 @@
         <div class="flex items-center gap-2 text-sm font-bold text-purple-400 uppercase tracking-widest">
           <span class="material-symbols-outlined text-base">chat_bubble</span>
           Social Activity
+        </div>
+      </div>
+
+      <!-- Events Card -->
+      <div [routerLink]="['/eventos']"
+           class="bg-primary-container p-6 rounded-2xl border border-outline-variant/20 shadow-lg cursor-pointer hover:scale-[1.02] hover:border-pink-400/40 transition-all active:scale-95 group">
+        <span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest block mb-1">Events (Map)</span>
+        <div class="flex items-baseline justify-between mb-2">
+          <span class="text-4xl font-bold text-white tracking-tight">{{ eventCount() === null ? '...' : eventCount() }}</span>
+          <span class="material-symbols-outlined text-pink-400/30 text-3xl group-hover:text-pink-400 transition-colors">map</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm font-bold text-pink-400 uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">explore</span>
+          Active Events
         </div>
       </div>
 
@@ -133,6 +147,24 @@
               {{ webClientStatus() === 'online' ? 'Healthy' : (webClientStatus() === 'offline' ? 'Error' : 'Checking...') }}
             </span>
           </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined"
+                    [ngClass]="matomoStatus() === 'online' ? 'text-green-400' : (matomoStatus() === 'offline' ? 'text-error' : 'text-outline')">
+                monitoring
+              </span>
+              <a [href]="matomoUrl" target="_blank" 
+                 class="flex items-center gap-1 text-base text-on-surface-variant font-medium hover:text-secondary hover:underline transition-all group">
+                Matomo Analytics
+                <span class="material-symbols-outlined text-[14px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">open_in_new</span>
+              </a>
+            </div>
+            <span class="px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-tighter transition-all"
+                  [ngClass]="matomoStatus() === 'online' ? 'bg-green-400/10 text-green-400 border-green-400/20' : 
+                             (matomoStatus() === 'offline' ? 'bg-error/10 text-error border-error/20' : 'bg-outline/10 text-outline border-outline/20')">
+              {{ matomoStatus() === 'online' ? 'Healthy' : (matomoStatus() === 'offline' ? 'Error' : 'Checking...') }}
+            </span>
+          </div>
           <div class="flex items-center justify-between opacity-40">
             <div class="flex items-center gap-3">
               <span class="material-symbols-outlined text-outline">smartphone</span>
@@ -150,24 +182,40 @@
           <p class="text-sm text-on-surface-variant mb-6">Access technical documentation and API specifications.</p>
         </div>
         
-        <a [href]="environment.apiUrl + '/api/'" target="_blank" 
-           class="flex items-center justify-between p-4 bg-blue-500/10 hover:bg-blue-500/20 rounded-xl transition-all border border-blue-500/20 group">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center">
-              <span class="material-symbols-outlined text-blue-400 text-3xl">api</span>
+        <div class="space-y-4">
+          <a [href]="environment.apiUrl + '/api/'" target="_blank" 
+             class="flex items-center justify-between p-4 bg-blue-500/10 hover:bg-blue-500/20 rounded-xl transition-all border border-blue-500/20 group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-blue-400 text-3xl">api</span>
+              </div>
+              <div>
+                <p class="text-base font-bold text-white">Swagger UI</p>
+                <p class="text-sm text-blue-400/80 uppercase font-medium">Interactive Docs</p>
+              </div>
             </div>
-            <div>
-              <p class="text-base font-bold text-white">Swagger UI</p>
-              <p class="text-sm text-blue-400/80 uppercase font-medium">Interactive Docs</p>
+            <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">open_in_new</span>
+          </a>
+
+          <a [href]="matomoUrl" target="_blank" 
+             class="flex items-center justify-between p-4 bg-purple-500/10 hover:bg-purple-500/20 rounded-xl transition-all border border-purple-500/20 group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-purple-400 text-3xl">analytics</span>
+              </div>
+              <div>
+                <p class="text-base font-bold text-white">Matomo Analytics</p>
+                <p class="text-sm text-purple-400/80 uppercase font-medium">User Tracking Dashboard</p>
+              </div>
             </div>
-          </div>
-          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">open_in_new</span>
-        </a>
+            <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">open_in_new</span>
+          </a>
+        </div>
 
         <div class="mt-4 pt-4 border-t border-outline-variant/10">
           <div class="flex items-center justify-between text-sm font-bold text-on-surface-variant uppercase tracking-tighter">
             <span>Documentation</span>
-            <span class="text-blue-400">Open API 3.0</span>
+            <span class="text-blue-400 font-semibold">Open API 3.0 & Analytics</span>
           </div>
         </div>
       </div>

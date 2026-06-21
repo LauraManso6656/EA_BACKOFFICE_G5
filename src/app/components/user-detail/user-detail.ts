@@ -33,10 +33,11 @@ export class UserDetail implements OnInit {
   showUniversidadesDropdown = false;
 
   // Nueva lógica de pestañas, posts y comentarios
-  activeTab: 'profile' | 'posts' | 'comments' | 'reports' = 'profile';
+  activeTab: 'profile' | 'posts' | 'comments' | 'reports' | 'unimatch' = 'profile';
   userPosts: Post[] = [];
   userComments: AppComment[] = [];
   userReports: Report[] = [];
+  unimatchPhotos: any[] = [];
 
   // Pagination for tabs
   postsPage = 1;
@@ -86,6 +87,7 @@ export class UserDetail implements OnInit {
       this.loadUserPosts();
       this.loadUserComments();
       this.loadUserReports();
+      this.loadUnimatchPhotos();
     }
 
     this.universidadSearch.valueChanges.subscribe(value => {
@@ -96,7 +98,7 @@ export class UserDetail implements OnInit {
     });
   }
 
-  setActiveTab(tab: 'profile' | 'posts' | 'comments' | 'reports'): void {
+  setActiveTab(tab: 'profile' | 'posts' | 'comments' | 'reports' | 'unimatch'): void {
     this.activeTab = tab;
   }
 
@@ -337,5 +339,46 @@ export class UserDetail implements OnInit {
         }
       });
     }
+  }
+
+  loadUnimatchPhotos(): void {
+    if (!this.userId) return;
+    this.usuarioService.getUnimatchPhotos(this.userId).subscribe({
+      next: (photos) => {
+        this.unimatchPhotos = photos || [];
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error loading unimatch photos:', err)
+    });
+  }
+
+  deleteUnimatchPhoto(photoId: string): void {
+    this.confirmService.ask({
+      title: 'Delete UniMatch Photo?',
+      message: 'Are you sure you want to permanently delete this photo? This action cannot be undone.',
+      type: 'comment',
+      confirmText: 'Delete',
+      onConfirm: () => {
+        this.usuarioService.deleteUnimatchPhoto(photoId).subscribe({
+          next: () => {
+             this.unimatchPhotos = this.unimatchPhotos.filter(p => p._id !== photoId);
+             this.cdr.detectChanges();
+          },
+          error: (err) => console.error('Error deleting unimatch photo:', err)
+        });
+      }
+    });
+  }
+
+  showProfileDropdown = false;
+
+  toggleProfileDropdown(): void {
+    this.showProfileDropdown = !this.showProfileDropdown;
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 }

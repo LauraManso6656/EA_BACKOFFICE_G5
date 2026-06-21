@@ -52,4 +52,8 @@ export class StatsService {
   getReportStats(): Observable<ReportStats> {
     return this.http.get<ReportStats>(`${this.apiUrl}/reports`);
   }
+
+  getActiveSockets(): Observable<{ count: number }> {
+    return this.http.get<{ count: number }>(`${this.apiUrl}/active-sockets`);
+  }
 }

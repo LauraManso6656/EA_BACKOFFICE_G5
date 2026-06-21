@@ -13,6 +13,7 @@ import { PostDashboard } from './components/post-dashboard/post-dashboard';
 import { BugDashboard } from './components/bug-dashboard/bug-dashboard';
 import { BugDetail } from './components/bug-detail/bug-detail';
 import { AuditList } from './components/audit-list/audit-list';
+import { EventoDashboard } from './components/evento-dashboard/evento-dashboard';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -30,6 +31,7 @@ export const routes: Routes = [
   { path: 'bugs', component: BugDashboard, canActivate: [authGuard] },
   { path: 'bug/:id', component: BugDetail, canActivate: [authGuard] },
   { path: 'audit', component: AuditList, canActivate: [authGuard] },
+  { path: 'eventos', component: EventoDashboard, canActivate: [authGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];

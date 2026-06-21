@@ -11,11 +11,25 @@
         <span class="text-xl font-bold tracking-tight text-white">AdminPanel</span>
     </div>
     
-    <div class="flex items-center gap-4">
-        <div class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 backdrop-blur-sm shadow-sm border border-outline-variant/20">
+    <div class="flex items-center gap-4 relative">
+        <button (click)="toggleProfileDropdown()" title="Open Profile Menu" class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface-container/50 hover:bg-surface-container-highest transition-colors backdrop-blur-sm shadow-sm border border-outline-variant/20 group">
             <span class="text-[11px] font-semibold tracking-wider uppercase text-secondary">Admin</span>
             <img alt="Admin profile avatar" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAThWY8GEDdX3rTREctzL1H8A_n0zL-qGnTlq8L3mE5l9mot1LdyOB769PIdsaQ6assJ1wP8yYnkg_sIRbEW8USMhdbQpWbCpX8RpGyx9aOKx1mXyq_5nOo_2N4HnOjSAwv4TUIalX0tZRoFDHKUeQXQXZw7pbOYn-cilQrHrWXMbOxkd0ABKzi8vexVkeCzbHImdWdjPXMH0lamAT_rcTFlzn3KT7SIN1dV3Rbek2dtEr-iMuuGJNxXrXSGOFtZg5wCT1ncI3rXLSV"/>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div *ngIf="showProfileDropdown" 
+            class="absolute right-0 top-full mt-2 w-48 bg-surface-container-highest border border-outline-variant/20 rounded-xl shadow-2xl py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
+            <button (click)="logout()" 
+                class="w-full text-left px-4 py-2.5 hover:bg-error/10 text-error hover:text-red-400 text-sm font-bold flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                Cerrar Sesión
+            </button>
         </div>
+
+        <!-- Click outside overlay to close -->
+        <div *ngIf="showProfileDropdown" (click)="showProfileDropdown = false" 
+            class="fixed inset-0 z-50"></div>
     </div>
 </nav>
 

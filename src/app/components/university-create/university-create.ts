@@ -44,4 +44,16 @@ export class UniversityCreate {
       this.universityForm.markAllAsTouched();
     }
   }
+
+  showProfileDropdown = false;
+
+  toggleProfileDropdown(): void {
+    this.showProfileDropdown = !this.showProfileDropdown;
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
+  }
 }
